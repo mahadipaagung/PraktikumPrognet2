@@ -2,27 +2,25 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable implements MustVerifyEmail
+class Admin extends Authenticatable
 {
     use Notifiable;
 
+    protected $guard = 'admin';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','profile_image','status'
+        'name', 'username', 'password','profile_image','phone'
     ];
 
-    public function product_review()
-    {
-        return $this->hasMany('App\Product_Review');
-    }
 
     /**
      * The attributes that should be hidden for arrays.
@@ -41,4 +39,13 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function sendPasswordResetNotification($token){
+        $this->notify(new AdminResetPasswordNotification($token));
+    }
+
+    public function response()
+    {
+        return $this->hasMany('App\Response');
+    }
 }
