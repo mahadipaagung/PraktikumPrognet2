@@ -57,7 +57,7 @@
                             </div>
                         </div>
                         
-                        <input type="submit" value="Change" class="btn btn-success pull-right">
+                        <input href="{{route('product.edit',['id'=>$product->id])}}" type="submit" value="Change" class="btn btn-success pull-right">
                     </form>
                 </div>
               </div>
