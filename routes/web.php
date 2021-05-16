@@ -38,6 +38,13 @@ Route::prefix('admin')->group(function(){
     Route::post('/password/email','Auth\AdminForgotPasswordController@sendResetLinkEmail')->name('admin.password.email');
     Route::get('/password/reset{token}','Auth\AdminResetPasswordController@showResetForm')->name('admin.password.reset');
     Route::post('/password/reset','Auth\AdminResetPasswordController@reset')->name('admin.password.update');
+    Route::get('/transaksi','AdminTransaksiController@index')->name('admin.transaksi');
+    Route::get('/transaksi/detail/{id}','AdminDetailTransaksiController@index')->name('admin.detail_transaksi');
+
+    Route::post('/transaksi/detail/status', 'AdminDetailTransaksiController@membatalkanPesanan');
+
+    Route::post('/transaksi/detail/review', 'ResponseController@create');
+
 });
 
 //Courier
@@ -73,3 +80,4 @@ Route::prefix('admin/discount')->group(function () {
     Route::put('/{id}/update', 'DiscountController@update')->name('discount.update')->middleware('auth:admin');
     Route::delete('/{id}', 'DiscountController@destroy')->name('discount.destroy')->middleware('auth:admin');
 });
+

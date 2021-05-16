@@ -33,9 +33,18 @@ class ResponseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+            $response = new Response;
+            $response->review_id = $request->review_id;
+            $response->admin_id = $request->admin_id;
+            $response->rate = $request->rate;
+            $response->content = $request->content;
+    
+            $response->save();
+    
+    
+    
     }
 
     public function add_response($review)

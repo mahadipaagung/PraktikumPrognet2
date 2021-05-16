@@ -93,6 +93,7 @@
 						<li><a href="/courier" class=""><i class="lnr lnr-code"></i> <span>Courier</span></a></li>
 						<li><a href="/products" class=""><i class="lnr lnr-chart-bars"></i> <span>Product</span></a></li>
 						<li><a href="/categories" class=""><i class="lnr lnr-cog"></i> <span>Product Categories</span></a></li>
+						<li><a href="/admin/transaksi" class=""><i class="lnr lnr-cog"></i> <span>Transaksi</span></a></li>
 					</ul>
 				</nav>
 			</div>
