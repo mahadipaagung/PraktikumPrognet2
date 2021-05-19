@@ -18,8 +18,12 @@ class Product_Review extends Model
         return $this->belongsTo('App\User','user_id','id');
     }
 
-    public function response()
-    {
-        return $this->hasMany('App\Response');
+    // public function response()
+    // {
+    //     return $this->hasMany('App\Response');
+    // }
+
+    public function response(){
+        return $this->hasMany('App\Response', 'review_id', 'id');
     }
 }

@@ -2,22 +2,21 @@
 
 @section('content')
 <!--================Home Banner Area =================-->
-<section class="banner_area">
-  <div class="banner_inner d-flex align-items-center">
-    <div class="container">
-      <div class="banner_content d-md-flex justify-content-between align-items-center">
-        <div class="mb-3 mb-md-0">
-          <h2>Product Details</h2>
-          <p>Very us move be blessed multiply night</p>
+    <!-- Start All Title Box -->
+    <div class="all-title-box">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2>Detail Produk</h2>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Produk</a></li>
+                        <li class="breadcrumb-item active">Detail Produk </li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div class="page_link">
-          <a href="index.html">Home</a>
-          <a href="single-product.html">Product Details</a>
-        </div>
-      </div>
     </div>
-  </div>
-</section>
+    <!-- End All Title Box -->
 <!--================End Home Banner Area =================-->
 
 <!--================Single Product Area =================-->
@@ -26,7 +25,7 @@
     <div class="row s_product_inner">
       <div class="col-lg-6">
         <!-- Product Image -->
-        <div class="col-lg-11">
+        <div class="col-lg-12">
           @php
             $i=1;
             $j=1;
@@ -41,7 +40,7 @@
                     $disc = $home->tampildiskon($products->discount);
                   @endphp
                   @if($disc!=0)
-                    <div style="background-color:red;" class="product_extra product_new"><a href="categories.html">-{{$disc}}%</a></div>
+                    <div style="background-color:red;" class="product_extra product_new"><a href="#">-{{$disc}}%</a></div>
                   @endif
                   @php
                     $i++;
@@ -60,51 +59,54 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-5 offset-lg-1">
-        <div class="s_product_text">
-          <h3>{{$products->product_name}}</h3>
+      <div class="col-lg-6">
+        <div class="single-product-details">
+          <h3 style="color:Black;"><strong>{{$products->product_name}}</strong></h3>
           @php
             $home = new Home;
             $harga = $home->diskon($products->discount,$products->price);
           @endphp
           @if ($harga != 0)
-            <del><h4>Rp.{{number_format($products->price)}}</h3></del>
-            <h2>Rp.{{number_format($harga)}}</h2>
+            <del><h4>Rp{{number_format($products->price)}}</h3></del>
+            <h2>Rp{{number_format($harga)}}</h2>
           @else
-            <h2>Rp.{{number_format($products->price)}}</h2>
+            <h2>Rp{{number_format($products->price)}}</h2>
           @endif
-          <div class="in_stock_container">
-            <span >Availability    :</span>
-            @if ($products->stock <= 0)
-              <span style="color:red;">Out of Stock!</span>
-              @else
-                @if ($products->stock <= 5) 
-                <span style="color:red;">Hurry Up!</span> <br>
-                <span style="color:black;">Only {{$products->stock}} left!</span>
-              @else
-                <span>In Stock</span> <br>
-                <span style="color:black;">{{$products->stock}} left</span>
-              @endif
-                    @endif
-          </div>
+          @if (!empty($products->product_rate))
+            <strong style="color:Black;">Rating    : </strong><strong style="color:Red;">{{($products->product_rate)}}</strong><br>
+          @else
+          <strong style="color:Black;">Rating    : </strong><strong style="color:Red;">Belum Ada Rating</strong><br>
+          @endif
+            <strong style="color:Black;">Ketersediaan    :</strong>
+          @if ($products->stock <= 0)
+            <span style="color:red;"><strong>Stok Kosong!</strong></span>
+          @else
+            @if ($products->stock <= 5) 
+              <span style="color:red;"><strong>Barang Langka!</strong></span> <br>
+              <span style="color:black;">Hanya {{$products->stock}} tersisa!</span>
+            @else
+              <span style="color:Green;"><strong>Ada</strong></span> <br>
+              <span style="color:black;">{{$products->stock}} barang</span>
+            @endif
+          @endif
           <p>{{$products->description}}</p>
           <div class="card_area">
             <div class="product_quantity_container">
               @if (is_null(Auth::user()))
-                @if ($products->stock<1)
-                  <button class="btn btn-primary btn-success tombol1" disabled><i class="fa fa-cart-plus mr-2" aria-hidden="true"></i> Purchase</button>
-                  <button class="btn btn-primary btn-rounded tombol1" disabled><i class="fa fa-cart-plus mr-2" aria-hidden="true"></i> Add to cart</button>
+                @if ($products->stock < 1)
+                  <button class="btn btn-danger mr-2" disabled><i class="fa fa-cart-plus mr-2" aria-hidden="true"></i> Beli Langsung</button>
+                  <button class="btn btn-secondary" disabled><i class="fa fa-cart-plus mr-2" aria-hidden="true"></i> Tambah ke Keranjang</button>
                 @else
-                  <button class="btn btn-primary btn-success tombol1"><i class="fa fa-cart-plus mr-2" aria-hidden="true"></i> Purchase</button>
-                  <button class="btn btn-primary btn-rounded tombol1"><i class="fa fa-cart-plus mr-2" aria-hidden="true"></i> Add to cart</button>
+                  <a href="/login" class="btn btn-danger mr-2"><i class="fa fa-cart-plus mr-2" aria-hidden="true"></i> Beli Langsung</a>
+                  <a href="/login" class="btn btn-secondary"><i class="fa fa-cart-plus mr-2" aria-hidden="true"></i> Tambah ke Keranjang</a>
                 @endif
-              @else -->
-                @if ($products->stock<1)
-                  <button class="btn btn-primary btn-success" class="tombol1" disabled>
-                    <i class="fa fa-shopping-cart mr-2" aria-hidden="true"></i> Purchase
+              @else
+                @if ($products->stock < 1)
+                  <button class="btn btn-danger mr-2" class="tombol1" disabled>
+                    <i class="fa fa-shopping-cart mr-2" aria-hidden="true"></i> Beli Langsung
                   </button>
-                  <button class="btn btn-primary btn-rounded" id="ajaxSubmit" disabled>
-                    <i class="fa fa-cart-plus mr-2" aria-hidden="true"></i> Add to cart
+                  <button class="btn btn-secondary" id="ajaxSubmit" disabled>
+                    <i class="fa fa-cart-plus mr-2" aria-hidden="true"></i> Tambah ke Keranjang
                   </button>
                 @else
                   <table>
@@ -119,33 +121,29 @@
                         @endif
                         <input type="hidden" name="weight" value="{{$products->weight}}">
                         <input type="hidden" name="qty" class="qty" value="1" readonly>
-                        <button type="submit" class="btn btn-success" class="tombol1">
-                        <i class="fa fa-cart-plus mr-2" aria-hidden="true"></i> Purchase</button>
+                        <button type="submit" class="btn btn-danger mr-2" class="tombol1">
+                          <i class="fa fa-cart-plus mr-2" aria-hidden="true"></i> Beli Langsung
+                        </button>
                       </form>
                     </td>
                     <td>
                       <input type="hidden" value="{{$products->id}}" id="product_id">
                       <input type="hidden" value="{{Auth::user()->id}}" id="user_id">
-                      <button class="btn btn-primary btn-rounded" id="ajaxSubmit">
-                        <i class="fa fa-cart-plus mr-2" aria-hidden="true"></i> Add to cart
+                      <button class="btn btn-secondary" id="ajaxSubmit">
+                        <i class="fa fa-cart-plus mr-2" aria-hidden="true"></i> Tambah ke Keranjang
                       </button>
                     </td>
                   </table>
                 @endif
               @endif
             </div>
-            <a class="icon_btn mt-3" href="#">
-              <i class="lnr lnr lnr-diamond"></i>
-            </a>
-            <a class="icon_btn" href="#">
-              <i class="lnr lnr lnr-heart"></i>
-            </a>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+<br>
 <!--================End Single Product Area =================-->
 
 <!--================Product Review Area =================-->
@@ -167,114 +165,102 @@
     </ul>
     <div class="tab-content" id="myTabContent">
       @if (!$products->product_review->count())
-      <div class="d-flex justify-content-center">    
-        <div class="row mb-5">
-            <p><strong>Belum ada review produk.</strong></p> 
+        <div class="d-flex justify-content-center">    
+          <div class="row mb-5">
+              <p><strong>Belum ada review produk.</strong></p> 
+          </div>
         </div>
-      </div>
       @else
-      @foreach ($products->product_review as $item)
-        <!-- First row -->
-        <div class="row mb-5">
-        
-        <!-- Image column -->
-        <div class="col-sm-2 col-12 mb-3">
-  
-          <img src="{{asset('/uploads/avatars/'.$item->user->profile_image)}}" style="width:100px;height:100px;object-fit:cover;" alt="sample image" class="avatar rounded-circle z-depth-1-half">
-  
-        </div>
-        <!-- Image column -->
-  
-        <!-- Content column -->
-        <div class="col-sm-10 col-12">
-  
-          <a>
-          {{-- @php
-            dd(Auth::user()->id);
-          @endphp --}}
-          <h5 style="color:#333333" class="user-name font-weight-bold">{{$item->user->name}} 
-          </h5>
-  
-          </a>
-  
-          <!-- Rating -->
-          <ul class="rating">
-            <li>
-          @for ($i = 0; $i < $item->rate; $i++)
-            
-            <i class="fa fa-star checked"></i>
-            
-          @endfor
-          @for ($i = 0; $i < 5-$item->rate; $i++)
-            
-            <i class="fa fa-star"></i>
-            
-          @endfor
-          </li>  
-          </ul>
-          <input type="hidden" class="rate{{$loop->iteration-1}}" value="{{$item->rate}}">
-          <input type="hidden" class="content{{$loop->iteration-1}}" value="{{$item->content}}">
-          <input type="hidden" class="review_id{{$loop->iteration-1}}" value="{{$item->id}}">
-          <div class="card-data">
-          <ul class="list-unstyled mb-1">
-            <li class="comment-date font-small grey-text">
-            <i class="fa fa-clock-o"></i> {{$item->created_at}}</li>
-          </ul>
-          </div>
-  
-          <p class="dark-grey-text article">{{$item->content}}</p>
-  
-        </div>
-        <!-- Content column -->
-  
-        </div>
-        <!-- First row -->
-          @if ($item->response->count())
-          <!-- Balasan -->
-          @foreach ($item->response as $balasan)
-          <div class="row mb-5" style="margin-left: 5%">
-            
-            <!-- Image column -->
+        @foreach ($products->product_review as $item)
+          <div class="row mb-5">
             <div class="col-sm-2 col-12 mb-3">
-  
-            <img src="{{asset('/uploads/avatars/'.$balasan->admin->profile_image)}}" style="width:100px;height:100px;object-fit:cover;" alt="sample image" class="avatar rounded-circle z-depth-1-half">
-  
+              <img src="{{asset('/uploads/avatars/'.$item->user->profile_image)}}" style="width:100px;height:100px;object-fit:cover;" alt="sample image" class="avatar rounded-circle z-depth-1-half">
             </div>
-            <!-- Image column -->
-  
-            <!-- Content column -->
             <div class="col-sm-10 col-12">
-  
-            <a>
-  
-              <h5 style="color: #333333" class="user-name font-weight-bold"><span style="margin-right:5px;" class="badge badge-success">Admin</span>{{$balasan->admin->name}}</h5>
-  
-            </a>
-            <!-- Rating -->
-            <div class="card-data">
-              <ul class="list-unstyled mb-1">
-              <li class="comment-date font-small grey-text">
-                <i class="fa fa-clock-o"></i> {{$balasan->created_at}}</li>
+              <a>
+                {{-- @php
+                  dd(Auth::user()->id);
+                @endphp --}}
+                <h5 style="color:#333333" class="user-name font-weight-bold">{{$item->user->name}} 
+                </h5>
+              </a>
+              <ul class="rating">
+                <li>
+                  @for ($i = 0; $i < $item->rate; $i++)
+                    <i class="fa fa-star"></i>
+                  @endfor
+                  @for ($i = 0; $i < 5-$item->rate; $i++)
+                    <i class="fa fa-star-o"></i>
+                  @endfor
+                </li>  
               </ul>
+              <input type="hidden" class="rate{{$loop->iteration-1}}" value="{{$item->rate}}">
+              <input type="hidden" class="content{{$loop->iteration-1}}" value="{{$item->content}}">
+              <input type="hidden" class="review_id{{$loop->iteration-1}}" value="{{$item->id}}">
+              <div class="card-data">
+                <ul class="list-unstyled mb-1">
+                  <li class="comment-date font-small grey-text">
+                    <i class="fa fa-clock-o"></i> {{$item->created_at}}
+                  </li>
+                </ul>
+              </div>
+              <p class="dark-grey-text article">{{$item->content}}</p>
             </div>
-  
-            <p class="dark-grey-text article">{{$balasan->content}}</p>
-  
-            </div>
-            <!-- Content column -->
-  
           </div>
-  
-          @endforeach
-          <!-- Balasan -->
-  
+          @if ($item->response->count())
+            @foreach ($item->response as $balasan)
+              <div class="row mb-5" style="margin-left: 5%">
+                <div class="col-sm-2 col-12 mb-3">
+                  <img src="{{asset('/uploads/avatars/'.$balasan->admin->profile_image)}}" style="width:100px;height:100px;object-fit:cover;" alt="sample image" class="avatar rounded-circle z-depth-1-half">
+                </div>
+                <div class="col-sm-10 col-12">
+                  <a>
+                    <h5 style="color: #333333" class="user-name font-weight-bold"><span style="margin-right:5px;" class="badge badge-success">Admin</span>{{$balasan->admin->name}}</h5>
+                  </a>
+                  <div class="card-data">
+                    <ul class="list-unstyled mb-1">
+                      <li class="comment-date font-small grey-text">
+                        <i class="fa fa-clock-o"></i> {{$balasan->created_at}}
+                      </li>
+                    </ul>
+                  </div>
+                  <p class="dark-grey-text article">{{$balasan->content}}</p>
+                </div>
+              </div>
+            @endforeach
           @endif
-  
-      @endforeach
-  
+        @endforeach
       @endif
     </div>
   </div>
 </section>
 <!--================End Product Description Area =================-->
+@endsection
+
+@section('script')
+
+<script>
+    jQuery(document).ready(function(e){
+        jQuery('#ajaxSubmit').click(function(e){
+            e.preventDefault();
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            jQuery.ajax({
+                url: "{{url('/tambah_cart')}}",
+                method: 'post',
+                data: {
+                    product_id: jQuery('#product_id').val(),
+                    user_id: jQuery('#user_id').val(),
+                },
+                success: function(result){
+                    jQuery('#jumlahcart').text(result.jumlah);
+                }
+            });
+        });
+    });
+</script>
+
 @endsection
