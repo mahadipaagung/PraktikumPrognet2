@@ -92,11 +92,11 @@
 			<div class="sidebar-scroll">
 				<nav>
 					<ul class="nav">
-						<li><a href="/admin" class="active"><i class="lnr lnr-home"></i> <span>Dashboard</span></a></li>
-						<li><a href="/courier" class=""><i class="lnr lnr-code"></i> <span>Courier</span></a></li>
-						<li><a href="/products" class=""><i class="lnr lnr-chart-bars"></i> <span>Product</span></a></li>
-						<li><a href="/categories" class=""><i class="lnr lnr-cog"></i> <span>Product Categories</span></a></li>
-						<li><a href="/admin/transaksi" class=""><i class="lnr lnr-cog"></i> <span>Transaksi</span></a></li>
+						<li><a href="/admin" class="{{ request()->is('admin') ? ' active' : ''}}"><i class="lnr lnr-home"></i> <span>Dashboard</span></a></li>
+						<li><a href="/courier" class="{{ request()->is('courier') ? ' active' : ''}}"><i class="lnr lnr-code"></i> <span>Courier</span></a></li>
+						<li><a href="/products" class="{{ request()->is('products') ? ' active' : ''}}"><i class="lnr lnr-chart-bars"></i> <span>Product</span></a></li>
+						<li><a href="/categories" class="{{ request()->is('categories') ? ' active' : ''}}"><i class="lnr lnr-cog"></i> <span>Product Categories</span></a></li>
+						<li><a href="/admin/transaksi" class="{{ request()->is('admin/transaksi') ? ' active' : ''}}"><i class="lnr lnr-cog"></i> <span>Transaksi</span></a></li>
 					</ul>
 				</nav>
 			</div>
