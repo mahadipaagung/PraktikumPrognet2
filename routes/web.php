@@ -53,7 +53,7 @@ Route::resource('/courier','CourierController')->middleware('auth:admin');
 //Product
 Route::resource('/products','ProductController')->middleware('auth:admin');
 Route::get('/{id}/edit', 'ProductController@edit')->name('product.edit')->middleware('auth:admin');
-Route::post('/{id}/update', 'ProductController@update')->name('product.edit')->middleware('auth:admin');
+Route::post('/{id}/update', 'ProductController@update')->name('product.update')->middleware('auth:admin');
 Route::post('/{id}/add_image', 'ProductController@add_image')->name('product.add_image')->middleware('auth:admin');
 Route::delete('/{id}/delete_image', 'ProductController@delete_image')->name('product.delete_image')->middleware('auth:admin');
 Route::post('/{id}/add_cat', 'ProductController@add_cat')->name('product.add_cat')->middleware('auth:admin');
