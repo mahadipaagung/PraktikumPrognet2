@@ -187,9 +187,9 @@
                             {{$det->product_categories->category_name}}
                           </td>
                           <td class="td-actions text-left" >
-                            <form style="display:inline-block;" action="{{route('product.delete_image',['id'=>$i->id])}}" method="post">
+                            <form style="display:inline-block;" action="{{route('product.delete_cat',['id'=>$det->id])}}" method="post">
                                     @csrf
-                                    @method('DELETE')
+                                    @method('delete')
                                   <button type="submit" value="Delete"  rel="tooltip" title="Remove" class="btn btn-danger btn-sm">
                                     <i class="fa fa-trash-o">  Delete</i>
                                   </button>

@@ -218,11 +218,8 @@ class ProductController extends Controller
 
     public function delete_cat($id)
     {
-        $product_category_details = Product_Category_Details::find($id);
-        $product_id = $product_category_details->product_id;
-        
-        $product_category_details->delete();
-        return redirect()->intended(route('product.edit', ['id' => $product_id]))->with("success", "Successfully Delete Category");
+        Product_Category_Details::destroy($id);
+        return back();
     }
 
 }
