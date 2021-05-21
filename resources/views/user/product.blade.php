@@ -67,7 +67,7 @@
             $harga = $home->diskon($products->discount,$products->price);
           @endphp
           @if ($harga != 0)
-            <del><h4>Rp{{number_format($products->price)}}</h3></del>
+            <del><h4>Rp{{number_format($products->price)}}</h4></del>
             <h2>Rp{{number_format($harga)}}</h2>
           @else
             <h2>Rp{{number_format($products->price)}}</h2>
@@ -178,9 +178,7 @@
             </div>
             <div class="col-sm-10 col-12">
               <a>
-                {{-- @php
-                  dd(Auth::user()->id);
-                @endphp --}}
+
                 <h5 style="color:#333333" class="user-name font-weight-bold">{{$item->user->name}} 
                 </h5>
               </a>

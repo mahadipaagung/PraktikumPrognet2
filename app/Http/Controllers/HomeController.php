@@ -81,9 +81,9 @@ class HomeController extends Controller
         if($request->id == 0){
             $kategori = Product::with('product_image','discount')->get();
             $status = 0;
-        }elseif($request->id == -1){
-            $kategori = Product::with('product_image','discount')->where('product_name','like','%'.$request->cari.'%')->get();
-            $status = 0;
+            // elseif($request->id == -1){
+            // $kategori = Product::with('product_image','discount')->where('product_name','like','%'.$request->cari.'%')->get();
+            // $status = 0;
         }else{
             $kategori = Category::with(['product' => function($q){
                 $q->with('discount', 'product_image');

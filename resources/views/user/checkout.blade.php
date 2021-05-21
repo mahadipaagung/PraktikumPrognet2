@@ -135,8 +135,7 @@
                   <li>
                     <a href="#">
                       @if (is_null($item->product))
-                        {{$item->product_name}}
-                        <span class="middle">x {{$qty}}</span>
+                        {{$item->product_name}}<span class="middle">x {{$qty}}</span>
                         @php
                           $home = new Home;
                           $hasil = $home->diskon($item->discount,$item->price);
@@ -256,8 +255,6 @@
                         $('#totalbiaya').val({{$subtotal}}+result.hasil["value"]);
                     }
                 });
-                // console.log('wrong');
-                // console.log('kota: '+kota+' provinsi: '+provinsi+' Kurir: '+kurir)
             }else{
                 console.log('wrong');
                 console.log('provinsi: '+provinsi+' Kurir: '+kurir)
