@@ -108,7 +108,7 @@
                             {{$loop->iteration}}
                           </td>
                           <td>
-                            <img src="{{asset('storage/img/gambarproduk/'.$i->image_name)}}" style="width:260px;" alt="">
+                            <img src="{{asset('storage/app/public/img/gambarproduk/'.$i->image_name)}}" style="width:260px;" alt="{{ $i->image_name }}">
                            
                           </td>
                           <td class="td-actions text-left" >
