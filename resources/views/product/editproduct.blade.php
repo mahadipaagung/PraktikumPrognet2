@@ -26,7 +26,7 @@
                         <div class="col-12">
 					            	</div>
                     </div>
-                  <form action="{{route('product.edit',['id'=>$product->id])}}" method="POST" class="form">
+                  <form action="{{route('product.update',['id'=>$product->id])}}" method="POST" class="form">
                         @csrf
                       <div class="row">
                             <div class="col-md-12">
@@ -108,7 +108,7 @@
                             {{$loop->iteration}}
                           </td>
                           <td>
-                            <img src="{{asset('storage/img/gambarproduk/'.$i->image_name)}}" style="width:260px;" alt="">
+                            <img src="{{asset('storage/app/public/img/gambarproduk/'.$i->image_name)}}" style="width:260px;" alt="{{ $i->image_name }}">
                            
                           </td>
                           <td class="td-actions text-left" >
@@ -187,9 +187,9 @@
                             {{$det->product_categories->category_name}}
                           </td>
                           <td class="td-actions text-left" >
-                            <form style="display:inline-block;" action="{{route('product.delete_image',['id'=>$i->id])}}" method="post">
+                            <form style="display:inline-block;" action="{{route('product.delete_cat',['id'=>$det->id])}}" method="post">
                                     @csrf
-                                    @method('DELETE')
+                                    @method('delete')
                                   <button type="submit" value="Delete"  rel="tooltip" title="Remove" class="btn btn-danger btn-sm">
                                     <i class="fa fa-trash-o">  Delete</i>
                                   </button>

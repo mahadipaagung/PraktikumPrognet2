@@ -204,25 +204,14 @@ class ProductController extends Controller
 
     public function delete_image($id)
     {
-        
-        $product_image = Product_Image::find($id);
-        $product_id = $product_image->product_id;
-        $path = 'product_images/'. $product_image->image_name;
-        if(file_exists($path)){
-            unlink($path);
-            $product_image->delete();
-            return redirect()->intended(route('product.edit', ['id' => $product_id]))->with("success", "Successfully Delete Image");
-        }
-        return redirect()->intended(route('product.edit', ['id' => $product_id]))->with('error', 'Failed to delete file');
+        Product_Image::destroy($id);
+        return back();
     }
 
     public function delete_cat($id)
     {
-        $product_category_details = Product_Category_Details::find($id);
-        $product_id = $product_category_details->product_id;
-        
-        $product_category_details->delete();
-        return redirect()->intended(route('product.edit', ['id' => $product_id]))->with("success", "Successfully Delete Category");
+        Product_Category_Details::destroy($id);
+        return back();
     }
 
 }
