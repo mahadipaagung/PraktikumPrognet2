@@ -24,8 +24,8 @@
   <div class="container">
     <div class="billing_details">
       <div class="row">
-        <div class="col-lg-6">
-          <h3>Billing Details</h3>
+        <div class="col-lg-12">
+          <h3>Checkout Barang</h3>
           @if ($errors->any())
               <div class="alert alert-danger">
                   <ul>
@@ -127,9 +127,9 @@
     </div>
             </div> 
           </div>
-          <div class="col-lg-6">
+          <div class="col-lg-12">
             <div class="order_box">
-              <h2>Your Order</h2>
+              <h2>Detail Order Anda</h2>
               <ul class="list">
                 @foreach ($cart as $item)
                   <li>
@@ -169,7 +169,7 @@
                 </li>
                 <li>
                   <a href="#">
-                    Shipping
+                    Pengiriman
                     <span id="biaya-ongkir">Rp</span>
                   </a>
                 </li>
