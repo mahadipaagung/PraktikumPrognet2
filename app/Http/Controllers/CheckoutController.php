@@ -19,19 +19,14 @@ class CheckoutController extends Controller
             $qty = $request->qty;
             $product_id = $request->product_id;
         }else{
-            $cart = Cart::with(['product' => function($q){
-                $q->with('product_image','discount');
-            }])->where('user_id', '=', $request->user_id)->where('status', '=', 'notyet')->get();
+            $cart = Cart::with(['product' => function($q){$q->with('product_image','discount');}])->where('user_id', '=', $request->user_id)->where('status', '=', 'notyet')->get();
             $subtotal = $request->sub_total;
-
-            $weight = 0;
-        
-            foreach($cart as $item){
-               $weight = $weight + ($item->product->weight * $item->qty);
-            }
-            
             $qty = 0;
             $product_id = 0;
+            $weight = 0;
+            foreach($cart as $isicart){
+               $weight = $weight + ($isicart->product->weight * $isicart->qty);
+            }
         }
         $provinsi = Provinsi::all();
         $kurir = kurir::all();

@@ -1,207 +1,222 @@
 @extends('layouts.app')
 
 @section('content')
-<!--================Home Banner Area =================-->
-<!-- Start All Title Box -->
-<div class="all-title-box">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <h2>Checkout</h2>
-                <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#">User</a></li>
-                    <li class="breadcrumb-item active">Checkout</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- End All Title Box -->
-<!--================End Home Banner Area =================-->
-
-<!--================Checkout Area =================-->
-<section class="checkout_area section_gap">
-  <div class="container">
-    <div class="billing_details">
-      <div class="row">
-        <div class="col-lg-12">
-          <h3>Checkout Barang</h3>
-          @if ($errors->any())
-              <div class="alert alert-danger">
-                  <ul>
-                      @foreach ($errors->all() as $error)
-                          <li>{{ $error }}</li>
-                      @endforeach
-                  </ul>
-              </div>
-          @endif
-          <form
-            action="/beli" method="post"
-            class="row contact_form needs-validation"
-            id="checkout_form" class="checkout_form"
-          >
-            @csrf
-            <div class="col-md-12 form-group p_star">
-              <label>Nama</label>
-              <input
-                type="text"
-                class="form-control"
-                id="name"
-                name="name"
-                value="{{Auth::user()->name}}"
-              />
-            </div>
-            <div class="col-md-6 form-group p_star">
-              <label>No Telp</label>
-              <input
-                type="text"
-                class="form-control"
-                id="number"
-                name="no_telp"
-                placeholder="Phone Number"
-                required
-              />
-              <div class="invalid-feedback">
-                required!
-              </div>
-            </div>
-            <div class="col-md-6 form-group p_star">
-              <label>Email</label>
-              <input
-                type="text"
-                class="form-control"
-                id="email"
-                name="compemailany"
-                value="{{Auth::user()->email}}"
-              />
-            </div>
-            <div class="col-md-12 form-group p_star">
-              <label>Provinsi</label>
-                <select 
-                  style="border: 1px solid #C8C8C8; border-radius:3px; padding:5px 7px; color: #707070; font-size: 16px;"
-                  name="province" id="provinsi" class="form-select dropdown_item_select checkout_input cekongkir" required
-                >
-                  <option></option>
-                    @foreach ($provinsi as $prov)
-                      <option value="{{$prov->id}}">{{$prov->title}}</option>
-                    @endforeach
-                </select>
-                <div class="invalid-feedback">
-                  Please select a valid state.
-                </div>
-            </div>
-            <div class="col-md-12 form-group p_star">
-              <label>Kota</label>
-              <select 
-                style="border: 1px solid #C8C8C8; border-radius:3px; padding:5px 7px; color: #707070; font-size: 16px;"
-                name="regency" id="kota" class="form-select country_select dropdown_item_select checkout_input cekongkir" required
-              >
-                <option value=""></option>
-              </select>
-              <div class="invalid-feedback">
-                Please select a valid state.
-              </div>
-            </div>
-            <div class="col-md-12 form-group p_star">
-              <label>Alamat</label>
-              <input
-                type="text"
-                class="form-control"
-                id="address"
-                name="address"
-                placeholder="Address"required>
-    <div class="invalid-feedback">
-      Please provide a valid city.
-    </div>
-            </div>
-            <div class="col-md-12 form-group p_star">
-              <label>Kurir</label>
-              <select style="border: 1px solid #C8C8C8; border-radius:3px; padding:5px 7px; color: #707070; font-size: 16px;" name="courier" id="kurir" class="form-select country_select dropdown_item_select checkout_input cekongkir" required>
-                <option></option>
-                @foreach ($kurir as $k)
-                    <option value="{{$k->id}}">{{$k->courier}}</option>
-                @endforeach
-              </select>
-              <div class="invalid-feedback">
-      Please select a valid state.
-    </div>
-            </div> 
-          </div>
-          <div class="col-lg-12">
-            <div class="order_box">
-              <h2>Detail Order Anda</h2>
-              <ul class="list">
-                @foreach ($cart as $item)
-                  <li>
-                    <a href="#">
-                      @if (is_null($item->product))
-                        {{$item->product_name}}<span class="middle">x {{$qty}}</span>
-                        @php
-                          $home = new Home;
-                          $hasil = $home->diskon($item->discount,$item->price);
-                        @endphp
-                        @if ($hasil != 0)
-                          <span>Rp{{number_format($hasil)}}</span>
-                        @else
-                          <span>Rp{{number_format($item->price)}}</span>
-                        @endif
-                      @else
-                        {{$item->product->product_name}}<span class="middle">x {{$item->qty}}</span>
-                        @php
-                          $home = new Home;
-                          $hasil = $home->diskon($item->product->discount,$item->product->price);
-                        @endphp
-                        @if ($hasil != 0)
-                        <span>Rp{{number_format($hasil)}}</span>
-                        @else
-                        <span>{{number_format($item->product->price)}}</span>
-                        @endif  
-                      @endif
-                    </a>
-                  </li>
-                @endforeach
-                <li>
-                  <a href="#">
-                    Sub Total
-                    <span>Rp{{ number_format($subtotal)}}</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#">
-                    Pengiriman
-                    <span id="biaya-ongkir">Rp</span>
-                  </a>
-                </li>
-              </ul>
-              <ul class="list list_2">
-                <li>
-                  <a href="#">
-                    Total
-                    <span class = "font-weight-bold">Rp<span class = "font-weight-bold" id="total-biaya"></span></span>
-                  </a>
-                </li>
-              </ul>
-              <input type="hidden" name="sub_total" value="{{$subtotal}}">
-              <input type="hidden" name="total" id="totalbiaya">
-              <input type="hidden" name="shipping_cost" id="ongkir">
-              <input type="hidden" name="user_id" value="{{Auth::user()->id}}">
-              <input type="hidden" name="product_id" value="{{$product_id}}">
-              <input type="hidden" name="qty" value="{{$qty}}">
-              <div class="d-flex justify-content-center mt-5">
-                <button type="submit" class="btn btn-danger" id="beli">Lanjut Pembayaran</button>
-              </div>
-            </div>
-          </div>
-        </form>
+@php
+  $hargaawal = 0;
+  $hargakali = 0;
+  $subtotalbaru = 0;
+@endphp
+<section class="item content">
+  <div class="container toparea">
+    <div class="underlined-title">
+      <div class="editContent">
+        <h1 class="text-center latestitems">MAKE PAYMENT</h1>
+      </div>
+      <div class="wow-hr type_short">
+        <span class="wow-hr-h">
+        <i class="fa fa-star"></i>
+        <i class="fa fa-star"></i>
+        <i class="fa fa-star"></i>
+        </span>
       </div>
     </div>
-    <div class="billing_details my-5">
-      <input id="signup-token" name="_token" type="hidden" value="{{csrf_token()}}">
-      <input type="hidden" value="{{$weight}}" id="weight">
-    </div>
+    <div id="edd_checkout_wrap" class="col-md-8 col-md-offset-2">
+      <form id="edd_checkout_cart_form" method="post">
+        <div id="edd_checkout_cart_wrap">
+          <table id="edd_checkout_cart" class="ajaxed">
+          <thead>
+          <tr class="edd_cart_header_row">
+            <th class="edd_cart_item_name">
+              Item Name
+            </th>
+            <th class="edd_cart_item_price">
+              Item Price
+            </th>
+            <th class="edd_cart_item_qty">
+              Item Qty
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          @foreach($cart as $products)
+            @if (is_null($products->product))
+              <tr class="edd_cart_item" id="edd_cart_item_0_25" data-download-id="25">
+                <td class="edd_cart_item_name">
+                  <div class="edd_cart_item_image">
+                      @foreach($products->product_image as $image)
+                        <img width="100" height="100" src="/uploads/product_images/{{$image->image_name}}" alt="">
+                        @break
+                      @endforeach
+                  </div>
+                  <span class="edd_checkout_cart_item_title">{{$products->product_name}}</span>
+                </td>
+                <td class="edd_cart_item_price">
+                  @if($products->discount->count())
+                    @foreach($products->discount as $diskon)
+                        @if($diskon->start <= date('Y-m-d') && $diskon->end >= date('Y-m-d'))
+                            <span class="price">
+                                <del class="edd_price">Rp.{{number_format($products->price)}}</del>
+                            </span>
+                            <span class="price">
+                                <span class="edd_price">Rp.{{number_format($products->price * ((100 - $diskon->percentage) / 100))}}</span>
+                            </span>
+                            @php
+                              $hargaawal = $products->price * ((100 - $diskon->percentage) / 100);
+                            @endphp
+                        @else
+                            <span class="price">
+                                <span class="edd_price">Rp.{{number_format($products->price)}}</span>
+                            </span>
+                            @php
+                              $hargaawal = $products->price;
+                            @endphp
+                        @endif
+                    @endforeach
+                  @else
+                      <span class="price">
+                          <span class="edd_price">Rp.{{number_format($products->price)}}</span>
+                      </span>
+                      @php
+                        $hargaawal = $products->price;
+                      @endphp
+                  @endif
+                </td>
+                <td class="edd_cart_item_qty">
+                  {{$qty}}
+                </td>
+                @php
+                  $hargakali = $hargaawal * $qty;
+                  $subtotalbaru = $subtotalbaru + $hargakali;
+                @endphp
+              </tr>
+            @else
+              <tr class="edd_cart_item" id="edd_cart_item_0_25" data-download-id="25">
+                <td class="edd_cart_item_name">
+                  <div class="edd_cart_item_image">
+                      @foreach($products->product->product_image as $image)
+                        <img width="100" height="100" src="/uploads/product_images/{{$image->image_name}}" alt="">
+                        @break
+                      @endforeach
+                  </div>
+                  <span class="edd_checkout_cart_item_title">{{$products->product->product_name}}</span>
+                </td>
+                <td class="edd_cart_item_price">
+                  @if($products->product->discount->count())
+                    @foreach($products->product->discount as $diskon)
+                        @if($diskon->start <= date('Y-m-d') && $diskon->end >= date('Y-m-d'))
+                            <span class="price">
+                                <del class="edd_price">Rp.{{number_format($products->product->price)}}</del>
+                            </span>
+                            <span class="price">
+                                <span class="edd_price">Rp.{{number_format($products->product->price * ((100 - $diskon->percentage) / 100))}}</span>
+                            </span>
+                            @php
+                              $hargaawal = $products->product->price * ((100 - $diskon->percentage) / 100);
+                            @endphp
+                        @else
+                            <span class="price">
+                                <span class="edd_price">Rp.{{number_format($products->product->price)}}</span>
+                            </span>
+                            @php
+                              $hargaawal = $products->product->price;
+                            @endphp
+                        @endif
+                    @endforeach
+                  @else
+                      <span class="price">
+                          <span class="edd_price">Rp.{{number_format($products->product->price)}}</span>
+                      </span>
+                      @php
+                        $hargaawal = $products->product->price;
+                      @endphp
+                  @endif
+                </td>
+                <td class="edd_cart_item_qty">
+                  {{$products->qty}}
+                </td>
+                @php
+                  $hargakali = $hargaawal * $products->qty;
+                  $subtotalbaru = $subtotalbaru + $hargakali;
+                @endphp
+              </tr>
+            @endif
+          @endforeach
+          </tbody>
+          <tfoot>
+            <tr class="edd_cart_footer_row">
+              <th colspan="5" class="edd_cart_total">
+                Total: <span class="edd_cart_amount" data-subtotal="11.99" data-total="11.99">Rp.{{number_format($subtotalbaru)}}</span>
+              </th>
+            </tr>
+          </tfoot>
+          </table>
+        </div>
+      
+        <div id="edd_checkout_form_wrap" class="edd_clearfix">
+          <fieldset id="edd_checkout_user_info">
+            <legend>Personal Info</legend>
+            <p id="edd-email-wrap">
+              <label class="edd-label" for="edd-email">
+              Email Address <span class="edd-required-indicator">*</span></label>
+              <input class="edd-input required" type="email" name="edd_email" placeholder="Email" id="email" value="{{Auth::user()->email}}" required>
+            </p>
+
+            <p id="edd-first-name-wrap">
+              <label class="edd-label" for="edd-first">
+              Name <span class="edd-required-indicator">*</span>
+              </label>
+              <input class="edd-input required" type="text" name="edd_first" placeholder="Name" id="name" value="{{Auth::user()->name}}" required>
+            </p>
+
+            <p id="edd-last-name-wrap">
+              <label class="edd-label" for="edd-last">
+              Phone Number </label>
+              <input class="edd-input" type="number" name="edd_last" id="number" placeholder="Phone Number" value="" required>
+            </p>
+
+            <p id="edd-last-name-wrap">
+              <label class="edd-label" for="edd-last">
+              Address </label>
+              <input class="edd-input" type="address" name="edd_last" id="number" placeholder="Address" value="" required>
+            </p>
+
+            <label class="edd-label" for="edd-last">Province </label>
+            <select name="province" id="provinsi" class="form-select dropdown_item_select checkout_input cekongkir" required>
+              <option value="0">Province Selection</option>
+              @foreach ($provinsi as $prov)
+                <option value="{{$prov->id}}">{{$prov->title}}</option>
+              @endforeach
+            </select>
+
+            <label class="edd-label" for="edd-last">City </label>
+            <select name="province" id="provinsi" class="form-select dropdown_item_select checkout_input cekongkir" required>
+              <option value="0">City Selection</option>
+              <option></option>
+            </select>
+
+            <label class="edd-label" for="edd-last">Courier</label>
+            <select name="courier" id="kurir" class="form-select country_select dropdown_item_select checkout_input cekongkir" required>
+              <option value="0">Courier Selection</option>
+              @foreach ($kurir as $k)
+                  <option value="{{$k->id}}">{{$k->courier}}</option>
+              @endforeach
+            </select>
+            
+          </fieldset>
+          <fieldset id="edd_purchase_submit">
+            <p id="edd_final_total_wrap">
+              <strong>Purchase Total (With Delivery):</strong>
+              <span class="edd_cart_amount" data-subtotal="11.99" data-total="11.99">$11.99</span>
+            </p>
+            <input type="hidden" name="edd_action" value="purchase">
+            <input type="hidden" name="edd-gateway" value="manual">
+            <input type="submit" class="edd-submit button" id="edd-purchase-button" name="edd-purchase" value="Purchase">
+          </fieldset>
+        
+      </div>
+    </form>
   </div>
 </section>
-<!--================End Checkout Area =================-->
 @endsection
 
 @section('script')
@@ -212,7 +227,7 @@
         }
         $('#provinsi').change(function(e){
             var id_provinsi = $('#provinsi').val()
-            if(id_provinsi){
+            if(id_provinsi>0){
                 jQuery.ajax({
                     url: '/kota/'+id_provinsi,
                     type: "GET",

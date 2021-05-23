@@ -29,6 +29,16 @@ class ProductController extends Controller
         return view('product.product',compact('data'));
     }
 
+    public function showbaru()
+    {
+        $products = Product::with('product_image','product_category_detail','category','discount')->orderBy('id', 'desc')->take(3)->get();
+        return view('home', ['product' => $products]);
+    }
+
+    public function showone($id){
+        $product = Product::with('product_image','product_category_detail','category','discount')->where('id','=',$id)->first();
+        return view('user.product', ['products' => $product]);
+    }
     /**
      * Show the form for creating a new resource.
      *
