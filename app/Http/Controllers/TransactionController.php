@@ -25,16 +25,16 @@ class TransactionController extends Controller
         $transaksi = new Transaction;
         date_default_timezone_set("Asia/Makassar");
         $transaksi->timeout = date('Y-m-d H:i:s', strtotime('+1 days'));
-        $transaksi->address = $request->address;
+        $transaksi->address = $request->inaddress;
         $transaksi->regency = $kota->title;
         $transaksi->province = $provinsi->title;
         $transaksi->total = $request->total;
-        $transaksi->shipping_cost = $request->shipping_cost;
-        $transaksi->sub_total = $request->sub_total;
+        $transaksi->shipping_cost = $request->delivery;
+        $transaksi->sub_total = $request->subtotal;
         $transaksi->user_id = $request->user_id;
         $transaksi->courier_id = $request->courier;
         $transaksi->status = 'unverified';
-        $transaksi->telp = $request->no_telp;
+        $transaksi->telp = $request->phonenumber;
         $transaksi->save();
         
         if($request->product_id != 0){

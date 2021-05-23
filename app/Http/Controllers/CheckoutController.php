@@ -41,12 +41,12 @@ class CheckoutController extends Controller
             'product_id'=>$product_id]);
     }
 
-    public function getCities($id){
+    public function cekkota($id){
         $city = City::where('province_id','=',$id)->pluck('title','city_id');
         return json_encode($city);
     }
 
-    public function submit(Request $request){
+    public function cekongkir(Request $request){
         $kurir = kurir::where('id','=',$request->courier)->first();
         if(is_null($request->destination)){
             $city = City::where('province_id','=',$request->prov)->first();

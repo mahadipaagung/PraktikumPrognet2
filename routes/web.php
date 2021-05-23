@@ -90,8 +90,8 @@ Route::get('/shop/category','ShopController@filter');
 Route::get('/product/{id}', 'ProductController@showone');
 
 Route::post('/checkout', 'CheckoutController@index');
-Route::get('/kota/{id}', 'CheckoutController@getCities');
-Route::post('/ongkir', 'CheckoutController@submit');
+Route::get('/kota/{id}', 'CheckoutController@cekkota');
+Route::post('/ongkir', 'CheckoutController@cekongkir');
 Route::post('/beli', 'TransactionController@store');
 
 Route::get('/transaksi/{id}', 'TransactionController@index');

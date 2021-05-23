@@ -21,6 +21,11 @@
 
 <body>
 
+    @include('layouts.navbar')
+
+    @yield('content')
+
+    @include('layouts.footer')
 	<!-- SCRIPTS =============================-->
 	<script src="{{ asset('scorilo/js/jquery-.js') }}"></script>
 	<script src="{{ asset('scorilo/js/jquery-3.6.0.min.js') }}"></script>
@@ -43,12 +48,8 @@
 		);
 	});
 	</script>
-    @include('layouts.navbar')
 
-    @yield('content')
-
-    @include('layouts.footer')
-
+	@yield('script')
 
 </body>
 
