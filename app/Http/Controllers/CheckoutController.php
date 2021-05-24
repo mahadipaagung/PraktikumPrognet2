@@ -13,27 +13,21 @@ class CheckoutController extends Controller
 {
     public function index(Request $request){
         if(!is_null($request->product_id)){
-            $cart = Product::with('product_image', 'discount')->where('id', '=', $request->product_id)->get();
-            $subtotal = $request->subtotal;
+            $cart = Product::where('id', '=', $request->product_id)->get();
             $weight = $request->weight;
             $qty = $request->qty;
             $product_id = $request->product_id;
         }else{
-            $cart = Cart::with(['product' => function($q){$q->with('product_image','discount');}])->where('user_id', '=', $request->user_id)->where('status', '=', 'notyet')->get();
-            $subtotal = $request->sub_total;
+            $cart = Cart::where('user_id', '=', $request->user_id)->where('status', '=', 'notyet')->get();
             $qty = 0;
             $product_id = 0;
             $weight = 0;
-            foreach($cart as $isicart){
-               $weight = $weight + ($isicart->product->weight * $isicart->qty);
-            }
         }
         $provinsi = Provinsi::all();
         $kurir = kurir::all();
 
         return view('user.checkout',[
             'cart'=>$cart,
-            'subtotal'=>$subtotal,
             'provinsi' => $provinsi,
             'kurir' => $kurir,
             'weight'=>$weight,
@@ -48,10 +42,6 @@ class CheckoutController extends Controller
 
     public function cekongkir(Request $request){
         $kurir = kurir::where('id','=',$request->courier)->first();
-        if(is_null($request->destination)){
-            $city = City::where('province_id','=',$request->prov)->first();
-            $request->destination = $city->city_id;
-        }
         $cost = RajaOngkir::ongkosKirim([
             'origin' => 114,
             'destination' => $request->destination,

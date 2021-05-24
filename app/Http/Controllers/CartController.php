@@ -9,10 +9,13 @@ use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
-    public function cart(){
-        $categories = Category::with('product')->get();
-        $products = Product::with('product_image','product_category_detail','category','discount')->get();
-        return view('user.cart', ['product' => $products, 'category' => $categories]);
+    public function show(){
+        if(is_null(Auth::user())){
+            return redirect('/login');
+        }else{
+            $cart = Cart::with(['product'])->where('user_id', '=', Auth::user()->id)->where('status', '=', 'notyet')->get();
+            return view('user.cart', ['cart'=>$cart]);
+        }
     }
 
     public function store(Request $request){
@@ -34,23 +37,7 @@ class CartController extends Controller
             $cek->save();
         }
 
-        $cek1 = Cart::where('user_id', '=', $request->user_id)->where('status','=','notyet')->get();
-        $jumlah = $cek1->count();
-
-        return response()->json(['success' => 'Produk berhasil dimasukkan dalam cart', 'jumlah' => $jumlah]);
-    }
-
-    public function show(){
-        if(is_null(Auth::user())){
-            return redirect('/login');
-        }else{
-            $id = Auth::user()->id;
-            $cart = Cart::with(['product' => function($q){
-                $q->with('product_image','discount');
-            }])->where('user_id', '=', $id)->where('status', '=', 'notyet')->get();
-
-            return view('user.cart', ['cart'=>$cart]);
-        }
+        return redirect('/cart');
     }
 
     public function update(Request $request){

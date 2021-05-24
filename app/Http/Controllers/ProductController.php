@@ -31,12 +31,12 @@ class ProductController extends Controller
 
     public function showbaru()
     {
-        $products = Product::with('product_image','product_category_detail','category','discount')->orderBy('id', 'desc')->take(3)->get();
+        $products = Product::orderBy('id', 'desc')->take(3)->get();
         return view('home', ['product' => $products]);
     }
 
     public function showone($id){
-        $product = Product::with('product_image','product_category_detail','category','discount')->where('id','=',$id)->first();
+        $product = Product::where('id','=',$id)->first();
         return view('user.product', ['products' => $product]);
     }
     /**

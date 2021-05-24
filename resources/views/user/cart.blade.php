@@ -2,244 +2,235 @@
 
 @section('content')
 @php
-	$total = 0;
-@endphp 
-<!--================Cart Area =================-->
-<section class="cart_area ganti">
-  <div class="container">
-    <div class="cart_inner">
-      <div class="table-responsive">
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Product</th>
-              <th scope="col">Price</th>
-              <th scope="col">Quantity</th>
-              <th scope="col">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- single product -->
-            @forelse ($cart as $isi)
-            <tr>
-              <td>
-                <div class="media">
-                  <input type="hidden" class="id_cart{{$loop->iteration-1}}" value="{{$isi->id}}">
-                  <input type="hidden" id="user_id" value="{{$isi->user_id}}">
-                  <input type="hidden" class="stock{{$loop->iteration-1}}" value="{{$isi->product->stock}}">
-                  @foreach ($isi->product->product_image as $image)
-                  <img class="w-25" src="/uploads/product_images/{{$image->image_name}}" alt="">
-                  @break
-							    @endforeach
-                  <div class="media-body">
-                    <p>{{$isi->product->product_name}}</p>
-                  </div>
+  $jumlahproduk = 0;
+  $beratawal = 0;
+  $beratkali = 0;
+  $beratakhir = 0;
+  $hargaawal = 0;
+  $hargakali = 0;
+  $subtotalbaru = 0;
+@endphp
+<section class="item content">
+  <div class="container toparea">
+    <div class="underlined-title">
+      <div class="editContent">
+        <h1 class="text-center latestitems">YOUR CART</h1>
+      </div>
+      <div class="wow-hr type_short">
+        <span class="wow-hr-h">
+        <i class="fa fa-star"></i>
+        <i class="fa fa-star"></i>
+        <i class="fa fa-star"></i>
+        </span>
+      </div>
+    </div>
+    <div id="edd_checkout_wrap" class="col-md-8 col-md-offset-2">
+      <div id="edd_checkout_cart_wrap">
+        <table id="edd_checkout_cart" class="ajaxed">
+        <thead>
+        <tr class="edd_cart_header_row">
+          <th class="edd_cart_item_name">
+            Item Name
+          </th>
+          <th class="edd_cart_item_price">
+            Item Price
+          </th>
+          <th class="edd_cart_item_qty">
+            Item Qty
+          </th>
+          <th class="edd_cart_item_qty">
+            Action
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach($cart as $products)
+          @if (is_null($products->product))
+            <tr class="edd_cart_item" id="edd_cart_item_0_25" data-download-id="25">
+              <td class="edd_cart_item_name">
+                <div class="edd_cart_item_image">
+                    @foreach($products->product_image as $image)
+                      <img width="100" height="100" src="/uploads/product_images/{{$image->image_name}}" alt="">
+                      @break
+                    @endforeach
                 </div>
+                <span class="edd_checkout_cart_item_title">{{$products->product_name}}</span>
               </td>
-              <td>
-                @php
-                  $home = new Home;
-                  $harga = $home->diskon($isi->product->discount,$isi->product->price);
-                @endphp
-                @if ($harga != 0)
-                  <div class="cart_item_price">
-                    Rp<span class="float-lef grey-text">{{number_format($harga)}}</li>
-                    Rp<span class="float-lef grey-text"><small><s>{{number_format($isi->product->price)}}</s></small></span>
-                    <span class="hide float-lef grey-text price{{$loop->iteration-1}}">{{$harga}}</li>
-                  </div>
+              <td class="edd_cart_item_price">
+                @if($products->discount->count())
+                  @foreach($products->discount as $diskon)
+                      @if($diskon->start <= date('Y-m-d') && $diskon->end >= date('Y-m-d'))
+                          <span class="price">
+                              <del class="edd_price">Rp.{{number_format($products->price)}}</del>
+                          </span>
+                          <span class="price">
+                              <span class="edd_price">Rp.{{number_format($products->price * ((100 - $diskon->percentage) / 100))}}</span>
+                          </span>
+                          @php
+                            $hargaawal = $products->price * ((100 - $diskon->percentage) / 100);
+                            $beratawal = $products->weight;
+                          @endphp
+                      @else
+                          <span class="price">
+                              <span class="edd_price">Rp.{{number_format($products->price)}}</span>
+                          </span>
+                          @php
+                            $hargaawal = $products->price;
+                            $beratawal = $products->weight;
+                          @endphp
+                      @endif
+                  @endforeach
                 @else
-                  <div class="cart_item_price">
-                    Rp<span class="float-lef grey-text">{{number_format($isi->product->price)}}</li>
-                    <span class="hide float-lef grey-text price{{$loop->iteration-1}}">{{$isi->product->price}}</li>
-                  </div>
+                    <span class="price">
+                        <span class="edd_price">Rp.{{number_format($products->price)}}</span>
+                    </span>
+                    @php
+                      $hargaawal = $products->price;
+                      $beratawal = $products->weight;
+                    @endphp
                 @endif
               </td>
-              <td>
-                <p class="text-danger" style="display:none" id="notif{{$loop->iteration-1}}"></p>
-                
-                <div class="btn-group radio-group ml-2" data-toggle="buttons">
-                  <span class="qty{{$loop->iteration-1}} mr-3">{{$isi->qty}} </span>
-                  <button class="btn btn-sm btn-primary btn-rounded tombol-kurang">-
-                  </button>
-        
-                  <button class="btn btn-sm btn-success btn-rounded tombol-tambah" >+
-                  </button>
-
-                  <button type="button" class="fa fa-trash btn btn-sm btn-danger tombolhapus" data-toggle="tooltip" data-placement="top" title="Remove item">
-                </div>
+              <td class="edd_cart_item_qty kuantiti">
+                {{$qty}}
               </td>
-              <td>
-                @if ($harga != 0)
-                  <strong>Rp</strong><strong class="cart_item_total sub-total{{$loop->iteration-1}}">{{number_format($harga*$isi->qty)}}</strong>
-                  @php
-                    $total = $total + ($harga*$isi->qty);
-                  @endphp
+              <td class="edd_cart_item_qty">
+                <i class="fa fa-plus-circle" aria-hidden="true" onclick="plus({{$products->id}})"></i>
+                <i class="fa fa-minus-circle" aria-hidden="true" onclick="minus({{$products->id}})"></i>
+                <i class="fa fa-trash" aria-hidden="true" onclick="hapus({{$products->id}})"></i>
+              </td>
+              @php
+                $hargakali = $hargaawal * $qty;
+                $subtotalbaru = $subtotalbaru + $hargakali;
+                $beratkali = $beratawal * $qty;
+                $beratakhir = $beratakhir + $beratkali;
+                $jumlahproduk = $jumlahproduk + 1;
+              @endphp
+            </tr>
+          @else
+            <tr class="edd_cart_item" id="edd_cart_item_0_25" data-download-id="25">
+              <td class="edd_cart_item_name">
+                <div class="edd_cart_item_image">
+                    @foreach($products->product->product_image as $image)
+                      <img width="100" height="100" src="/uploads/product_images/{{$image->image_name}}" alt="">
+                      @break
+                    @endforeach
+                </div>
+                <span class="edd_checkout_cart_item_title">{{$products->product->product_name}}</span>
+              </td>
+              <td class="edd_cart_item_price">
+                @if($products->product->discount->count())
+                  @foreach($products->product->discount as $diskon)
+                      @if($diskon->start <= date('Y-m-d') && $diskon->end >= date('Y-m-d'))
+                          <span class="price">
+                              <del class="edd_price">Rp.{{number_format($products->product->price)}}</del>
+                          </span>
+                          <span class="price">
+                              <span class="edd_price">Rp.{{number_format($products->product->price * ((100 - $diskon->percentage) / 100))}}</span>
+                          </span>
+                          @php
+                            $hargaawal = $products->product->price * ((100 - $diskon->percentage) / 100);
+                            $beratawal = $products->product->weight;
+                          @endphp
+                      @else
+                          <span class="price">
+                              <span class="edd_price">Rp.{{number_format($products->product->price)}}</span>
+                          </span>
+                          @php
+                            $hargaawal = $products->product->price;
+                            $beratawal = $products->product->weight;
+                          @endphp
+                      @endif
+                  @endforeach
                 @else
-                  <strong>Rp</strong><strong class="cart_item_total sub-total{{$loop->iteration-1}}">{{number_format($isi->product->price*$isi->qty)}}</strong>
-                  @php
-                    $total = $total + ($isi->product->price*$isi->qty);
-                  @endphp
+                    <span class="price">
+                        <span class="edd_price">Rp.{{number_format($products->product->price)}}</span>
+                    </span>
+                    @php
+                      $hargaawal = $products->product->price;
+                      $beratawal = $products->product->weight;
+                    @endphp
                 @endif
               </td>
-            </tr>
-            @empty
-            <tr>
-            <td colspan="4" style="text-align:center">
-				      <p class="fa fa-shopping-cart m-auto" style="font-size:50px;"><br><br>Cart Kosong!</p>
+              <td class="edd_cart_item_qty kuantiti">
+                {{$products->qty}}
               </td>
-            </tr>
-            @endforelse
-            <!-- end single product -->
-            <tr>
-              <td></td>
-              <td></td>
-              <td>
-                <h5>Subtotal</h5>
+              <td class="edd_cart_item_qty">
+                <i class="fa fa-plus-circle" aria-hidden="true" onclick="plus({{$products->id}})"></i>
+                <i class="fa fa-minus-circle" aria-hidden="true" onclick="minus({{$products->id}})"></i>
+                <i class="fa fa-trash" aria-hidden="true" onclick="hapus({{$products->id}})"></i>
               </td>
-              <td>
-                <span class="font-weight-bold text-dark">Rp</span><span class="totalShow font-weight-bold text-dark">{{number_format($total)}}</span>
-                <h5 class="hide total">{{$total}}</h5>
-                <input id="signup-token" name="_token" type="hidden" value="{{csrf_token()}}">
-              </td>
+              @php
+                $hargakali = $hargaawal * $products->qty;
+                $subtotalbaru = $subtotalbaru + $hargakali;
+                $beratkali = $beratawal * $products->qty;
+                $beratakhir = $beratakhir + $beratkali;
+                $jumlahproduk = $jumlahproduk + 1;
+              @endphp
             </tr>
-            <tr><td></td>
-              <td></td><td></td>
-              <td></td></tr>
-          </tbody>
+          @endif
+        @endforeach
+        </tbody>
+        <tfoot>
+          <tr class="edd_cart_footer_row">
+            <th colspan="5" class="edd_cart_total">
+              Weight: <span class="edd_cart_amount" data-subtotal="11.99" data-total="11.99">{{$beratakhir}} Gram</span>
+              || Total: <span class="edd_cart_amount" data-subtotal="11.99" data-total="11.99">Rp.{{number_format($subtotalbaru)}}</span>
+            </th>
+          </tr>
+        </tfoot>
         </table>
-        <div class="d-flex flex-row-reverse">
-        <div class="checkout_btn_inner">
-          <form action="/checkout" method="POST">
-            @csrf
-              <input type="hidden" name="user_id" value="{{Auth::user()->id}}">
-              <input type="hidden" name="sub_total" id="hiddentotalpost" value="{{$total}}">
-              @if ($total == 0)
-                <button type="submit" class="btn btn-danger" disabled>Lanjut Pembayaran
-                    <i class="fa fa-angle-right right"></i>
-                </button>
-              @else
-                <button type="submit" class="btn btn-danger">Lanjut Pembayaran
-                    <i class="fa fa-angle-right right"></i>
-                </button>
-              @endif
-          </form>
-        </div>
-        <a href="/home" class="gray_btn mx-3">Kembali Berbelanja</a>
       </div>
     </div>
   </div>
+  <div id="edd_checkout_form_wrap" class="edd_clearfix text-center">
+    <fieldset id="edd_purchase_submit">
+      <form action="/checkout" method="POST">
+        @csrf
+          @if ($subtotalbaru == 0)
+            <input type="hidden" name="user_id" value="{{Auth::user()->id}}">
+            <button type="submit" class="edd-submit button" id="edd-purchase-button" name="edd-purchase" disabled>Checkout
+                <i class="fa fa-angle-right right"></i>
+            </button>
+          @else
+            <input type="hidden" name="user_id" value="{{Auth::user()->id}}">
+            <button type="submit" class="edd-submit button" id="edd-purchase-button" name="edd-purchase">Checkout
+                <i class="fa fa-angle-right right"></i>
+            </button>
+          @endif
+      </form>
+      <a href="/shop">Back to Shopping</a>
+    </fieldset>
+  </div>
 </section>
-<!--================End Cart Area =================-->
 @endsection
 
-@section('script')
+@section('after-script')
 <script>
-	jQuery(document).ready(function(e){
-    $(".hide").hide();
-    
-    function formatNumber(num) {
-      return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+	$(document).ready(function(e){
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+    function minus(id){
+      var qty = $('.kuantiti').val();
+      var qtybaru = $('.kuantiti').val() + 1;
+      $('.kuantiti').text(qtybaru);
     }
 
-		jQuery('.tombol-tambah').click(function(e){
-      var index = $(".tombol-tambah").index(this);
-		  var jumlah = $(".qty"+index).text();
-		  var jumlah = parseInt(jumlah)+1
-		  $(".qty"+index).text(jumlah);
-		  var price = $('.price'+index).text();
-		  console.log('price: '+price);
-  
-		  if(parseInt(jumlah) > parseInt($(".stock"+index).val())){
-			  $("#notif"+index).css('display','inline');
-			  $("#notif"+index).text('Jumlah stock melebihi stock produk');
-			  $("#notif"+index).append('<br>');
-			  $(".qty"+index).text(jumlah-1);
-		  }else{
-        var subtotal = parseInt(jumlah)*parseInt(price);
-        console.log('subtotal: ', + subtotal)
-        $(".sub-total"+index).text(formatNumber(subtotal));
-        var total = parseInt($(".total").text());
-        total = total + parseInt(price);
-        $(".total").text(total);
-        $(".totalShow").text(formatNumber(total));
-        $("#notif"+index).css('display','none');
-  
-        jQuery.ajax({
-          url: "{{url('/update_qty')}}",
-          method: 'post',
-          data: {
-            _token: $('#signup-token').val(),
-            id: $('.id_cart'+index).val(),
-            qty: 1
-          },
-          success: function(result){
-            location.reload();
-            console.log(result.success);
-          }
-        });
-		  }
-		});
-  
-		jQuery('.tombol-kurang').click(function(e){
-		  var index = $(".tombol-kurang").index(this);
-		  var jumlah = $(".qty"+index).text();
-		  var jumlah = parseInt(jumlah)-1
-		  $(".qty"+index).text(jumlah);
-		  var price = $('.price'+index).text();
-		  console.log('price: '+price);
-  
-		  if(parseInt(jumlah) == 0){
-			  $("#notif"+index).css('display','inline');
-			  $("#notif"+index).text('Tolong stock tidak boleh 0');
-			  $("#notif"+index).append('<br>');
-			  $(".qty"+index).text(1);
-		  }else{
-			var subtotal = parseInt(jumlah)*parseInt(price);
-			console.log('subtotal: ', + subtotal)
-			$(".sub-total"+index).text(formatNumber(subtotal));   
-			var total = parseInt($(".total").text());
-			total = total - parseInt(price);
-			$(".total").text(total);
-      $(".totalShow").text(formatNumber(total));
-			$("#notif"+index).css('display','none');
-			jQuery.ajax({
-				url: "{{url('/update_qty')}}",
-				method: 'post',
-				data: {
-					_token: $('#signup-token').val(),
-					id: $('.id_cart'+index).val(),
-					qty: -1
-				},
-				success: function(result){
-          location.reload();
-					console.log(result.success);
-				}
-			});
-		  }
-		});
-  
-		jQuery('.tombolhapus').click(function(e){
-		  var index = $(".tombolhapus").index(this);
-		  var konfirmasi = confirm('Apakah anda yakin ingin menghapus produk dari keranjang?');
-		  if(konfirmasi == true){
-			jQuery.ajax({
-				url: "{{url('/update_qty')}}",
-				method: 'post',
-				data: {
-					_token: $('#signup-token').val(),
-					id: $('.id_cart'+index).val(),
-					user_id: $('#user_id').val(),
-					qty: 0
-				},
-				success: function(result){
-					$('.ganti').html(result.hasil);
-          location.reload();
-					jQuery('#jumlahcart').text(result.jumlah);
-					console.log(result.success);
-				}
-			});
-		  }
-		});
+    function plus(id){
+      var qty = $$('.kuantiti').val();
+      if (qty==1){
+        var qtybaru = $$('.kuantiti').val() - 1;
+        $('.kuantiti').text(qtybaru);
+      }
+    }
+
+    function hapus(id){
+      
+    }
+
 	});
-  </script>
+</script>
 @endsection

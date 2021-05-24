@@ -2,6 +2,7 @@
 
 @section('content')
 @php
+  $jumlahproduk = 0;
   $beratawal = 0;
   $beratkali = 0;
   $beratakhir = 0;
@@ -94,6 +95,7 @@
                 $subtotalbaru = $subtotalbaru + $hargakali;
                 $beratkali = $beratawal * $qty;
                 $beratakhir = $beratakhir + $beratkali;
+                $jumlahproduk = $jumlahproduk + 1;
               @endphp
             </tr>
           @else
@@ -149,6 +151,7 @@
                 $subtotalbaru = $subtotalbaru + $hargakali;
                 $beratkali = $beratawal * $products->qty;
                 $beratakhir = $beratakhir + $beratkali;
+                $jumlahproduk = $jumlahproduk + 1;
               @endphp
             </tr>
           @endif
@@ -239,6 +242,7 @@
             </p>
             <input id="subtotalbaru" type="hidden" name="subtotal" value="{{$subtotalbaru}}">
             <input id="beratbarang" type="hidden" name="berat" value="{{$beratakhir}}">
+            <input id="jumlahproduk" type="hidden" name="jumlah" value="{{$jumlahproduk}}">
             <input id="totalakhir" type="hidden" name="total" value="">
             <input id="hargadelivery" type="hidden" name="delivery" value="">
             <input type="hidden" name="user_id" value="{{Auth::user()->id}}">
@@ -256,6 +260,11 @@
 @section('script')
 <script>
   $(document).ready(function(e){
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
 
     function rubah(angka){
       var reverse = angka.toString().split('').reverse().join(''),
@@ -273,8 +282,8 @@
           dataType: "json",
           success:function(data){
             $('#kota').empty();
-            $.each(data, function(key,value){
-              $('#kota').append('<option value="'+key+'">'+value+'</option>');
+            $.each(data, function(cityid,citytitle){
+              $('#kota').append('<option value="'+cityid+'">'+citytitle+'</option>');
             });
           },
         });
@@ -291,14 +300,8 @@
       var berat = parseInt($('#beratbarang').val());
 
       if(provinsi>0 && kurir>0){
-        e.preventDefault();
-        $.ajaxSetup({
-          headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-          }
-        });
         $.ajax({
-          url: "{{url('/ongkir')}}",
+          url: '/ongkir',
           method: 'POST',
           data: {
             destination: kota,

@@ -1,26 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
-<!--================Home Banner Area =================-->
-  <!-- Start All Title Box -->
-  <div class="all-title-box">
-      <div class="container">
-          <div class="row">
-              <div class="col-lg-12">
-                  <h2>Cek Riwayat Transaksi</h2>
-                  <ul class="breadcrumb">
-                      <li class="breadcrumb-item"><a href="#">User</a></li>
-                      <li class="breadcrumb-item active">Transaksi</li>
-                  </ul>
-              </div>
-          </div>
-      </div>
-  </div>
-  <!-- End All Title Box -->
-<!--================End Home Banner Area =================-->
-
 <!--================Checkout Area =================-->
 <section class="cart_area">
+  <div class="container toparea">
+    <div class="underlined-title">
+        <div class="editContent">
+            <h1 class="text-center latestitems">YOUR TRANSACTIONS</h1>
+        </div>
+        <div class="wow-hr type_short">
+            <span class="wow-hr-h">
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            </span>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="container">
     <div class="cart_inner">
       <div class="table-responsive">
@@ -28,76 +25,86 @@
           <thead>
             <tr>
               <th>
-                <strong style="color:Red;">Sisa Waktu Bayar</strong>
+                <strong style="color:Black;">Payment Timeout</strong>
               </th>
               <th>
-                <strong style="color:Red;">ID Transaksi</strong>
+                <strong style="color:Black;">Transaction ID</strong>
               </th>
               <th>
-                <strong style="color:Red;">Alamat</strong>
+                <strong style="color:Black;">Address</strong>
               </th>
               <th>
-                <strong style="color:Red;">Kota</strong>
+                <strong style="color:Black;">Regency</strong>
               </th>
               <th>
-                  <strong style="color:Red;">Provinsi</strong>
+                  <strong style="color:Black;">Province</strong>
               </th>
               <th>
-                  <strong style="color:Red;">Total Pembayaran</strong>
+                  <strong style="color:Black;">Total</strong>
               </th>
               <th>
-                  <strong style="color:Red;">Status</strong>
+                  <strong style="color:Black;">Status</strong>
               </th>
               <th>
-                <strong style="color:Red;">Aksi</strong>
+                <strong style="color:Black;">Detail</strong>
               </th>
             </tr>
           </thead>
           <tbody>
-            @foreach ($transaksi as $item)
+            @foreach ($transaksi as $trs)
               <tr> 
                 <td>
-                  @if ($item->status == 'unverified' & $item->timeout > date('Y-m-d H:i:s') & is_null($item->proof_of_payment))
+                  @if ($trs->status == 'unverified' & $trs->timeout > date('Y-m-d H:i:s') & is_null($trs->proof_of_payment))
                     @php
                       date_default_timezone_set("Asia/Makassar");
-                      $date1 = new DateTime($item->timeout);
+                      $date1 = new DateTime($trs->timeout);
                       $date2 = new DateTime(date('Y-m-d H:i:s'));
                       $tenggat = $date1->diff($date2);
                     @endphp
                       <span class="btn-sm btn-warning font-weight-bold">{{$tenggat->h}} Jam, {{$tenggat->i}} Menit</span>
+                  @else
+                  <div class="text-center">
+                    <strong> --- </strong>
+                  </div>
                   @endif
                 </td>               
                 <td>
-                    <strong style="color:Black;">{{$item->id}}</strong>
+                    <p style="color:Black;">{{$trs->id}}</p>
                 </td>
                 <td>
-                    <strong style="color:Black;">{{$item->address}}</strong>
+                    <p style="color:Black;">{{$trs->address}}</p>
                 </td>
                 <td>
-                    <strong style="color:Black;">{{$item->regency}}</strong>
+                    <p style="color:Black;">{{$trs->regency}}</p>
                 </td>
                 <td>
-                    <strong style="color:Black;">{{$item->province}}</strong>
+                    <p style="color:Black;">{{$trs->province}}</p>
                 </td>
                 <td>
-                    <strong style="color:Black;">Rp{{number_format($item->total)}}</strong>
+                    <p style="color:Black;">Rp{{number_format($trs->total)}}</p>
                 </td>
-                <td>
-                  @if ($item->status == 'success')
-                    <span style="color: white;" class="btn-sm btn-success font-weight-bold  mt-1">{{$item->status}}</span>
-                  @elseif ($item->status == 'delivered' || $item->status == 'verified' || $item->status == 'indelivery')
-                    <span style="color: white;" class="btn-sm btn-warning font-weight-bold  mt-1">{{$item->status}}</span>
+                <td class="text-center">
+                  @if ($trs->status == 'success')
+                    <span style="color: white;" class="btn-sm btn-success font-weight-bold  mt-1 btn-lg btn-block">{{$trs->status}}</span>
+                  @elseif ($trs->status == 'delivered' || $trs->status == 'verified' || $trs->status == 'indelivery')
+                    <span style="color: white;" class="btn-sm btn-warning font-weight-bold  mt-1 btn-lg btn-block">{{$item->status}}</span>
                   @else
-                    <span style="color: white;" class="btn-sm btn-danger font-weight-bold mt-1">{{$item->status}}</span>
+                    <span style="color: white;" class="btn-sm btn-danger font-weight-bold mt-1 btn-lg btn-block">{{$trs->status}}</span>
                   @endif
                 </td>
                 <td>
-                  <a href="/transaksi/detail/{{$item->id}}"><strong>Lihat Detail</strong></a>
+                  <a href="/transaksi/detail/{{$trs->id}}"><strong>See Detail</strong></a>
                 </td>
               </tr>
             @endforeach
           </tbody>
         </table>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                Page : {{ $transaksi->currentPage() }} || Item Per Page : {{ $transaksi->perPage() }} <br/>
+                {{ $transaksi->links() }}
+            </div>
+        </div>
       </div>
     </div>
   </div>

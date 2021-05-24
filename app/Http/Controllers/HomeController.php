@@ -31,41 +31,17 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     
-    public function diskon($discount,$harga){
-        if($discount->count()){
-            $dsk = $discount->sortByDesc('id');
-            foreach($dsk as $d){
-                $persen = $d;
-                break;
-            }
-
-            if($persen->end >= date('Y-m-d')){
-               return $harga = $harga-($harga * $persen->percentage/100);
-            }else{
-                return $harga = 0;
-            }
-        }else{
-            return $harga = 0;
-        }
-    }
-    public function tampildiskon($discount){
-        if($discount->count()){
-            $dsk = $discount->sortByDesc('id');
-            foreach($dsk as $d){
-                $persen = $d;
-                break;
-            }
-            if($persen->end >= date('Y-m-d')){
-                return $disc = $persen->percentage;
-             }else{
-                 return $disc = 0;
-             }
-        }else{
-            return $disc = 0;
-        }
+    function detail_product($id)
+    {
+        $product = Product::find($id);
+        $product_images = Product_Image::where('product_id','=',$product->id)->get();
+        $product_reviews = Product_Review::where('product_id', '=', $product->id)->with('user')->paginate(5);
+        $user = Auth::user();
+        $user_review = Product_Review::where('product_id', '=', $product->id)->where('user_id', '=', $user->id)->with('user')->first();
+        return view('user.productuser',compact('product', 'product_images', 'product_reviews','user','user_review'));
     }
     
-     public function review_product($id, Request $request)
+    public function review_product($id, Request $request)
     {
         $request->validate([
             'rate' => ['required'],

@@ -105,14 +105,20 @@
           @else
             <form action="/checkout" method="POST">
             @csrf
-              <input type="hidden" name="product_id" value="{{$products->id}}" id="product_id">
+              <input type="hidden" name="product_id" value="{{$products->id}}">
               <input type="hidden" name="subtotal" id="subtotal" value="{{$harga}}">
               <input type="hidden" name="weight" value="{{$products->weight}}">
               <input type="hidden" name="qty" class="qty" value="1" readonly>
               <button type="submit" class="btn btn-primary btn-lg btn-block">Purchase</button>
             </form>
             <br>
-            <button type="button" class="btn btn-warning btn-lg btn-block">Add To Cart</button>
+            <form action="/addcart" method="POST">
+            @csrf
+              <input type="hidden" name="product_id" value="{{$products->id}}">
+              <input type="hidden" name="user_id" value="{{Auth::user()->id}}" id="user_id">
+              <input type="hidden" name="qty" class="qty" value="1" readonly>
+              <button type="submit" class="btn btn-warning btn-lg btn-block">Add To Cart</button>
+            </form>
           @endif
         @else
           @if($products->stock==0)
@@ -132,74 +138,20 @@
 <!--================End Single Product Area =================-->
 
 <!--================Product Review Area =================-->
-<section class="product_description_area">
-  <div class="container">
-    <div class="card">
-      <h5>Product Reviews</h5>
-      <div class="col-md-12">
-        @if (!$products->product_review->count())
-          <div class="text-center">    
-              <p><strong>Belum ada review produk.</strong></p> 
+<section>
+  <div class="item content">
+    <div class="container">
+      <div class="col-md-10 col-md-offset-1">
+        <div class="slide-text">
+          <div>
+            <h2><span class="uppercase">Awesome Support</span></h2>
+            <img src="http://wowthemes.net/demo/salique/salique-boxed/images/temp/avatar2.png" alt="Awesome Support">
+            <p>
+              The support... I can only say it's awesome. You make a product and you help people out any way you can even if it means that you have to log in on their dashboard to sort out any problems that customer might have. Simply Outstanding!
+            </p>
+            <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
           </div>
-        @else
-          @foreach ($products->product_review as $item)
-            <div class="row mb-5">
-              <div class="col-sm-2 col-12 mb-3">
-                <img src="{{asset('/uploads/avatars/'.$item->user->profile_image)}}" style="width:100px;height:100px;object-fit:cover;" alt="sample image" class="avatar rounded-circle z-depth-1-half">
-              </div>
-              <div class="col-sm-10 col-12">
-                <a>
-
-                  <h5 style="color:#333333" class="user-name font-weight-bold">{{$item->user->name}} 
-                  </h5>
-                </a>
-                <ul class="rating">
-                  <li>
-                    @for ($i = 0; $i < $item->rate; $i++)
-                      <i class="fa fa-star"></i>
-                    @endfor
-                    @for ($i = 0; $i < 5-$item->rate; $i++)
-                      <i class="fa fa-star-o"></i>
-                    @endfor
-                  </li>  
-                </ul>
-                <input type="hidden" class="rate{{$loop->iteration-1}}" value="{{$item->rate}}">
-                <input type="hidden" class="content{{$loop->iteration-1}}" value="{{$item->content}}">
-                <input type="hidden" class="review_id{{$loop->iteration-1}}" value="{{$item->id}}">
-                <div class="card-data">
-                  <ul class="list-unstyled mb-1">
-                    <li class="comment-date font-small grey-text">
-                      <i class="fa fa-clock-o"></i> {{$item->created_at}}
-                    </li>
-                  </ul>
-                </div>
-                <p class="dark-grey-text article">{{$item->content}}</p>
-              </div>
-            </div>
-            @if ($item->response->count())
-              @foreach ($item->response as $balasan)
-                <div class="row mb-5" style="margin-left: 5%">
-                  <div class="col-sm-2 col-12 mb-3">
-                    <img src="{{asset('/uploads/avatars/'.$balasan->admin->profile_image)}}" style="width:100px;height:100px;object-fit:cover;" alt="sample image" class="avatar rounded-circle z-depth-1-half">
-                  </div>
-                  <div class="col-sm-10 col-12">
-                    <a>
-                      <h5 style="color: #333333" class="user-name font-weight-bold"><span style="margin-right:5px;" class="badge badge-success">Admin</span>{{$balasan->admin->name}}</h5>
-                    </a>
-                    <div class="card-data">
-                      <ul class="list-unstyled mb-1">
-                        <li class="comment-date font-small grey-text">
-                          <i class="fa fa-clock-o"></i> {{$balasan->created_at}}
-                        </li>
-                      </ul>
-                    </div>
-                    <p class="dark-grey-text article">{{$balasan->content}}</p>
-                  </div>
-                </div>
-              @endforeach
-            @endif
-          @endforeach
-        @endif
+        </div>
       </div>
     </div>
   </div>
@@ -222,8 +174,8 @@
         url: "{{url('/tambah_cart')}}",
         method: 'post',
         data: {
-            product_id: jQuery('#product_id').val(),
-            user_id: jQuery('#user_id').val(),
+            product_id: $('#product_id').val(),
+            user_id: $('#user_id').val(),
         },
         success: function(result){
             jQuery('#jumlahcart').text(result.jumlah);

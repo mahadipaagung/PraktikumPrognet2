@@ -19,7 +19,7 @@ Route::get('/', function () {
 
 Auth::routes(['verify' =>true]); //verifikasi email
 
-Route::get('/home', 'HomeController@index')->name('home'); //route setelah user login
+Route::get('/home', 'ProductController@showbaru')->name('home'); //route setelah user login
 Route::prefix('product')->group(function () {
     Route::get('/{id}', 'HomeController@detail_product')->name('detail_product');
     Route::post('review/{id}', 'HomeController@review_product')->name('review_product');
@@ -92,7 +92,7 @@ Route::get('/product/{id}', 'ProductController@showone');
 Route::post('/checkout', 'CheckoutController@index');
 Route::get('/kota/{id}', 'CheckoutController@cekkota');
 Route::post('/ongkir', 'CheckoutController@cekongkir');
-Route::post('/beli', 'TransactionController@store');
+Route::post('/beli', 'TransactionController@inbeli');
 
 Route::get('/transaksi/{id}', 'TransactionController@index');
 Route::get('/transaksi/detail/{id}', 'TransactionDetailController@index');
@@ -101,7 +101,7 @@ Route::post('/transaksi/detail/proof', 'TransactionDetailController@uploadProof'
 Route::post('/transaksi/detail/review', 'ProductReviewController@store');
 
 Route::get('/cart', 'CartController@show');
-Route::post('/tambah_cart', 'CartController@store');
+Route::post('/addcart', 'CartController@store');
 Route::post('/update_qty', 'CartController@update');
 
 Auth::routes();

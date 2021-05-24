@@ -11,6 +11,7 @@ use App\Cart;
 use App\Product;
 use App\Admin;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class TransactionController extends Controller
 {
@@ -19,31 +20,42 @@ class TransactionController extends Controller
         $this->middleware(['auth:web']);
     }
 
-    public function store(Request $request){
-        $provinsi = Province::find($request->province);
+    public function inbeli(Request $request)
+    {
+        $provinsi = Province::where('province_id','=',$request->province)->first();
         $kota = City::where('city_id','=',$request->regency)->first();
+        
         $transaksi = new Transaction;
+
         date_default_timezone_set("Asia/Makassar");
-        $transaksi->timeout = date('Y-m-d H:i:s', strtotime('+1 days'));
+        $waktuhabis = Carbon::now()->addDay();
+        $transaksi->timeout = $waktuhabis;
+
         $transaksi->address = $request->inaddress;
         $transaksi->regency = $kota->title;
         $transaksi->province = $provinsi->title;
+
         $transaksi->total = $request->total;
         $transaksi->shipping_cost = $request->delivery;
-        $transaksi->sub_total = $request->subtotal;
-        $transaksi->user_id = $request->user_id;
         $transaksi->courier_id = $request->courier;
         $transaksi->status = 'unverified';
+
+        $transaksi->sub_total = $request->subtotal;
+        $transaksi->user_id = $request->user_id;
         $transaksi->telp = $request->phonenumber;
+
         $transaksi->save();
         
-        if($request->product_id != 0){
+        if($request->jumlah == 1){
             $detail_transaksi = new Transaction_Detail;
+
             $detail_transaksi->transaction_id = $transaksi->id;
             $detail_transaksi->product_id = $request->product_id;
             $detail_transaksi->qty = $request->qty;
-            $produk = Product::with('discount')->find($request->product_id);
-            if($produk->discount->count()){
+
+            $produk = Product::where('id','=',$request->product_id)->first();
+
+            if(!is_null($produk->discount)){
                 foreach($produk->discount as $diskon){
                     if($diskon->end > date('Y-m-d')){
                         $detail_transaksi->discount = $diskon->percentage;
@@ -57,16 +69,16 @@ class TransactionController extends Controller
             $detail_transaksi->selling_price = $produk->price;
             $detail_transaksi->save();
         }else{
-            $cart = Cart::with(['product' => function($q){
-                $q->with('product_image','discount');
-            }])->where('user_id', '=', $request->user_id)->where('status', '=', 'notyet')->get();
+            $cart = Cart::where('user_id', '=', $request->user_id)->where('status', '=', 'notyet')->get();
     
             foreach($cart as $item){
                 $detail_transaksi = new Transaction_Detail;
+
                 $detail_transaksi->transaction_id = $transaksi->id;
                 $detail_transaksi->product_id = $item->product->id;
                 $detail_transaksi->qty = $item->qty;
-                if($item->product->discount->count()){
+
+                if(!is_null($item->product->discount)){
                     foreach($item->product->discount as $diskon){
                         if($diskon->end > date('Y-m-d')){
                             $detail_transaksi->discount = $diskon->percentage;
@@ -92,9 +104,9 @@ class TransactionController extends Controller
         if(is_null(Auth::user())){
             return redirect('/login');
         }elseif(Auth::user()->id != $id){
-            return abort(404);
+            return redirect('/');
         }else{
-            $transaksi = Transaction::orderBy('id', 'DESC')->where('user_id','=',$id)->get();
+            $transaksi = Transaction::where('user_id','=',$id)->orderBy('id', 'DESC')->simplePaginate(6);
             foreach($transaksi as $item){
                 if($item->timeout < date('Y-m-d H:i:s') & $item->status == 'unverified'){
                     $item->status = 'expired';
