@@ -66,10 +66,14 @@
 									<a href="/product/{{$products->id}}" class="learn-more detailslearn"><i class="fa fa-link"></i> Details</a>
 								</p>
 							</div>
-							@foreach ($products->product_image as $image)
-								<span class="maxproduct"><img src="/uploads/product_images/{{$image->image_name}}" alt=""></span>
-								@break
-							@endforeach
+							@if($products->product_image->count())
+								@foreach ($products->product_image as $image)
+									<span class="maxproduct"><img src="/uploads/product_images/{{$image->image_name}}" alt=""></span>
+									@break
+								@endforeach
+							@else
+								<span class="maxproduct"><img src="/uploads/product_images/noimage.jpg" alt=""></span>
+							@endif
 						</div>
 						<div class="product-details">
 							<a href="/product/{{$products->id}}">

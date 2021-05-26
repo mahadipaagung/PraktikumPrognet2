@@ -102,7 +102,7 @@ Route::post('/transaksi/detail/review', 'ProductReviewController@store');
 
 Route::get('/cart', 'CartController@show');
 Route::post('/addcart', 'CartController@store');
-Route::post('/update_qty', 'CartController@update');
+Route::post('/updatecart', 'CartController@update');
 
 Auth::routes();
 Route::get('/user/logout', 'Auth\LoginController@userLogout')->name('user.logout');

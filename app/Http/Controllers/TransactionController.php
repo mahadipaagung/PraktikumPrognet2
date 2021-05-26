@@ -11,6 +11,7 @@ use App\Cart;
 use App\Product;
 use App\Admin;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Carbon\Carbon;
 
 class TransactionController extends Controller

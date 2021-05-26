@@ -20,11 +20,15 @@ class ShopController extends Controller
 		$cari = $request->product_name;
         $categories = Category::all();
 		$products = Product::where('product_name','like',"%".$cari."%")->simplePaginate(6);
-		return view('user.shop', ['product' => $products, 'category' => $categories]);
+        $hasil = view('user.filter', ['category' => $categories, 'product' => $products])->render();
+
+
+        return response()->json(['hasil' => $hasil]);
+		// return view('user.shop', ['product' => $products, 'category' => $categories]);
 	}
     public function filter(Request $request){
         $value = $request->category_id;
-        if($value=="all_categories"){
+        if($value==0){
             $categories = Category::all();
             $products = Product::simplePaginate(6);
         }else{
@@ -34,6 +38,8 @@ class ShopController extends Controller
             })->simplePaginate(6);
         }
 
-        return view('user.shop',['product' => $products, 'category' => $categories]);
+        $hasil = view('user.filter', ['category' => $categories, 'product' => $products])->render();
+        return response()->json(['hasil' => $hasil]);
+        // return view('user.shop',['product' => $products, 'category' => $categories]);
     }
 }

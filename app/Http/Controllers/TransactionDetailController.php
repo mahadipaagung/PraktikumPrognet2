@@ -26,7 +26,7 @@ class TransactionDetailController extends Controller
         $review = Product_Review::where('user_id', '=', $transaksi->user_id)->get();
 
         if($transaksi->user_id != Auth::user()->id || is_null(Auth::user())){
-            return abort(404);
+            return redirect('/transaksi/'.$id);
         }else{
             return view('user.detailtransaksi',['transaksi' => $transaksi, 'review' => $review]);
         }
@@ -39,27 +39,11 @@ class TransactionDetailController extends Controller
             $transaksi->status = 'canceled';
             $transaksi->save();
             return redirect('/transaksi/detail/'.$request->id);
-        // }elseif($request->status == 3){
-        //     $transaksi->status = 'verified';
-        //     $transaksi->save();
-
-        //     foreach($transaksi->transaction_detail as $item){
-        //         $produk = Product::find($item->product_id);
-        //         $produk->stock = $produk->stock - $item->qty;
-        //         $produk->save();
-        //     }
-
-        //     return redirect('admin/transaksi/detail/'.$request->id);
         }elseif($request->status == 2){
             $transaksi->status = 'success';
             $transaksi->save();
             return redirect('/transaksi/detail/'.$request->id);
         }
-        // else{
-        //     $transaksi->status = 'delivered';
-        //     $transaksi->save();
-        //     return redirect('admin/transaksi/detail/'.$request->id);
-        // }
     }
 
     public function uploadProof(Request $request){

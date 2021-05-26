@@ -13,8 +13,29 @@ class CartController extends Controller
         if(is_null(Auth::user())){
             return redirect('/login');
         }else{
-            $cart = Cart::with(['product'])->where('user_id', '=', Auth::user()->id)->where('status', '=', 'notyet')->get();
-            return view('user.cart', ['cart'=>$cart]);
+            $carts = Cart::where('user_id', '=', Auth::user()->id)->where('status', '=', 'notyet')->get();
+            foreach($carts as $cart){
+                $idcart = $cart->id;
+                $product = $cart->product->id;
+                $cekproduk = Product::where('id', '=', $product)->get();
+
+                $cart = Cart::find($idcart);
+
+                if(!isset($cekproduk)){
+                    $cart->status = 'cancelled';
+                    $cart->save();
+                }else{
+                    foreach($cekproduk as $chk){
+                        $stockprod = $chk->stock;
+                        if($stockprod < $cart->qty){
+                            $cart->qty = $stockprod;
+                            $cart->save();
+                        }
+                    }
+                }
+            }
+            $cartakhir = Cart::where('user_id', '=', Auth::user()->id)->where('status', '=', 'notyet')->get();
+            return view('user.cart', ['cart'=>$cartakhir]);
         }
     }
 
@@ -41,22 +62,44 @@ class CartController extends Controller
     }
 
     public function update(Request $request){
-        $cart = Cart::find($request->id);
+        $cart = Cart::find($request->cart_id);
+        // $products = $cart->product_id;
+        // $cekproduk = Product::where('id', '=', $products);
 
-        if($request->qty == 0){
+        // if($cekproduk->id->count()){
+        //     $cart->status = 'cancelled';
+        //     $cart->save();
+
+        //     $cart = Cart::where('user_id', '=', Auth::user()->id)->where('status', '=', 'notyet')->get();
+        //     return view('user.cart', ['cart'=>$cart]);
+        // }
+
+        if($request->action == 3){
             $cart->status = 'cancelled';
             $cart->save();
-            $carts = Cart::with(['product' => function($q){
-                $q->with('product_image','discount');
-            }])->where('user_id', '=', $request->user_id)->where('status', '=', 'notyet')->get();
-            $hasil = view('user.recart',['carts' => $carts])->render();
-            $jumlah = $carts->count();
-            return response()->json(['success' => 'berhasil diganti', 'hasil' => $hasil, 'jumlah' => $jumlah]);
-        }else{
-            $cart->qty = $cart->qty+$request->qty;
+
+            $carts = Cart::where('user_id', '=', $request->user_id)->where('status', '=', 'notyet')->get();
+            $hasilr = view('user.filtercart',['cart' => $carts])->render();
+
+            return response()->json(['hasil' => $hasilr]);
+
+        }else if($request->action == 2){
+            $cart->qty = $cart->qty - 1;
             $cart->save();
 
-            return response()->json(['success' => 'berhasil nambah']);
+            $carts = Cart::where('user_id', '=', $request->user_id)->where('status', '=', 'notyet')->get();
+            $hasilr = view('user.filtercart',['cart' => $carts])->render();
+
+            return response()->json(['hasil' => $hasilr]);
+
+        }else if($request->action == 1){
+            $cart->qty = $cart->qty + 1;
+            $cart->save();
+
+            $carts = Cart::where('user_id', '=', $request->user_id)->where('status', '=', 'notyet')->get();
+            $hasilr = view('user.filtercart',['cart' => $carts])->render();
+
+            return response()->json(['hasil' => $hasilr]);
         }
     }
 }

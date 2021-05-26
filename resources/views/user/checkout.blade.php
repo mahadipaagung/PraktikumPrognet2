@@ -151,7 +151,7 @@
                 $subtotalbaru = $subtotalbaru + $hargakali;
                 $beratkali = $beratawal * $products->qty;
                 $beratakhir = $beratakhir + $beratkali;
-                $jumlahproduk = $jumlahproduk + 1;
+                $jumlahproduk = 2;
               @endphp
             </tr>
           @endif
@@ -312,7 +312,7 @@
           success: function(result){
             $('#hargaongkir').text('Rp.'+ rubah(result.hasil["value"]));
             var subtotalbaru = $('#subtotalbaru').val();
-            var totalakhir = result.hasil["value"] + parseInt($('#subtotalbaru').val());
+            var totalakhir = result.hasil["value"] + parseInt(subtotalbaru);
             $('#totalall').text('Rp.'+ rubah(totalakhir));
             $('#totalakhir').val(totalakhir);
             $('#hargadelivery').val(result.hasil["value"]);
