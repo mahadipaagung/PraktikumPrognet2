@@ -37,10 +37,15 @@ class ProductCategoriesController extends Controller
      */
     public function store(Request $request)
     {
-        $ct = new Product_Categories;
-        $ct->category_name = $request->category_name;
-        $ct->save();
-        return redirect('/categories')->with('success','Data Tersimpan');
+        $test = Product_Categories::where('category_name' , $request->category_name)->get();
+        if (count($test)>0){
+            return redirect('/categories');
+        }else{
+            $ct = new Product_Categories;
+            $ct->category_name = $request->category_name;
+            $ct->save();
+            return redirect('/categories')->with('success','Data Tersimpan');
+        }
     }
 
     /**
