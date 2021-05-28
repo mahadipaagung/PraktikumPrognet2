@@ -13,14 +13,14 @@ class ShopController extends Controller
     {
         $categories = Category::all();
         $products = Product::simplePaginate(6);
-        return view('user.shop', ['product' => $products, 'category' => $categories]);
+        return view('user.shop', ['products' => $products, 'categories' => $categories]);
     }
     public function search(Request $request)
 	{
 		$cari = $request->product_name;
         $categories = Category::all();
 		$products = Product::where('product_name','like',"%".$cari."%")->simplePaginate(6);
-        $hasil = view('user.filter', ['category' => $categories, 'product' => $products])->render();
+        $hasil = view('user.filter', ['categories' => $categories, 'products' => $products])->render();
 
 
         return response()->json(['hasil' => $hasil]);
@@ -38,7 +38,7 @@ class ShopController extends Controller
             })->simplePaginate(6);
         }
 
-        $hasil = view('user.filter', ['category' => $categories, 'product' => $products])->render();
+        $hasil = view('user.filter', ['categories' => $categories, 'products' => $products])->render();
         return response()->json(['hasil' => $hasil]);
         // return view('user.shop',['product' => $products, 'category' => $categories]);
     }

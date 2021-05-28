@@ -1,9 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-
-  @if(!is_null($products))
   <!--================Single Product Area =================-->
+  @if(isset($products))
   <section class="item content">
     <div class="container toparea">
       <div class="underlined-title">
@@ -163,6 +162,7 @@
           </div>
         @else
           @foreach ($products->product_review as $item)
+            <br>
             <div class="row mb-5">
               <div class="col-sm-2">
                 <img src="{{asset('/uploads/avatars/'.$item->user->profile_image)}}" style="width:100px;height:100px;object-fit:cover;" class="avatar rounded-circle z-depth-1-half">

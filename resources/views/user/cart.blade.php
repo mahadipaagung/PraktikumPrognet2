@@ -45,7 +45,7 @@
           </tr>
           </thead>
           <tbody>
-          @foreach($cart as $products)
+          @foreach($carts as $products)
             <tr class="edd_cart_item" id="edd_cart_item_0_25" data-download-id="25">
               <td class="edd_cart_item_name">
                 <div class="edd_cart_item_image">

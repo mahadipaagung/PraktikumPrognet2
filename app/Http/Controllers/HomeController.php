@@ -31,15 +31,15 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     
-    function detail_product($id)
-    {
-        $product = Product::find($id);
-        $product_images = Product_Image::where('product_id','=',$product->id)->get();
-        $product_reviews = Product_Review::where('product_id', '=', $product->id)->with('user')->paginate(5);
-        $user = Auth::user();
-        $user_review = Product_Review::where('product_id', '=', $product->id)->where('user_id', '=', $user->id)->with('user')->first();
-        return view('user.productuser',compact('product', 'product_images', 'product_reviews','user','user_review'));
-    }
+    // function detail_product($id)
+    // {
+    //     $product = Product::find($id);
+    //     $product_images = Product_Image::where('product_id','=',$product->id)->get();
+    //     $product_reviews = Product_Review::where('product_id', '=', $product->id)->with('user')->paginate(5);
+    //     $user = Auth::user();
+    //     $user_review = Product_Review::where('product_id', '=', $product->id)->where('user_id', '=', $user->id)->with('user')->first();
+    //     return view('user.productuser',compact('product', 'product_images', 'product_reviews','user','user_review'));
+    // }
     
     public function review_product($id, Request $request)
     {

@@ -21,7 +21,7 @@ Auth::routes(['verify' =>true]); //verifikasi email
 
 Route::get('/home', 'ProductController@showbaru')->name('home'); //route setelah user login
 Route::prefix('product')->group(function () {
-    Route::get('/{id}', 'HomeController@detail_product')->name('detail_product');
+    // Route::get('/{id}', 'HomeController@detail_product')->name('detail_product');
     Route::post('review/{id}', 'HomeController@review_product')->name('review_product');
 });
 
@@ -87,16 +87,16 @@ Route::get('/shop', 'ShopController@show');
 Route::get('/shop/search','ShopController@search');
 Route::get('/shop/category','ShopController@filter');
 
-Route::get('/product/{id}', 'ProductController@showone');
+Route::get('/product/{slug}', 'ProductController@showone');
 
 Route::post('/checkout', 'CheckoutController@index');
 Route::get('/kota/{id}', 'CheckoutController@cekkota');
 Route::post('/ongkir', 'CheckoutController@cekongkir');
 Route::post('/beli', 'TransactionController@inbeli');
 
-Route::get('/transaksi/{id}', 'TransactionController@index');
-Route::get('/transaksi/detail/{id}', 'TransactionDetailController@index');
-Route::post('/transaksi/detail/status', 'TransactionDetailController@membatalkanPesanan');
+Route::get('/transaksi/{param}', 'TransactionController@index');
+Route::get('/transaksi/detail/{param}', 'TransactionDetailController@index');
+Route::post('/transaksi/detail/status', 'TransactionDetailController@updatestatus');
 Route::post('/transaksi/detail/proof', 'TransactionDetailController@uploadProof');
 Route::post('/transaksi/detail/review', 'ProductReviewController@store');
 

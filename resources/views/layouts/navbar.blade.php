@@ -20,7 +20,7 @@
             </li>
             @else
             <li class="nav-item">
-              <a class="nav-link" href="/transaksi/{{Auth::user()->id}}">Transaction</a>
+              <a class="nav-link" href="/transaksi/{{Crypt::encrypt(Auth::user()->id)}}">Transaction</a>
             </li>
             <li class="nav-item submenu dropdown">
                 <a class="dropdown-item nav-link" href="{{ url('/user/logout') }}"
@@ -35,6 +35,17 @@
           @endguest
           @auth
           <li class="nav-item active"><a class="nav-link" href="\cart">Cart</a></li>
+          <li class="nav-item avatar dropdown">
+            <a class="nav-link dropdown-toggle waves-effect waves-light" id="navbarDropdownMenuLink-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <span class="badge badge-danger ml-2">4</span>
+              <i class="fa fa-bell"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg-right dropdown-secondary" aria-labelledby="navbarDropdownMenuLink-5">
+              <a class="dropdown-item waves-effect waves-light" href="#">Notification 1</a><br>
+              <a class="dropdown-item waves-effect waves-light" href="#">Notification 2</a><br>
+              <a class="dropdown-item waves-effect waves-light" href="#">Notification 3</a><br>
+            </div>
+          </li>
           @endauth
         </ul>
       </div>

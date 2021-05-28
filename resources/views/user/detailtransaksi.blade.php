@@ -1,288 +1,352 @@
 @extends('layouts.app')
 
 @section('content')
-<!--================Home Banner Area =================-->
-  <!-- Start All Title Box -->
-  <div class="all-title-box">
-      <div class="container">
-          <div class="row">
-              <div class="col-lg-12">
-                  <h2>Cek Detail Transaksi</h2>
-                  <ul class="breadcrumb">
-                      <li class="breadcrumb-item"><a href="#">User</a></li>
-                      <li class="breadcrumb-item active">Detail Transaksi</li>
-                  </ul>
-              </div>
-          </div>
-      </div>
-  </div>
-  <!-- End All Title Box -->
-<!--================End Home Banner Area =================-->
-
 <!--================Checkout Area =================-->
-<section class="checkout_area section_gap">
-  <div class="container">
-    <div class="billing_details">
-      <h3>Billing Details</h3>
-      <div class="row">
-        <div class="col-lg-6 row contact_form">
-          <div class="col-md-12 form-group p_star">
-            <label>Nama</label>
-            <input
-              type="text"
-              class="form-control text-dark"
-              id="name"
-              name="name"
-              placeholder="Name"
-              value="{{Auth::user()->name}}"disabled
-            />
-          </div>
-          <div class="col-md-6 form-group p_star">
-            <label>No Telp</label>
-            <input
-              type="text"
-              class="form-control text-dark"
-              value="{{$transaksi->telp}}"disabled
-            />
-          </div>
-          <div class="col-md-6 form-group p_star">
-            <label>Email</label>
-            <input
-              type="text"
-              class="form-control text-dark"
-              id="email"
-              name="compemailany"
-              placeholder="Email Address"
-              value="{{Auth::user()->email}}"disabled
-            />
-          </div>
-          <div class="col-md-12 form-group p_star">
-            <label>Provinsi</label>
-            <input
-              type="text"
-              class="form-control text-dark"
-              name="compemailany"
-              value="{{$transaksi->province}}"disabled
-            />
-          </div>
-          <div class="col-md-12 form-group p_star">
-            <label>Kota</label>
-            <input
-              type="text"
-              class="form-control text-dark"
-              name="compemailany"
-              value="{{$transaksi->regency}}"disabled
-            />
-          </div>
-          <div class="col-md-12 form-group p_star">
-            <label>Alamat</label>
-            <input
-              type="text"
-              class="form-control text-dark"
-              id="address"
-              name="address"
-              value="{{$transaksi->address}}"disabled
-            />
-          </div>
-          <div class="col-md-12 form-group p_star">
-            <label>Kurir</label>
-            <input
-              type="text"
-              class="form-control text-dark"
-              value="{{$transaksi->courier->courier}}"disabled
-            />
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="order_box">
-            <h2>Your Order</h2>
-            <ul class="list">
-              @php
-                if($transaksi->status == 'unverified' && !is_null($transaksi->proof_of_payment))
-                {$transaksi->status = 'Menunggu Verifikasi';}
-              @endphp
-              <li>
-                <a href="#">
-                  Status
-                  @if ($transaksi->status == 'success')
-                    <span style="color: white;" class="btn-sm btn-success font-weight-bold  mt-1">{{$transaksi->status}}</span>
-                  @elseif ($transaksi->status == 'Menunggu Verifikasi' || $transaksi->status == 'delivered' || $transaksi->status == 'verified' || $transaksi->status == 'indelivery')
-                    <span style="color: white;" class="btn-sm btn-warning font-weight-bold  mt-1">{{$transaksi->status}}</span>
-                  @else
-                    <span style="color: white;" class="btn-sm btn-danger font-weight-bold mt-1">{{$transaksi->status}}</span>
-                  @endif
-                </a>
-              </li>
-              @foreach ($transaksi->transaction_detail as $item)
-              <li>
-                <a href="#">
-                <input type="hidden" name="id" id="product_id{{$loop->iteration-1}}" value="{{$item->product->id}}">
-                {{$item->product->product_name}}<span class="middle">x {{$item->qty}}</span>
-                <span>Rp{{number_format($item->selling_price*(100-$item->discount)/100)}}</span>
-                @if ($transaksi->status == 'success')
-              <div>
-                  @php
-                      $status = 0;
-                  @endphp
-                  @foreach ($review as $pr)
-                       @php
-                           if($item->product->id == $pr->product_id){
-                              $status = $status + 1;
-                           }else{
-                              $status = $status;
-                           }
-                       @endphp
-                  @endforeach
-                  @if ($status != 0)
-                      
-                      <button class="btn btn-sm btn-success tambah-review" data-toggle="modal" data-target="#modalTambahReview" disabled>Review telah diberikan</button>
-                      
-                  @else
-                      <button class="btn btn-sm btn-success tambah-review" data-toggle="modal" data-target="#modalTambahReview">+Tambah Review</button>
-                      
-                  @endif
-              </div>    
+@if(isset($transaction))
+  @php
+    if($transaction->status == 'unverified' && !is_null($transaction->proof_of_payment)){
+      $transaction->status = 'waiting approval';
+    }
+  @endphp
+  <section class="checkout_area section_gap">
+    <div class="container toparea">
+      <div class="underlined-title">
+          <div class="editContent text-center">
+              <h1 class="text-center latestitems">TRANSACTIONS DETAIL</h1>
+              @if ($transaction->status == 'success')
+                <span style="color: white;" class="btn-sm btn-success font-weight-bold  mt-1"><strong>{{$transaction->status}}</strong></span>
+              @elseif ($transaction->status == 'waiting approval' || $transaction->status == 'delivered' || $transaction->status == 'verified' || $transaction->status == 'indelivery')
+                <span style="color: white;" class="btn-sm btn-warning font-weight-bold  mt-1"><strong>{{$transaction->status}}</strong></span>
+              @else
+                <span style="color: white;" class="btn-sm btn-danger font-weight-bold mt-1"><strong>{{$transaction->status}}</strong></span>
               @endif
-                </a>
-              </li>
-              @endforeach
-              <li>
-                <a href="#"
-                  >Sub Total
-                  <span>Rp{{number_format($transaksi->sub_total)}}</span>
-                </a>
-              </li>
-              <li>
-                <a href="#"
-                  >Shipping
-                  <span>Rp{{number_format($transaksi->shipping_cost)}}</span>
-                </a>
-              </li>
-            </ul>
-            <ul class="list list_2">
-              <li>
-                <a href="#"
-                  >Total
-                  <span class = "font-weight-bold">Rp{{number_format($transaksi->total)}}</span>
-                </a>
-              </li>
-              <li>
-                <a href="">
-                  Proof Of Payment
-                  @if (is_null($transaksi->proof_of_payment) && $transaksi->status == 'unverified')
-                    <form action="/transaksi/detail/proof" method="POST" enctype="multipart/form-data">
-                      @csrf
-                      <input type="hidden" name="id" value="{{$transaksi->id}}">
-                      <input type="file" name="file" id="form19" accept=".jpeg,.jpg,.png,.gif" onchange="preview_image(event)" required>
-                      <span> 
-                        <button type="submit" class="text-white btn btn-info font-weight-bold  mt-2">Send</button>
-                      </span>
-                    </form>
-                  @elseif ($transaksi->proof_of_payment)
-                    <span class = "text-white btn-sm btn-success font-weight-bold  mt-2">Sudah diupload</span>
-                  @endif
-                </a>
-              </li>
-              <li>
-                @if ($transaksi->status == 'unverified' && is_null($transaksi->proof_of_payment))
-                  <div class="d-flex justify-content-center mt-5">
-                    <form action="/transaksi/detail/status" method="POST">
-                      @csrf
-                      <input type="hidden" name="id" value="{{$transaksi->id}}">
-                      <input type="hidden" name="status" value="1">
-                      <button style="color:white;margin-left:10px;" type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apa yakin ingin membatalkan pesanan ini?')">Batalkan Pesanan</button>
-                    </form>
-                  </div>  
-                @else
-                  @if ($transaksi->status == 'delivered')
-                  <a href="">
-                    <form action="/transaksi/detail/status" method="POST">
-                      @csrf
-                      <input type="hidden" name="id" value="{{$transaksi->id}}">
-                      <input type="hidden" name="status" value="2">
-                      <span><button type="submit" class="text-white btn-sm btn-primary font-weight-bold  mt-2">Pesanan Sudah Sampai</button></span>
-                    </form>
-                  </a>
-                  @endif
+          </div>
+          <div class="wow-hr type_short">
+              <span class="wow-hr-h">
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="billing_details">
+        <div class="row">
+          <div class="col-lg-12 row contact_form">
+            <div class="col-md-12 form-group p_star">
+              <div class="col-md-3">
+                <label>Name</label>
+              </div>
+              <div class="col-md-9">
+                <input class="form-control" type="text" value="{{Auth::user()->name}}"disabled/>
+              </div>
+            </div>
+            <div class="col-md-12 form-group p_star">
+              <div class="col-md-3">
+                <label>Phone Number</label>
+              </div>
+              <div class="col-md-9">
+                <input class="form-control" type="text" value="{{$transaction->telp}}"disabled/>
+              </div>
+            </div>
+            <div class="col-md-12 form-group p_star">
+              <div class="col-md-3">
+                <label>Email</label>
+              </div>
+              <div class="col-md-9">
+                <input class="form-control" type="text" value="{{Auth::user()->email}}"disabled/>
+              </div>
+            </div>
+            <div class="col-md-12 form-group p_star">
+              <div class="col-md-3">
+                <label>Province</label>
+              </div>
+              <div class="col-md-9">
+                <input class="form-control" type="text" value="{{$transaction->province}}"disabled/>
+              </div>
+            </div>
+            <div class="col-md-12 form-group p_star">
+              <div class="col-md-3">
+                <label>City</label>
+              </div>
+              <div class="col-md-9">
+                <input class="form-control" type="text" value="{{$transaction->regency}}"disabled/>
+              </div>
+            </div>
+            <div class="col-md-12 form-group p_star">
+              <div class="col-md-3">
+                <label>Address</label>
+              </div>
+              <div class="col-md-9">
+                <input class="form-control" type="text" value="{{$transaction->address}}"disabled/>
+              </div>
+            </div>
+            <div class="col-md-12 form-group p_star">
+              <div class="col-md-3">
+                <label>Courier</label>
+              </div>
+              <div class="col-md-9">
+                <input class="form-control" type="text" value="{{$transaction->courier->courier}}"disabled/>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-lg-12">
+            <div class="text-center">
+              <br>
+              <h1 class="text-center latestitems">ITEM DETAIL</h1>
+            </div>
+            <div id="edd_checkout_cart_wrap">
+              <table id="edd_checkout_cart" class="ajaxed">
+                <thead>
+                  <tr class="edd_cart_header_row">
+                    <th class="edd_cart_item_name">
+                      Item Name
+                    </th>
+                    <th class="edd_cart_item_price">
+                      Item Price (Selling Price)
+                    </th>
+                    <th class="edd_cart_item_qty">
+                      Item Qty
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach ($transaction->transaction_detail as $item)
+                  <tr class="edd_cart_item" id="edd_cart_item_0_25" data-download-id="25">
+                    <td class="edd_cart_item_name">
+                      <div class="edd_cart_item_image">
+                        @foreach($item->product->product_image as $image)
+                          <img width="100" height="100" src="/uploads/product_images/{{$image->image_name}}" alt="">
+                          @break
+                        @endforeach
+                      </div>
+                      <span class="edd_checkout_cart_item_title">{{$item->product->product_name}}</span>
+                    </td>
+                    <td class="edd_cart_item_price">
+                      <span class="edd_price">Rp.{{number_format($item->selling_price)}}</span>
+                    </td>
+                    <td class="edd_cart_item_qty">
+                      <span class="edd_price">{{($item->qty)}}</span>
+                    </td>
+                  <tr>
+                  @endforeach
+                </tbody>
+                <tfoot>
+                  <tr class="edd_cart_footer_row">
+                    <th colspan="5" class="edd_cart_total">
+                      Subtotal: <span class="edd_cart_amount" data-subtotal="11.99" data-total="11.99">Rp.{{number_format($transaction->sub_total)}}</span> ||
+                      Delivery: <span class="edd_cart_amount" data-subtotal="11.99" data-total="11.99">Rp.{{number_format($transaction->shipping_cost)}}</span> ||
+                      Total: <span class="edd_cart_amount" data-subtotal="11.99" data-total="11.99">Rp.{{number_format($transaction->total)}}</span><br>
+                    </th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            <div class="text-center">
+              <br>
+              <h1 class="text-center latestitems">PAYMENT DETAIL</h1>
+            </div>
+            @if (is_null($transaction->proof_of_payment))
+              <div class="col-md-3">
+                <img width="300" height="300" src="/uploads/product_images/noimage.jpg" alt="">
+              </div>
+            @else
+              <div class="col-md-3">
+                <img width="300" height="300" src="/proof_payment/{{$transaction->proof_of_payment}}" alt="">
+              </div>
+            @endif
+            <div class="col-md-9">
+              <strong>Proof Of Payment</strong><br>
+              @if ($transaction->status == 'unverified')
+                <form action="/transaksi/detail/proof" method="POST" enctype="multipart/form-data">
+                  @csrf
+                  <input type="hidden" name="id" value="{{$transaction->id}}">
+                  <input type="file" name="file" class="form-control-file" id="form19" accept=".jpeg,.jpg,.png,.gif" onchange="preview_image(event)" required><br>
+                  <button type="submit" class="text-white btn btn-info btn-lg btn-block">Send Proof</button>
+                </form>
+              @endif
+              @if (!is_null($transaction->proof_of_payment))
+                <span class = "text-white btn-sm btn-success font-weight-bold btn-lg btn-block">Proof Already Uploaded</span>
+                @if($transaction->status == 'waiting approval')
+                <form action="/transaksi/detail/proof" method="POST" enctype="multipart/form-data">
+                  @csrf
+                  <input type="hidden" name="id" value="{{$transaction->id}}">
+                  <input type="file" name="file" class="form-control-file" id="form19" accept=".jpeg,.jpg,.png,.gif" onchange="preview_image(event)" required><br>
+                  <button type="submit" class="text-white btn btn-info btn-lg btn-block">Update Proof</button>
+                </form>
                 @endif
-              </li>
-            </ul>
+              @endif
+            </div>
+          </div>
+          <div class="text-center">
+            <br>
+            <h1 class="text-center latestitems">REVIEW</h1>
+          </div>
+          <div class="col-md-12">
+          @if ($transaction->status == 'success')
+            @foreach ($transaction->transaction_detail as $item)
+              @php
+                $status = 0;
+              @endphp
+              @foreach ($reviews as $review)
+                @php
+                  if($item->product->id == $review->product_id && $review->user_id == Auth::user()->id){
+                    $status = $status + 1;
+                  }
+                @endphp
+              @endforeach
+              @if ($status == 0)
+                <div class="text-center">
+                  <p><strong>{{$item->product->product_name}}</strong></p>
+                </div>
+                <form action="/transaksi/detail/review" method="POST">
+                  @csrf
+                  <div class="info-icons text-center">
+                    <strong>RATE</strong>
+                    <br>
+                    <!-- <i class="fa fa-star-o ratingproduct star1" style="font-size:48px;"></i>
+                    <i class="fa fa-star-o ratingproduct star2" style="font-size:48px;"></i>
+                    <i class="fa fa-star-o ratingproduct star3" style="font-size:48px;"></i>
+                    <i class="fa fa-star-o ratingproduct star4" style="font-size:48px;"></i>
+                    <i class="fa fa-star-o ratingproduct star5" style="font-size:48px;"></i> -->
+                    <input type="number" name="rate" value="1" min="1" max="5">
+                  </div>
+                  <div class="text-center">
+                    <strong>CONTENT</strong>
+                    <br>
+                    <input type="text" class="form-control" id="content" name="content" value="" required>
+                  </div>
+                  <input type="hidden" name="user_id" value="{{Auth::user()->id}}">
+                  <!-- <input type="hidden" name="rate" value="0"> -->
+                  <input type="hidden" name="product_id" value="{{$item->product->id}}">
+
+                  <br>
+                  <div class="text-center">
+                    <button type="submit" class="btn btn-success btn-lg">Send Review ({{$item->product->product_name}})</button>
+                  </div>
+                  <br>
+                </form>
+              @else
+                @foreach ($reviews as $review)
+                  @if($item->product->id == $review->product_id && $review->user_id == Auth::user()->id)
+                    <div class="text-center">
+                      <p><strong>{{$item->product->product_name}}</strong></p>
+                    </div>
+                    <form action="/transaksi/detail/review" method="POST">
+                      @csrf
+                      <div class="info-icons text-center">
+                        <strong>RATE</strong>
+                        <br>
+                        <!-- <i class="fa fa-star-o ratingproduct star1" style="font-size:48px;"></i>
+                        <i class="fa fa-star-o ratingproduct star2" style="font-size:48px;"></i>
+                        <i class="fa fa-star-o ratingproduct star3" style="font-size:48px;"></i>
+                        <i class="fa fa-star-o ratingproduct star4" style="font-size:48px;"></i>
+                        <i class="fa fa-star-o ratingproduct star5" style="font-size:48px;"></i> -->
+                        <input type="number" name="rate" value="{{$review->rate}}" min="1" max="5">
+                      </div>
+                      <div class="text-center">
+                        <strong>CONTENT</strong>
+                        <br>
+                        <input type="text" class="form-control" id="content" name="content" value="{{$review->content}}" required>
+                      </div>
+                      <input type="hidden" name="user_id" value="{{$review->user_id}}">
+                      <!-- <input type="hidden" name="rate" value="0"> -->
+                      <input type="hidden" name="product_id" value="{{$review->product_id}}">
+
+                      <br>
+                      <div class="text-center">
+                        <button type="submit" class="btn btn-success btn-lg">Update Review ({{$item->product->product_name}})</button>
+                      </div>
+                      <br>
+                    </form>
+                  @endif
+                @endforeach
+              @endif
+            @endforeach
+          @else
+            <div class="text-center">
+              <p><strong>Finish Your Transaction To Review!</strong></p>
+            </div>
+          @endif
+          </div>
+          
+          <div class="col-md-12">
+            @if ($transaction->status == 'unverified' && is_null($transaction->proof_of_payment))
+              <form action="/transaksi/detail/status" method="POST">
+                @csrf
+                <input type="hidden" name="id" value="{{$transaction->id}}">
+                <input type="hidden" name="status" value="1">
+                <br>
+                <div class="text-center">
+                  <button type="submit" class="btn btn-danger btn-lg btn-block" onclick="return confirm('Cancel this order?')">Cancel Order</button>
+                </div>
+                <br>
+              </form>
+            @else
+              @if ($transaction->status == 'delivered')
+                <form action="/transaksi/detail/status" method="POST">
+                  @csrf
+                  <input type="hidden" name="id" value="{{$transaction->id}}">
+                  <input type="hidden" name="status" value="2">
+                  <br>
+                  <div class="text-center">
+                    <button type="submit" class="btn btn-danger btn-lg">Finish Order</button>
+                  </div>
+                </form>
+              @endif
+            @endif
           </div>
         </div>
       </div>
+      <br>
+      
     </div>
-  </div>
-  <div class="modal fade" id="modalTambahReview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog cascading-modal" role="document">
-      <!-- Content -->
-      <div class="modal-content">
-
-        <!-- Header -->
-        <div class="modal-header light-blue darken-3 white-text">
-          <h4 class="">Tambah Rating dan Review Produk</h4>
-          <button type="button" class="close waves-effect waves-light" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+  </section>
+@else
+  <section class="item content">
+    <div class="container toparea">
+      <div class="underlined-title">
+        <div class="editContent">
+          <h1 class="text-center latestitems">Transaction Detail Not Found!</h1>
         </div>
-
-        <!-- Body -->
-        <div class="modal-body mb-0">
-            <input type="hidden" name="product_id" id="product_id" value="">
-            <input type="hidden" name="user_id" id="user_id" value="{{Auth::user()->id}}">
-            <input id="signup-token" name="_token" type="hidden" value="{{csrf_token()}}">
-          <div class="md-form form-sm">
-            Masukkan Rate untuk Produk
-            <select name="rate" id="rate" class="form-control form-control-sm">
-              @for ($i = 0; $i < 6; $i++)
-              <option value="{{$i}}">{{$i}}</option>
-              @endfor
-            </select>
-          </div>
-          <br><br>
-          <div class="md-form form-sm">
-            <textarea type="text" id="content" class="md-textarea form-control form-control-sm" rows="3" required></textarea>
-          </div>
-          <br><br>
-          <div class="text-center mt-1-half">
-            <button type="submit" class="btn btn-info mb-2" id="kirim-review">Send</button>
-          </div>
+        <div class="wow-hr type_short">
+          <span class="wow-hr-h">
+          <i class="fa fa-star"></i>
+          <i class="fa fa-star"></i>
+          <i class="fa fa-star"></i>
+          </span>
         </div>
       </div>
-      <!-- Content -->
     </div>
-  </div>
-</section>
+  </section>
+  <script>
+    alert("Transaction Detail Not Found! Redirecting Back to Home.");
+    window.location.href = '/';
+  </script>
+@endif
 <!--================End Checkout Area =================-->
 @endsection
 
 @section('script')
-<script>
+<!-- <script>
   $(document).ready(function(e){
-       $(".tambah-review").click(function(e){
-        var index = $(".tambah-review").index(this);
-        var product_id = $("#product_id"+index).val();
-        $("#product_id").val(product_id);
-      });
+    $('.ratingproduct').click(function(e){
+      var index = parseInt($(".ratingproduct").index(this))+1;
+      var indextidaak = index+1;      
+      var i;
 
-      $("#kirim-review").click(function(e){
-        jQuery.ajax({
-              url: "{{url('/transaksi/detail/review')}}",
-              method: 'post',
-              data: {
-                  _token: $('#signup-token').val(),
-                  product_id: $("#product_id").val(),
-                  user_id: $("#user_id").val(),
-                  rate: $("#rate").val(),
-                  content: $("#content").val(),
-              },
-              success: function(result){
-                $('#modalTambahReview').modal('hide');
-                alert('Berhasil Menambah Review');
-                location.reload();
-              }
-          });
-      });    
+      for (i = 1; i <= index; i++) {
+        $(".star"+i).attr("class","fa fa-star ratingproduct star"+i);
+      }
+      for (indexno = indextidaak; indexno<= 5; indexno++){
+        $(".star"+indexno).attr("class","fa fa-star-o ratingproduct star"+indexno);
+      }
+
+      $("#rateval").val(index);
+    });
   });
-</script>
+</script> -->
 @endsection
