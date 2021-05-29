@@ -39,7 +39,7 @@ class ProductCategoriesController extends Controller
     {
         $test = Product_Categories::where('category_name' , $request->category_name)->get();
         if (count($test)>0){
-            return redirect('/categories');
+            return redirect('/categories')->with('failed','Data Sudah Ada');
         }else{
             $ct = new Product_Categories;
             $ct->category_name = $request->category_name;
