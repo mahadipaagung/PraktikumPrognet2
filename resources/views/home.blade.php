@@ -56,18 +56,18 @@
 				</div>
 			</div>
 			<div class="row">
-			@foreach ($product as $products)
+			@foreach ($products as $product)
 				<div class="col-md-4">
 					<div class="productbox">
 						<div class="fadeshop">
 							<div class="captionshop text-center" style="display: none;">
-								<h3>{{$products->product_name}}</h3>
+								<h3>{{$product->product_name}}</h3>
 								<p>
-									<a href="/product/{{$products->id}}" class="learn-more detailslearn"><i class="fa fa-link"></i> Details</a>
+									<a href="/product/{{$product->slug}}" class="learn-more detailslearn"><i class="fa fa-link"></i> Details</a>
 								</p>
 							</div>
-							@if($products->product_image->count())
-								@foreach ($products->product_image as $image)
+							@if($product->product_image->count())
+								@foreach ($product->product_image as $image)
 									<span class="maxproduct"><img src="/uploads/product_images/{{$image->image_name}}" alt=""></span>
 									@break
 								@endforeach
@@ -76,26 +76,26 @@
 							@endif
 						</div>
 						<div class="product-details">
-							<a href="/product/{{$products->id}}">
-								<h1>{{$products->product_name}}</h1>
+							<a href="/product/{{$product->slug}}">
+								<h1>{{$product->product_name}}</h1>
 							</a>
-							@if($products->stock==0)
+							@if($product->stock==0)
 								<h4>Out of Stock!</h4>
 							@endif
 
-							@if($products->discount->count())
-								@foreach($products->discount as $diskon)
+							@if($product->discount->count())
+								@foreach($product->discount as $diskon)
 									<h4>-{{$diskon->percentage}}%</h4>
 									<span class="price">
-										<del class="edd_price">Rp.{{number_format($products->price)}}</del>
+										<del class="edd_price">Rp.{{number_format($product->price)}}</del>
 									</span>
 									<span class="price">
-										<span class="edd_price">Rp.{{number_format($products->price * ((100 - $diskon->percentage) / 100))}}</span>
+										<span class="edd_price">Rp.{{number_format($product->price * ((100 - $diskon->percentage) / 100))}}</span>
 									</span>
 								@endforeach
 							@else
 								<span class="price">
-									<span class="edd_price">Rp.{{number_format($products->price)}}</span>
+									<span class="edd_price">Rp.{{number_format($product->price)}}</span>
 								</span>
 							@endif
 						</div>

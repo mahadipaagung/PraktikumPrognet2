@@ -30,12 +30,15 @@ class CartController extends Controller
                         if($stockprod < $cart->qty){
                             $cart->qty = $stockprod;
                             $cart->save();
+                        }else if($stockprod==0){
+                            $cart->status = 'cancelled';
+                            $cart->save();
                         }
                     }
                 }
             }
             $cartakhir = Cart::where('user_id', '=', Auth::user()->id)->where('status', '=', 'notyet')->get();
-            return view('user.cart', ['cart'=>$cartakhir]);
+            return view('user.cart', ['carts'=>$cartakhir]);
         }
     }
 
@@ -79,7 +82,7 @@ class CartController extends Controller
             $cart->save();
 
             $carts = Cart::where('user_id', '=', $request->user_id)->where('status', '=', 'notyet')->get();
-            $hasilr = view('user.filtercart',['cart' => $carts])->render();
+            $hasilr = view('user.filtercart',['carts' => $carts])->render();
 
             return response()->json(['hasil' => $hasilr]);
 
@@ -88,7 +91,7 @@ class CartController extends Controller
             $cart->save();
 
             $carts = Cart::where('user_id', '=', $request->user_id)->where('status', '=', 'notyet')->get();
-            $hasilr = view('user.filtercart',['cart' => $carts])->render();
+            $hasilr = view('user.filtercart',['carts' => $carts])->render();
 
             return response()->json(['hasil' => $hasilr]);
 
@@ -97,7 +100,7 @@ class CartController extends Controller
             $cart->save();
 
             $carts = Cart::where('user_id', '=', $request->user_id)->where('status', '=', 'notyet')->get();
-            $hasilr = view('user.filtercart',['cart' => $carts])->render();
+            $hasilr = view('user.filtercart',['carts' => $carts])->render();
 
             return response()->json(['hasil' => $hasilr]);
         }

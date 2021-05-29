@@ -12,6 +12,7 @@ use App\Product;
 use App\Admin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Carbon\Carbon;
 
 class TransactionController extends Controller
@@ -98,23 +99,33 @@ class TransactionController extends Controller
             }
         }
 
-        return redirect('/transaksi/'.$request->user_id);
+        $encryptid = Crypt::encrypt($request->user_id);
+
+        return redirect('/transaksi/'.$encryptid);
     }
 
-    public function index($id){
+    public function index($param){
+
+        try {
+            $id = Crypt::decrypt($param);
+        } catch (DecryptException $exception) {
+            return view('user.transaksi');
+        }
+
         if(is_null(Auth::user())){
             return redirect('/login');
-        }elseif(Auth::user()->id != $id){
+        }else if(Auth::user()->id != $id){
             return redirect('/');
         }else{
             $transaksi = Transaction::where('user_id','=',$id)->orderBy('id', 'DESC')->simplePaginate(6);
+
             foreach($transaksi as $item){
                 if($item->timeout < date('Y-m-d H:i:s') & $item->status == 'unverified'){
                     $item->status = 'expired';
                     $item->save();
                 }
             }
-            return view('user.transaksi', ['transaksi' => $transaksi]);
+            return view('user.transaksi', ['transactions' => $transaksi]);
         }
     }
 

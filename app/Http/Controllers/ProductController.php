@@ -32,11 +32,12 @@ class ProductController extends Controller
     public function showbaru()
     {
         $products = Product::orderBy('id', 'desc')->take(3)->get();
-        return view('home', ['product' => $products]);
+        return view('home', ['products' => $products]);
     }
 
-    public function showone($id){
-        $product = Product::where('id','=',$id)->first();
+    public function showone($slug){
+
+        $product = Product::where('slug','=',$slug)->first();
         return view('user.product', ['products' => $product]);
     }
     /**

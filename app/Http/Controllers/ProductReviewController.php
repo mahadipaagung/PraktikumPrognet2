@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Product_Review;
 use App\Product;
 use App\Admin;
+use Illuminate\Support\Facades\Crypt;
 
 class ProductReviewController extends Controller
 {
@@ -35,10 +36,6 @@ class ProductReviewController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
      * Display the specified resource.
@@ -69,10 +66,6 @@ class ProductReviewController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -86,28 +79,64 @@ class ProductReviewController extends Controller
     }
     
     public function store(Request $request){
-        $review = new Product_Review;
-        $review->product_id = $request->product_id;
-        $review->user_id = $request->user_id;
-        $review->rate = $request->rate;
-        $review->content = $request->content;
 
-        $review->save();
+        $cekreview = Product_Review::where('product_id', '=', $request->product_id)->where('user_id', '=', $request->user_id)->first();
+        $cekproduk = Product::find($request->product_id);
 
-        
-        $reviews = Product_Review::where('product_id', '=', $request->product_id)->get();
-        $meanRate = 0;
-        $count = $reviews->count();
+        if(is_null($cekreview)){
+            $review = new Product_Review;
+            $review->product_id = $request->product_id;
+            $review->user_id = $request->user_id;
+            $review->rate = $request->rate;
+            $review->content = $request->content;
+    
+            $review->save();
+    
+            $reviews = Product_Review::where('product_id', '=', $request->product_id)->get();
+            $meanRate = 0;
+            $count = $reviews->count();
+    
+            foreach($reviews as $item){
+                $meanRate = $meanRate+$item->rate;
+            }
+    
+            $meanRate = $meanRate / $count;
+    
+            $produk = Product::find($request->product_id);
+            $produk->product_rate = $meanRate;
+            $produk->save();
 
-        foreach($reviews as $item){
-            $meanRate = $meanRate+$item->rate;
+            return redirect('/product/'.$cekproduk->slug);
+        }else{
+            $review = Product_Review::find($cekreview->id);
+
+            $review->product_id = $request->product_id;
+            $review->user_id = $request->user_id;
+            $review->rate = $request->rate;
+            $review->content = $request->content;
+    
+            $review->save();
+    
+            $reviews = Product_Review::where('product_id', '=', $request->product_id)->get();
+            $meanRate = 0;
+            $count = $reviews->count();
+    
+            foreach($reviews as $item){
+                $meanRate = $meanRate+$item->rate;
+            }
+    
+            $meanRate = $meanRate / $count;
+    
+            $produk = Product::find($request->product_id);
+            $produk->product_rate = $meanRate;
+            $produk->save();
+
+            return redirect('/product/'.$cekproduk->slug);
         }
 
-        $meanRate = $meanRate / $count;
+        
 
-        $produk = Product::find($request->product_id);
-        $produk->product_rate = $meanRate;
-        $produk->save();
+
         // $admin = Admin::find(1);
         // $notif = "<a class='dropdown-item' href='/admin/products/".$produk->id."'>".
         //         "<div class='item-content flex-grow'>".
