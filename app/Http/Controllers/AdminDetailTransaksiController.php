@@ -30,7 +30,7 @@ class AdminDetailTransaksiController extends Controller
     }
 
     public function membatalkanPesanan(Request $request){
-        $transaksi = Transaction::with('transaction_detail')->find($request->id);
+        $transaksi = Transaction::find($request->id);
         $user = User::find($transaksi->user_id);
         if($request->status == 1){
             $transaksi->status = 'canceled';

@@ -252,7 +252,6 @@
                       <!-- <input type="hidden" name="rate" value="0"> -->
                       <input type="hidden" name="product_id" value="{{$review->product_id}}">
                       <input type="hidden" name="trans_id" value="{{$transaction->id}}">
-
                       <br>
                       <div class="text-center">
                         <button type="submit" class="btn btn-success btn-lg">Update Review ({{$item->product->product_name}})</button>

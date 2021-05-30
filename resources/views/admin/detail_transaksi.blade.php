@@ -161,51 +161,50 @@
                           </li>
                             <br>
                             <li>
-                                    @if ($transaksi->status == "unverified" && !is_null($transaksi->proof_of_payment))
-                                        <br>
-                                        <div class="d-flex flex-row bd-highlight mb-3">
-                                            <form action="/admin/transaksi/detail/status" method="POST">
-                                              @csrf
-                                              <input type="hidden" name="id" value="{{$transaksi->id}}">
-                                              <input type="hidden" name="status" value="3">
-                                              <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Apa yakin ingin acc pesanan ini?')">Verify</button>
-                                            </form>
-                                        </div>  
-                                    @endif
-                                    
-                                    @if ($transaksi->status === 'verified')
-                                            <div class="d-flex flex-row bd-highlight mb-3">
-                                            <form action="/admin/transaksi/detail/status" method="POST">
-                                                @csrf
-                                                <input type="hidden" name="id" value="{{$transaksi->id}}">
-                                                <input type="hidden" name="status" value="4">
-                                                <button type="submit" class="btn btn-success btn-sm">Deliver Products</button>
-                                            </form>
-                                        </div>  
-                                    @endif
+                            @if ($transaksi->status == "unverified" && !is_null($transaksi->proof_of_payment))
+                                <br>
+                                <div class="d-flex flex-row bd-highlight mb-3">
+                                    <form action="/admin/transaksi/detail/status" method="POST">
+                                      @csrf
+                                      <input type="hidden" name="id" value="{{$transaksi->id}}">
+                                      <input type="hidden" name="status" value="3">
+                                      <button type="submit" class="btn btn-success btn-sm d-flex justify-content-center" onclick="return confirm('Apa yakin ingin acc pesanan ini?')">Verify</button>
+                                    </form>
+                                </div>  
+                            @endif
+                            
+                            @if ($transaksi->status === 'verified')
+                                    <div class="d-flex flex-row bd-highlight mb-3">
+                                    <form action="/admin/transaksi/detail/status" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="id" value="{{$transaksi->id}}">
+                                        <input type="hidden" name="status" value="4">
+                                        <button type="submit" class="btn btn-success btn-sm d-flex justify-content-center">Deliver Products</button>
+                                    </form>
+                                </div>  
+                            @endif
 
-                                    @if ($transaksi->status === 'indelivery')
-                                            <div class="d-flex flex-row bd-highlight mb-3">
-                                            <form action="/admin/transaksi/detail/status" method="POST">
-                                                @csrf
-                                                <input type="hidden" name="id" value="{{$transaksi->id}}">
-                                                <input type="hidden" name="status" value="5">
-                                                <button type="submit" class="btn btn-success btn-sm">Set Product Delivered</button>
-                                            </form>
-                                        </div>  
-                                    @endif
-                                    
-                                        @if (is_null($transaksi->proof_of_payment))
-                                       
-                                        @else
-                                            <div style="margin-top:10px;" class="d-flex justify-content-center">
-                                                <button id="tombol" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalContactForm">Proof Of Payment</button>
-                                            </div>
-                                        @endif
-
-                                        <div style="margin-top:10px;" class="d-flex justify-content-center">
-                                          <a href="/admin/transaksi"><button class="btn btn-warning btn-rounded">Back</button></a>
-                                        </div>
+                            @if ($transaksi->status === 'indelivery')
+                                    <div class="d-flex flex-row bd-highlight mb-3">
+                                    <form action="/admin/transaksi/detail/status" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="id" value="{{$transaksi->id}}">
+                                        <input type="hidden" name="status" value="5">
+                                        <button type="submit" class="btn btn-success btn-sm d-flex justify-content-center">Set Product Delivered</button>
+                                    </form>
+                                </div>  
+                            @endif
+                            
+                                @if (is_null($transaksi->proof_of_payment))
+                                
+                                @else
+                                    <div style="margin-top:10px;" class="d-flex ">
+                                        <button id="tombol" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalContactForm">Proof Of Payment</button>
+                                    </div>
+                                @endif
+                                <div style="margin-top:10px;" class="d-flex ">
+                                  <a href="/admin/transaksi"><button class="btn btn-warning btn-rounded">Back</button></a>
+                                </div>
                             </li>
                           </ul>
                         </div>
@@ -314,29 +313,29 @@
                   <td class="text-center text-md-left">
                     <span>{{$item->qty}} </span>
                   </td>
-                        @foreach($item->product->product_review as $review)
-                            <td>
-                              {{$review->rate}}
-                              <input type="hidden" name="review_id" id="review_id{{$loop->iteration-1}}" value="{{$review->id}}">
-                            </td>
-                            <td>
-                              {{$review->content}}
-                            </td> 
-                        @endforeach
-                            <input type="hidden" name="id" id="product_id{{$loop->iteration-1}}" value="{{$item->product->id}}">
-                            <input type="hidden" name="name" id="product_name{{$loop->iteration-1}}" value="{{$item->product->product_name}}">
-                            @php
-                                $status = 0;
-                            @endphp
-                            @foreach ($item->product->product_review as $pr)
-                                @php
-                                    if($item->product->id == $pr->product_id){
-                                          $status = $status + 1;
-                                    }else{
-                                          $status = $status;
-                                    }
-                                @endphp
-                            @endforeach
+                    @foreach($item->product->product_review as $review)
+                      <td>
+                        {{$review->rate}}
+                        <input type="hidden" name="review_id" id="review_id{{$loop->iteration-1}}" value="{{$review->id}}">
+                      </td>
+                      <td>
+                        {{$review->content}}
+                      </td> 
+                    @endforeach
+                    <input type="hidden" name="id" id="product_id{{$loop->iteration-1}}" value="{{$item->product->id}}">
+                    <input type="hidden" name="name" id="product_name{{$loop->iteration-1}}" value="{{$item->product->product_name}}">
+                    @php
+                        $status = 0;
+                    @endphp
+                    @foreach ($item->product->product_review as $pr)
+                        @php
+                            if($item->product->id == $pr->product_id){
+                                  $status = $status + 1;
+                            }else{
+                                  $status = $status;
+                            }
+                        @endphp
+                    @endforeach
                   </td>
                   <td>
                      @if ($status != 0)               
@@ -361,57 +360,57 @@
       </div>
       <!-- Main Container -->
       <div class="modal" id="modalContactForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog cascading-modal" role="document">
-        <!-- Content -->
-        <div class="modal-content">
-      
-          <!-- Header -->
-          <div class="modal-header light-blue darken-3 white-text">
-            <h4>Bukti Pembayaran</h4>
+        <div class="modal-dialog cascading-modal" role="document">
+          <!-- Content -->
+          <div class="modal-content">
+        
+            <!-- Header -->
+            <div class="modal-header light-blue darken-3 white-text">
+              <h4>Bukti Pembayaran</h4>
+            </div>
+        
+            <!-- Body -->
+            <div class="modal-body mb-0">
+              <div align="center" class="d-flex justify-content-center">
+                  <img style="width:300px;height:300px;" src="{{url('proof_payment/'.$transaksi->proof_of_payment)}}"  id="output_image" onload="preview_image(event)" class="mb-2 mw-50 w-50 h-50 rounded">
+                </div>
+            </div>
           </div>
-      
-          <!-- Body -->
-          <div class="modal-body mb-0">
-            <div align="center" class="d-flex justify-content-center">
-                <img style="width:300px;height:300px;" src="{{url('proof_payment/'.$transaksi->proof_of_payment)}}"  id="output_image" onload="preview_image(event)" class="mb-2 mw-50 w-50 h-50 rounded">
-              </div>
-          </div>
+          <!-- Content -->
         </div>
-        <!-- Content -->
-      </div>
       </div>
 
       <div class="modal fade" id="modalLihatReview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog cascading-modal" role="document">
-                  <!-- Content -->
-                  <div class="modal-content">
+        <div class="modal-dialog cascading-modal" role="document">
+          <!-- Content -->
+          <div class="modal-content">
 
-                    <!-- Header -->
-                    <div class="modal-header light-blue darken-3 white-text">
-                      <h4 class="mb-2" id="product_name" name="product_name"></h4>
-                      <button type="button" class="close waves-effect waves-light" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <!-- Body -->
-                    <div class="modal-body mb-0">
-                        <input type="hidden" name="review_id" id="review_id" value="">
-                        <input type="hidden" name="admin_id" id="admin_id" value="1">
-                        <input id="signup-token" name="_token" type="hidden" value="{{csrf_token()}}">
-                      <br><br>
-                      <div class="md-form form-sm">
-                        <label >Masukan Balasan</label>
-                        <textarea type="text" id="content" class="md-textarea form-control form-control-sm text-dark" rows="3" required></textarea>
-                      </div>
-                      <br><br>
-                      <div class="text-center mt-1-half">
-                        <button type="submit" class="btn btn-info mb-2" id="kirim-review">Send</button>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- Content -->
-                </div>
+            <!-- Header -->
+            <div class="modal-header light-blue darken-3 white-text">
+              <h4 class="mb-2" id="product_name" name="product_name"></h4>
+              <button type="button" class="close waves-effect waves-light" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <!-- Body -->
+            <div class="modal-body mb-0">
+                <input type="hidden" name="review_id" id="review_id" value="">
+                <input type="hidden" name="admin_id" id="admin_id" value="1">
+                <input id="signup-token" name="_token" type="hidden" value="{{csrf_token()}}">
+              <br><br>
+              <div class="md-form form-sm">
+                <label >Masukan Balasan</label>
+                <textarea type="text" id="content" class="md-textarea form-control form-control-sm text-dark" rows="3" required></textarea>
               </div>
+              <br><br>
+              <div class="text-center mt-1-half">
+                <button type="submit" class="btn btn-info mb-2" id="kirim-review">Send</button>
+              </div>
+            </div>
+          </div>
+          <!-- Content -->
+        </div>
+      </div>
                                     
 @endsection
 @section('script')
@@ -443,8 +442,6 @@
                               admin_id: $("#admin_id").val(),
                               review_id: $("#review_id").val(),
                               content: $("#content").val(),
-                            
-                              
                           },
                           success: function(result){
                             $('#modalLihatReview').modal('hide');

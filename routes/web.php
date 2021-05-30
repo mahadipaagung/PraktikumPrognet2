@@ -26,7 +26,6 @@ Route::prefix('product')->group(function () {
 });
 
 Route::prefix('admin')->group(function(){
-    Route::get('/', 'AdminController@index')->name('admin.dashboard');
     Route::get('/login', 'Auth\AdminLoginController@showLoginform')->name('admin.login');
     Route::post('/login', 'Auth\AdminLoginController@login')->name('admin.login.submit');
     Route::get('/', 'AdminController@index')->name('admin.dashboard')->middleware('auth:admin');
@@ -38,11 +37,10 @@ Route::prefix('admin')->group(function(){
     Route::post('/password/email','Auth\AdminForgotPasswordController@sendResetLinkEmail')->name('admin.password.email');
     Route::get('/password/reset{token}','Auth\AdminResetPasswordController@showResetForm')->name('admin.password.reset');
     Route::post('/password/reset','Auth\AdminResetPasswordController@reset')->name('admin.password.update');
+
     Route::get('/transaksi','AdminTransaksiController@index')->name('admin.transaksi');
     Route::get('/transaksi/detail/{id}','AdminDetailTransaksiController@index')->name('admin.detail_transaksi');
-
     Route::post('/transaksi/detail/status', 'AdminDetailTransaksiController@membatalkanPesanan');
-
     Route::post('/transaksi/detail/review', 'ResponseController@create');
 
 });
