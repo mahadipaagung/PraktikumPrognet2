@@ -291,24 +291,17 @@
   
               </thead>
               <!-- Table head -->
-  
               <!-- Table body -->
               <tbody>
-  
                 <!-- First row -->
                 @foreach ($transaksi->transaction_detail as $item)
-                    
-                
                 <tr>
-  
                   <th scope="row">
                       @foreach ($item->product->relasi_product_image as $image)
-                      
                           <img style="width:100px;height:100px;" src="{{asset('/uploads/product_images/'.$image->image_name)}}" alt=""class="img-fluid z-depth-0">
                           @break
                       @endforeach
                   </th>
-  
                   <td>
                     <h5 class="mt-3">
                       <input type="hidden" name="id" id="product_id{{$loop->iteration-1}}" value="{{$item->product->id}}">
@@ -323,14 +316,12 @@
                   </td>
                         @foreach($item->product->product_review as $review)
                             <td>
-                            {{$review->rate}}
-                            <input type="hidden" name="review_id" id="review_id{{$loop->iteration-1}}" value="{{$review->id}}">
-
+                              {{$review->rate}}
+                              <input type="hidden" name="review_id" id="review_id{{$loop->iteration-1}}" value="{{$review->id}}">
                             </td>
                             <td>
-                            {{$review->content}}
-                            </td>
-                            
+                              {{$review->content}}
+                            </td> 
                         @endforeach
                             <input type="hidden" name="id" id="product_id{{$loop->iteration-1}}" value="{{$item->product->id}}">
                             <input type="hidden" name="name" id="product_name{{$loop->iteration-1}}" value="{{$item->product->product_name}}">
@@ -390,8 +381,7 @@
       </div>
       </div>
 
-      <div class="modal fade" id="modalLihatReview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                aria-hidden="true">
+      <div class="modal fade" id="modalLihatReview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog cascading-modal" role="document">
                   <!-- Content -->
                   <div class="modal-content">
@@ -403,9 +393,6 @@
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
-
-                    
-
                     <!-- Body -->
                     <div class="modal-body mb-0">
                         <input type="hidden" name="review_id" id="review_id" value="">
