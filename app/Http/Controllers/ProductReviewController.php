@@ -7,6 +7,7 @@ use App\Product_Review;
 use App\Product;
 use App\Admin;
 use Illuminate\Support\Facades\Crypt;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ProductReviewController extends Controller
 {
@@ -80,13 +81,15 @@ class ProductReviewController extends Controller
     
     public function store(Request $request){
 
-        $cekreview = Product_Review::where('product_id', '=', $request->product_id)->where('user_id', '=', $request->user_id)->first();
+        $cekreview = Product_Review::where('product_id', '=', $request->product_id)
+        ->where('user_id', '=', $request->user_id)->where('transaction_id', '=', $request->trans_id)->first();
         $cekproduk = Product::find($request->product_id);
 
         if(is_null($cekreview)){
             $review = new Product_Review;
             $review->product_id = $request->product_id;
             $review->user_id = $request->user_id;
+            $review->transaction_id = $request->trans_id;
             $review->rate = $request->rate;
             $review->content = $request->content;
     
@@ -105,6 +108,8 @@ class ProductReviewController extends Controller
             $produk = Product::find($request->product_id);
             $produk->product_rate = $meanRate;
             $produk->save();
+
+            Alert::success('Review Added', 'Your review is added to the product!');
 
             return redirect('/product/'.$cekproduk->slug);
         }else{
@@ -131,6 +136,7 @@ class ProductReviewController extends Controller
             $produk->product_rate = $meanRate;
             $produk->save();
 
+            Alert::success('Review Updated', 'Your review is updated to the product!');
             return redirect('/product/'.$cekproduk->slug);
         }
 
@@ -148,26 +154,26 @@ class ProductReviewController extends Controller
         // $admin->notify(new AdminNotification($notif));
     }
 
-    public function update(Request $request){
-        $review = Product_Review::find($request->review_id);
-        $review->rate = $request->rate;
-        $review->content = $request->content;
-        $review->save();
+    // public function update(Request $request){
+    //     $review = Product_Review::find($request->review_id);
+    //     $review->rate = $request->rate;
+    //     $review->content = $request->content;
+    //     $review->save();
 
-        $reviews = Product_Review::where('product_id', '=', $review->product_id)->get();
-        $meanRate = 0;
-        $count = $reviews->count();
+    //     $reviews = Product_Review::where('product_id', '=', $review->product_id)->get();
+    //     $meanRate = 0;
+    //     $count = $reviews->count();
 
-        foreach($reviews as $item){
-            $meanRate = $meanRate+$item->rate;
-        }
+    //     foreach($reviews as $item){
+    //         $meanRate = $meanRate+$item->rate;
+    //     }
 
-        $meanRate = $meanRate / $count;
+    //     $meanRate = $meanRate / $count;
 
-        $produk = Product::find($review->product_id);
-        $produk->product_rate = $meanRate;
-        $produk->save();
+    //     $produk = Product::find($review->product_id);
+    //     $produk->product_rate = $meanRate;
+    //     $produk->save();
 
-        return redirect('/product/'.$review->product_id);
-    }
+    //     return redirect('/product/'.$review->product_id);
+    // }
 }

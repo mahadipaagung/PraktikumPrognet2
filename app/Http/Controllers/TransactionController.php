@@ -13,6 +13,7 @@ use App\Admin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
+use RealRashid\SweetAlert\Facades\Alert;
 use Carbon\Carbon;
 
 class TransactionController extends Controller
@@ -109,7 +110,8 @@ class TransactionController extends Controller
         try {
             $id = Crypt::decrypt($param);
         } catch (DecryptException $exception) {
-            return view('user.transaksi');
+            Alert::error('Transaction Not Found', 'You enter the wrong transaction information! Redirecting back to Home.');
+            return redirect('/');
         }
 
         if(is_null(Auth::user())){
@@ -120,6 +122,10 @@ class TransactionController extends Controller
             $transaksi = Transaction::where('user_id','=',$id)->orderBy('id', 'DESC')->simplePaginate(6);
 
             foreach($transaksi as $item){
+                if(!is_null($item->proof_of_payment) & $item->status == 'unverified'){
+                    $item->status = 'waiting approval';
+                    $item->save();
+                }
                 if($item->timeout < date('Y-m-d H:i:s') & $item->status == 'unverified'){
                     $item->status = 'expired';
                     $item->save();

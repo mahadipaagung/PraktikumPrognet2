@@ -2,6 +2,8 @@
 
 @section('content')
 @php
+  $status = 0;
+  $statusall = 0;
   $jumlahproduk = 0;
   $beratawal = 0;
   $beratkali = 0;
@@ -46,17 +48,30 @@
           </thead>
           <tbody>
           @foreach($carts as $products)
+            @php
+              $status=0;
+              if($products->status == "producterror"){
+                $status = 1;
+              }else if($products->status == "qtyerror"){
+                $status = 2;
+                $statusall = $statusall+1;
+              }
+            @endphp
             <tr class="edd_cart_item" id="edd_cart_item_0_25" data-download-id="25">
               <td class="edd_cart_item_name">
                 <div class="edd_cart_item_image">
                     @foreach($products->product->product_image as $image)
-                      <img width="100" height="100" src="/uploads/product_images/{{$image->image_name}}" alt="">
+                      <a href="/product/{{$products->product->slug}}"><img width="100" height="100" src="/uploads/product_images/{{$image->image_name}}" alt="" ></a>
                       @break
                     @endforeach
                 </div>
                 <span class="edd_checkout_cart_item_title">{{$products->product->product_name}}</span>
+                  @if($status==1)
+                    <a id="ilang"><i class="fa fa-exclamation-triangle"></i></a>
+                  @endif
               </td>
               <td class="edd_cart_item_price">
+                
                 @if($products->product->discount->count())
                   @foreach($products->product->discount as $diskon)
                       @if($diskon->start <= date('Y-m-d') && $diskon->end >= date('Y-m-d'))
@@ -82,7 +97,7 @@
                   @endforeach
                 @else
                     <span class="price">
-                        <span class="edd_price">Rp.{{number_format($products->product->price)}}</span>
+                      <span class="edd_price">Rp.{{number_format($products->product->price)}}</span>
                     </span>
                     @php
                       $hargaawal = $products->product->price;
@@ -92,6 +107,9 @@
               </td>
               <td class="edd_cart_item_qty kuantiti">
                 <span class="qty{{$loop->iteration}}">{{$products->qty}}</span>
+                @if($status==2)
+                  <a id="habis"><i class="fa fa-exclamation-triangle"></i></a>
+                @endif
               </td>
               <td class="edd_cart_item_qty">
                 <input type="hidden" class="cartid{{$loop->iteration}}" name="cartid" value="{{$products->id}}">
@@ -128,9 +146,9 @@
         <fieldset id="edd_purchase_submit">
           <form action="/checkout" method="POST">
             @csrf
-              @if ($subtotalbaru == 0)
+              @if ($subtotalbaru == 0 || $statusall > 0)
                 <input type="hidden" name="user_id" value="{{Auth::user()->id}}">
-                <button type="submit" class="edd-submit button" id="edd-purchase-button" name="edd-purchase" disabled>Checkout
+                <button type="submit" class="edd-submit button" id="edd-purchase-button" name="edd-purchase" disabled><del>Checkout</del>
                     <i class="fa fa-angle-right right"></i>
                 </button>
               @else
@@ -151,6 +169,13 @@
 @section('script')
 <script>
 	$(document).ready(function(e){
+    $('#habis').click(function(e){
+      swal("Cart Status", "Item stock is low or empty. Please reduce your cart quantity or remove the product.", "warning");
+    });
+
+    $('#ilang').click(function(e){
+      swal("Cart Status", "Item is removed by admin. Please remove the product from your cart.", "warning");
+    });
 
     $('.tambah').click(function(e){
       var index = $(".tambah").index(this);
@@ -190,7 +215,7 @@
             }
         });
       }else{
-        alert("Stok Produk "+ product_name +" Hanya "+ stok +" buah");
+        swal("Cart Status", "Item '"+ product_name + "' only have " + stok + " stock.", "error");
       }
     });
 
@@ -209,7 +234,7 @@
       var newjumlah = parseInt(parseInt(qty)-1);
       console.log(newjumlah);
       if(0 >= parseInt(newjumlah)){
-        alert("Tidak bisa mengurangi produk lagi.");
+        swal("Cart Status", "To remove the item completely, use the 'Delete' button.", "error");
       }else{
         $('.qty'+indexbaru).text(newjumlah);
         $.ajaxSetup({
@@ -218,16 +243,16 @@
           }
         });
         $.ajax({
-            url: '/updatecart',
-            method: 'post',
-            data: {
-              action: 2,
-              user_id: $('.userid'+indexbaru).val(),
-              cart_id: $('.cartid'+indexbaru).val(),
-            },
-            success: function(result){
-              $('.cartswitch').html(result.hasil);
-            }
+          url: '/updatecart',
+          method: 'post',
+          data: {
+            action: 2,
+            user_id: $('.userid'+indexbaru).val(),
+            cart_id: $('.cartid'+indexbaru).val(),
+          },
+          success: function(result){
+            $('.cartswitch').html(result.hasil);
+          }
         });
       }
     });
@@ -246,28 +271,40 @@
       console.log(stok);
       var newjumlah = parseInt(parseInt(qty)-1);
       console.log(newjumlah);
-      var konfirmasi = confirm('Apakah anda yakin ingin menghapus produk dari keranjang?');
-		  if(konfirmasi == true){
-        $.ajaxSetup({
-          headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-          }
-        });
-        $.ajax({
-          url: '/updatecart',
-          method: 'post',
-          data: {
-            action: 3,
-            user_id: $('.userid'+indexbaru).val(),
-            cart_id: $('.cartid'+indexbaru).val(),
-          },
-          success: function(result){
-            $('.cartswitch').html(result.hasil);
-          }
-        });
-      }
+      swal({
+        title: "Delete this item?",
+        text: "You will not be able to undo this action!",
+        icon: "warning",
+        buttons: [
+          'No!',
+          'Yes!'
+        ],
+        dangerMode: true,
+      }).then(function(isConfirm) {
+        if (isConfirm) {
+          $.ajaxSetup({
+            headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+          });
+          $.ajax({
+            url: '/updatecart',
+            method: 'post',
+            data: {
+              action: 3,
+              user_id: $('.userid'+indexbaru).val(),
+              cart_id: $('.cartid'+indexbaru).val(),
+            },
+            success: function(result){
+              $('.cartswitch').html(result.hasil);
+              swal("Item Deleted", "The item is removed from cart!", "success");
+            }
+          });
+        } else {
+          swal("Cart Status", "Your item is still in cart!", "warning");
+        }
+      });
     });
-
 	});
 </script>
 @endsection

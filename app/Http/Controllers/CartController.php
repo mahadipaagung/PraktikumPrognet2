@@ -6,6 +6,7 @@ use App\Category;
 use App\Cart;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class CartController extends Controller
 {
@@ -13,32 +14,46 @@ class CartController extends Controller
         if(is_null(Auth::user())){
             return redirect('/login');
         }else{
-            $carts = Cart::where('user_id', '=', Auth::user()->id)->where('status', '=', 'notyet')->get();
+            $carts = Cart::where('user_id', '=', Auth::user()->id)->where('status', '=' , 'notyet')->get();
             foreach($carts as $cart){
                 $idcart = $cart->id;
                 $product = $cart->product->id;
-                $cekproduk = Product::where('id', '=', $product)->get();
+                $cekproduk = Product::find($product);
 
                 $cart = Cart::find($idcart);
 
                 if(!isset($cekproduk)){
-                    $cart->status = 'cancelled';
+                    $cart->status = 'producterror';
                     $cart->save();
                 }else{
-                    foreach($cekproduk as $chk){
-                        $stockprod = $chk->stock;
-                        if($stockprod < $cart->qty){
-                            $cart->qty = $stockprod;
-                            $cart->save();
-                        }else if($stockprod==0){
-                            $cart->status = 'cancelled';
-                            $cart->save();
-                        }
+                    $stockprod = $cekproduk->stock;
+                    if($stockprod < $cart->qty){
+                        $cart->status = 'qtyerror';
+                        $cart->save();
                     }
                 }
+
+                // if(!isset($cekproduk)){
+                //     $cart->status = 'cancelled';
+                //     $cart->save();
+                // }else{
+                //     $stockprod = $cekproduk->stock;
+                //     if($stockprod < $cart->qty){
+                //         $cart->qty = $stockprod;
+                //         $cart->save();
+                //     }else if($stockprod==0){
+                //         $cart->status = 'cancelled';
+                //         $cart->save();
+                //     }
+                // }
             }
-            $cartakhir = Cart::where('user_id', '=', Auth::user()->id)->where('status', '=', 'notyet')->get();
-            return view('user.cart', ['carts'=>$cartakhir]);
+            $carts = Cart::where('user_id', '=', Auth::user()->id)
+            ->where(function($query){
+                $query->where('status', '=', 'notyet')
+                    ->orWhere('status', '=', 'producterror')
+                    ->orWhere('status', '=', 'qtyerror');
+            })->get();
+            return view('user.cart', ['carts'=>$carts]);
         }
     }
 
@@ -61,48 +76,66 @@ class CartController extends Controller
             $cek->save();
         }
 
+        Alert::success('Item Added', 'Your item has been added to the cart!');
         return redirect('/cart');
     }
 
     public function update(Request $request){
         $cart = Cart::find($request->cart_id);
-        // $products = $cart->product_id;
-        // $cekproduk = Product::where('id', '=', $products);
-
-        // if($cekproduk->id->count()){
-        //     $cart->status = 'cancelled';
-        //     $cart->save();
-
-        //     $cart = Cart::where('user_id', '=', Auth::user()->id)->where('status', '=', 'notyet')->get();
-        //     return view('user.cart', ['cart'=>$cart]);
-        // }
 
         if($request->action == 3){
             $cart->status = 'cancelled';
             $cart->save();
 
-            $carts = Cart::where('user_id', '=', $request->user_id)->where('status', '=', 'notyet')->get();
+            $carts = Cart::where('user_id', '=', Auth::user()->id)
+            ->where(function($query){
+                $query->where('status', '=', 'notyet')
+                      ->orWhere('status', '=', 'producterror')
+                      ->orWhere('status', '=', 'qtyerror');
+            })->get();
+
             $hasilr = view('user.filtercart',['carts' => $carts])->render();
 
             return response()->json(['hasil' => $hasilr]);
 
         }else if($request->action == 2){
             $cart->qty = $cart->qty - 1;
+            $cart->status = 'notyet';
             $cart->save();
-
-            $carts = Cart::where('user_id', '=', $request->user_id)->where('status', '=', 'notyet')->get();
-            $hasilr = view('user.filtercart',['carts' => $carts])->render();
-
-            return response()->json(['hasil' => $hasilr]);
 
         }else if($request->action == 1){
             $cart->qty = $cart->qty + 1;
+            $cart->status = 'notyet';
             $cart->save();
-
-            $carts = Cart::where('user_id', '=', $request->user_id)->where('status', '=', 'notyet')->get();
-            $hasilr = view('user.filtercart',['carts' => $carts])->render();
-
-            return response()->json(['hasil' => $hasilr]);
         }
+        $carts = Cart::where('user_id', '=', Auth::user()->id)->where('status', '=' , 'notyet')->get();
+        foreach($carts as $cart){
+            $idcart = $cart->id;
+            $product = $cart->product->id;
+            $cekproduk = Product::find($product);
+
+            $cart = Cart::find($idcart);
+
+            if(!isset($cekproduk)){
+                $cart->status = 'producterror';
+                $cart->save();
+            }else{
+                $stockprod = $cekproduk->stock;
+                if($stockprod < $cart->qty){
+                    $cart->status = 'qtyerror';
+                    $cart->save();
+                }
+            }
+        }
+        $carts = Cart::where('user_id', '=', Auth::user()->id)
+        ->where(function($query){
+            $query->where('status', '=', 'notyet')
+                ->orWhere('status', '=', 'producterror')
+                ->orWhere('status', '=', 'qtyerror');
+        })->get();
+
+        $hasilr = view('user.filtercart',['carts' => $carts])->render();
+
+        return response()->json(['hasil' => $hasilr]);
     }
 }

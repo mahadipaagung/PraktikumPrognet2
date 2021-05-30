@@ -66,9 +66,23 @@
 									<a href="/product/{{$product->slug}}" class="learn-more detailslearn"><i class="fa fa-link"></i> Details</a>
 								</p>
 							</div>
+							
 							@if($product->product_image->count())
 								@foreach ($product->product_image as $image)
-									<span class="maxproduct"><img src="/uploads/product_images/{{$image->image_name}}" alt=""></span>
+									@php
+										$pathhome = base_path();
+										$path = $pathhome.'/public/uploads/product_images/'.$image->image_name;
+										$statusgambar=0;
+										
+										if(file_exists($path)){
+											$statusgambar=1;
+										}
+									@endphp
+									@if($statusgambar==1)
+										<span class="maxproduct"><img src="/uploads/product_images/{{$image->image_name}}" alt=""></span>
+									@else
+										<span class="maxproduct"><img src="/uploads/product_images/noimage.jpg" alt=""></span>
+									@endif
 									@break
 								@endforeach
 							@else

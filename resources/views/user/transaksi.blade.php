@@ -87,7 +87,7 @@
                   <td class="text-center">
                     @if ($transaction->status == 'success')
                       <span style="color: white;" class="btn-sm btn-success font-weight-bold  mt-1 btn-lg btn-block">{{$transaction->status}}</span>
-                    @elseif ($transaction->status == 'delivered' || $transaction->status == 'verified' || $transaction->status == 'indelivery')
+                    @elseif ($transaction->status == 'delivered' || $transaction->status == 'verified' || $transaction->status == 'indelivery' || $transaction->status == 'waiting approval')
                       <span style="color: white;" class="btn-sm btn-warning font-weight-bold  mt-1 btn-lg btn-block">{{$transaction->status}}</span>
                     @else
                       <span style="color: white;" class="btn-sm btn-danger font-weight-bold mt-1 btn-lg btn-block">{{$transaction->status}}</span>

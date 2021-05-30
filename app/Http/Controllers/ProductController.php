@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use RealRashid\SweetAlert\Facades\Alert;
 use File;
 
 
@@ -38,7 +39,13 @@ class ProductController extends Controller
     public function showone($slug){
 
         $product = Product::where('slug','=',$slug)->first();
-        return view('user.product', ['products' => $product]);
+        if(!is_null($product)){
+            return view('user.product', ['products' => $product]);
+        }else{
+            Alert::error('Product Not Found', 'You enter the wrong product information! Redirecting back to shop.');
+            return redirect('/shop');
+        }
+        
     }
     /**
      * Show the form for creating a new resource.

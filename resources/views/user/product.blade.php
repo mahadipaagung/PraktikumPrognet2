@@ -21,21 +21,51 @@
         <div class="col-md-8">
         @if($products->product_image->count())
           @foreach ($products->product_image as $image)
+            @php
+              $pathhome = base_path();
+              $path = $pathhome.'/public/uploads/product_images/'.$image->image_name;
+              $statusgambar=0;
+              
+              if(file_exists($path)){
+                $statusgambar=1;
+              }
+            @endphp
             @if ($loop->first)
+              @if($statusgambar==1)
               <div class="col-md-8">
                 <img class="d-block w-100" src="/uploads/product_images/{{$image->image_name}}" alt="First slide">
               </div>
+              @else
+              <div class="col-md-8">
+                <span class="maxproduct"><img src="/uploads/product_images/noimage.jpg" alt=""></span>
+              </div>
+              @endif
               @break
             @endif
           @endforeach
 
           @foreach ($products->product_image as $image)
+            @php
+              $pathhome = base_path();
+              $path = $pathhome.'/public/uploads/product_images/'.$image->image_name;
+              $statusgambar=0;
+              
+              if(file_exists($path)){
+                $statusgambar=1;
+              }
+            @endphp
             @if ($loop->first)
               @continue
             @else
+              @if($statusgambar==1)
               <div class="col-md-4">
-                <img class="d-block w-100" src="/uploads/product_images/{{$image->image_name}}" alt="Second slide">
+                <img class="d-block w-100" src="/uploads/product_images/{{$image->image_name}}">
               </div>
+              @else
+              <div class="col-md-4">
+                <img class="d-block w-100" src="/uploads/product_images/noimage.jpg">
+              </div>
+              @endif
             @endif
           @endforeach
         @else
@@ -237,18 +267,18 @@
       e.preventDefault();
       $.ajaxSetup({
         headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
       });
       $.ajax({
         url: "{{url('/tambah_cart')}}",
         method: 'post',
         data: {
-            product_id: $('#product_id').val(),
-            user_id: $('#user_id').val(),
+          product_id: $('#product_id').val(),
+          user_id: $('#user_id').val(),
         },
         success: function(result){
-            jQuery('#jumlahcart').text(result.jumlah);
+          $('#jumlahcart').text(result.jumlah);
         }
       });
     });

@@ -3,11 +3,6 @@
 @section('content')
 <!--================Checkout Area =================-->
 @if(isset($transaction))
-  @php
-    if($transaction->status == 'unverified' && !is_null($transaction->proof_of_payment)){
-      $transaction->status = 'waiting approval';
-    }
-  @endphp
   <section class="checkout_area section_gap">
     <div class="container toparea">
       <div class="underlined-title">
@@ -160,7 +155,7 @@
             @endif
             <div class="col-md-9">
               <strong>Proof Of Payment</strong><br>
-              @if ($transaction->status == 'unverified')
+              @if ($transaction->status == 'unverified' && is_null($transaction->proof_of_payment))
                 <form action="/transaksi/detail/proof" method="POST" enctype="multipart/form-data">
                   @csrf
                   <input type="hidden" name="id" value="{{$transaction->id}}">
@@ -170,12 +165,12 @@
               @endif
               @if (!is_null($transaction->proof_of_payment))
                 <span class = "text-white btn-sm btn-success font-weight-bold btn-lg btn-block">Proof Already Uploaded</span>
-                @if($transaction->status == 'waiting approval')
+                @if($transaction->status == 'rejected')
                 <form action="/transaksi/detail/proof" method="POST" enctype="multipart/form-data">
                   @csrf
                   <input type="hidden" name="id" value="{{$transaction->id}}">
                   <input type="file" name="file" class="form-control-file" id="form19" accept=".jpeg,.jpg,.png,.gif" onchange="preview_image(event)" required><br>
-                  <button type="submit" class="text-white btn btn-info btn-lg btn-block">Update Proof</button>
+                  <button type="submit" class="text-white btn btn-info btn-lg btn-block">Upload New Proof</button>
                 </form>
                 @endif
               @endif
@@ -193,7 +188,7 @@
               @endphp
               @foreach ($reviews as $review)
                 @php
-                  if($item->product->id == $review->product_id && $review->user_id == Auth::user()->id){
+                  if($item->product->id == $review->product_id && $review->user_id == Auth::user()->id && $review->transaction_id == $transaction->id){
                     $status = $status + 1;
                   }
                 @endphp
@@ -212,7 +207,7 @@
                     <i class="fa fa-star-o ratingproduct star3" style="font-size:48px;"></i>
                     <i class="fa fa-star-o ratingproduct star4" style="font-size:48px;"></i>
                     <i class="fa fa-star-o ratingproduct star5" style="font-size:48px;"></i> -->
-                    <input type="number" name="rate" value="1" min="1" max="5">
+                    <input type="number" name="rate" value="1" min="1" max="5" required>
                   </div>
                   <div class="text-center">
                     <strong>CONTENT</strong>
@@ -222,6 +217,7 @@
                   <input type="hidden" name="user_id" value="{{Auth::user()->id}}">
                   <!-- <input type="hidden" name="rate" value="0"> -->
                   <input type="hidden" name="product_id" value="{{$item->product->id}}">
+                  <input type="hidden" name="trans_id" value="{{$transaction->id}}">
 
                   <br>
                   <div class="text-center">
@@ -231,7 +227,7 @@
                 </form>
               @else
                 @foreach ($reviews as $review)
-                  @if($item->product->id == $review->product_id && $review->user_id == Auth::user()->id)
+                  @if($item->product->id == $review->product_id && $review->user_id == Auth::user()->id && $review->transaction_id == $transaction->id)
                     <div class="text-center">
                       <p><strong>{{$item->product->product_name}}</strong></p>
                     </div>
@@ -255,6 +251,7 @@
                       <input type="hidden" name="user_id" value="{{$review->user_id}}">
                       <!-- <input type="hidden" name="rate" value="0"> -->
                       <input type="hidden" name="product_id" value="{{$review->product_id}}">
+                      <input type="hidden" name="trans_id" value="{{$transaction->id}}">
 
                       <br>
                       <div class="text-center">
@@ -275,25 +272,25 @@
           
           <div class="col-md-12">
             @if ($transaction->status == 'unverified' && is_null($transaction->proof_of_payment))
-              <form action="/transaksi/detail/status" method="POST">
+              <form id="cancel" action="/transaksi/detail/status" method="POST">
                 @csrf
                 <input type="hidden" name="id" value="{{$transaction->id}}">
                 <input type="hidden" name="status" value="1">
                 <br>
                 <div class="text-center">
-                  <button type="submit" class="btn btn-danger btn-lg btn-block" onclick="return confirm('Cancel this order?')">Cancel Order</button>
+                  <button id="tb_cancel" type="button" class="btn btn-danger btn-lg btn-block">Cancel Order</button>
                 </div>
                 <br>
               </form>
             @else
               @if ($transaction->status == 'delivered')
-                <form action="/transaksi/detail/status" method="POST">
+                <form id="jadi" action="/transaksi/detail/status" method="POST">
                   @csrf
                   <input type="hidden" name="id" value="{{$transaction->id}}">
                   <input type="hidden" name="status" value="2">
                   <br>
                   <div class="text-center">
-                    <button type="submit" class="btn btn-danger btn-lg">Finish Order</button>
+                    <button id="tb_jadi" type="button" class="btn btn-danger btn-lg">Finish Order</button>
                   </div>
                 </form>
               @endif
@@ -331,22 +328,67 @@
 @endsection
 
 @section('script')
-<!-- <script>
+<script>
+  // $(document).ready(function(e){
+  //   $('.ratingproduct').click(function(e){
+  //     var index = parseInt($(".ratingproduct").index(this))+1;
+  //     var indextidaak = index+1;      
+  //     var i;
+
+  //     for (i = 1; i <= index; i++) {
+  //       $(".star"+i).attr("class","fa fa-star ratingproduct star"+i);
+  //     }
+  //     for (indexno = indextidaak; indexno<= 5; indexno++){
+  //       $(".star"+indexno).attr("class","fa fa-star-o ratingproduct star"+indexno);
+  //     }
+
+  //     $("#rateval").val(index);
+  //   });
+  // });
   $(document).ready(function(e){
-    $('.ratingproduct').click(function(e){
-      var index = parseInt($(".ratingproduct").index(this))+1;
-      var indextidaak = index+1;      
-      var i;
-
-      for (i = 1; i <= index; i++) {
-        $(".star"+i).attr("class","fa fa-star ratingproduct star"+i);
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
-      for (indexno = indextidaak; indexno<= 5; indexno++){
-        $(".star"+indexno).attr("class","fa fa-star-o ratingproduct star"+indexno);
-      }
+    });
 
-      $("#rateval").val(index);
+    $('#tb_cancel').click(function(e){
+      swal({
+        title: "Are you sure to cancel this order?",
+        text: "You will not be able to undo this action!",
+        icon: "warning",
+        buttons: [
+          'No',
+          'Yes!'
+        ],
+        dangerMode: true,
+      }).then(function(isConfirm) {
+        if (isConfirm) {
+          $( "#cancel" ).submit();
+        } else {
+          swal("Order Status", "Your order is still up!", "error");
+        }
+      });
+    });
+
+    $('#tb_jadi').click(function(e){
+      swal({
+        title: "Finish This Order?",
+        text: "You will not be able to undo this action!",
+        icon: "warning",
+        buttons: [
+          'No',
+          'Yes!'
+        ],
+        dangerMode: true,
+      }).then(function(isConfirm) {
+        if (isConfirm) {
+          $( "#jadi" ).submit();
+        } else {
+          swal("Order Status", "Your order is not finished yet!", "error");
+        }
+      });
     });
   });
-</script> -->
+</script>
 @endsection
