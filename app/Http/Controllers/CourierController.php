@@ -36,10 +36,15 @@ class CourierController extends Controller
      */
     public function store(Request $request) //method untuk input data ke database
     {
+        $test = Courier::where('courier' , $request->courier)->get();
+        if (count($test)>0){
+            return redirect('/courier')->with('failed','Data Sudah Ada');
+        }else{
         $cr = new Courier;
         $cr->courier = $request->courier;
         $cr->save();
         return redirect('/courier')->with('success','Data Tersimpan');
+        }
     }
 
     /**

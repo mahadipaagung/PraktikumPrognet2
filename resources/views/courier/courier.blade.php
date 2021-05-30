@@ -41,6 +41,18 @@
 </div>
 @endif
 
+@section('page-contents')
+@if(Session::has('failed'))
+<div class="alert alert-danger">
+    <div class="alert-body">
+        <button class="close" data-dismiss="alert">
+            <span>&times;</span>
+        </button>
+        Data Sudah Ada
+    </div>
+</div>
+@endif
+
 <div class="panel">
     <div class="panel-heading">
         <h3 class="panel-tittle">Courier</h3>
