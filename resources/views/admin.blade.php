@@ -117,17 +117,27 @@
               <li class="nav-item dropdown">
                 <a class="nav-link" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="material-icons">notifications</i>
-                  <span class="notification">5</span>
+                  @if ($notif->count() != 0)            
+                      <!-- Counter - Alerts -->
+                      @if ($notif->count() >= 5)
+                          <span class="notification"> {{ $notif->count() }}+</span>
+                      @else
+                          <span class="notification">{{ $notif->count() }}</span>
+                      @endif
+                  @endif
                   <p class="d-lg-none d-md-block">
                     Some Actions
                   </p>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="#">Mike John responded to your email</a>
-                  <a class="dropdown-item" href="#">You have 5 new tasks</a>
-                  <a class="dropdown-item" href="#">You're now friend with Andrew</a>
-                  <a class="dropdown-item" href="#">Another Notification</a>
-                  <a class="dropdown-item" href="#">Another One</a>
+                  @foreach($notif as $item)
+                      @php
+
+                      $data = json_decode($item->data);
+
+                      @endphp
+                      <a class="dropdown-item waves-effect waves-light" href="#">{{$data->nama}}{{$data->pesan}}</a><br>
+                      @endforeach
                 </div>
               </li>
               <li class="nav-item dropdown">

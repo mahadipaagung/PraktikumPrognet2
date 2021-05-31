@@ -37,24 +37,22 @@
           <li class="nav-item active"><a class="nav-link" href="\cart">Cart</a></li>
           <li class="nav-item avatar dropdown">
             <a class="nav-link dropdown-toggle waves-effect waves-light" id="navbarDropdownMenuLink-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            @if ($notif->count() != 0)
-                                
-                                <!-- Counter - Alerts -->
-                                @if ($notif->count() >= 5)
-                                    <span class="badge badge-danger ml-2">{{ $notif->count() }}+</span>
-                                    <!-- <span class="badge badge-danger badge-counter">
-                                        {{ $notif->count() }}+
-                                    </span> -->
-                                    
-                                @else
-                                    <span class="badge badge-danger ml-2">{{ $notif->count() }}</span>
-                                    <!-- <span class="badge badge-danger badge-counter">
-                                        {{ $notif->count() }}
-                                    </span>
-                                     -->
-                                @endif
-                            
-                            @endif
+            @if ($notif->count() != 0)            
+                <!-- Counter - Alerts -->
+                @if ($notif->count() >= 5)
+                    <span class="badge badge-danger ml-2">{{ $notif->count() }}+</span>
+                    <!-- <span class="badge badge-danger badge-counter">
+                        {{ $notif->count() }}+
+                    </span> -->
+                    
+                @else
+                    <span class="badge badge-danger ml-2">{{ $notif->count() }}</span>
+                    <!-- <span class="badge badge-danger badge-counter">
+                        {{ $notif->count() }}
+                    </span>
+                      -->
+                @endif
+            @endif
   
               <i class="fa fa-bell"></i>
 

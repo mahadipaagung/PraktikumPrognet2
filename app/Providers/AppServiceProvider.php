@@ -33,7 +33,10 @@ class AppServiceProvider extends ServiceProvider
             $view->with('notif',$notif);
         });
 
-        
+        view()->composer('admin',function(ViewView $view){
+            $notif= AdminNotification::where('read_at',null)->orderBy('created_at','desc')->limit(5)->get();
+            $view->with('notif',$notif);
+        });
         
         // Schema::defaultStringLength(191);
 
