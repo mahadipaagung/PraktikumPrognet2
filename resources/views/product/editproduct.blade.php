@@ -9,10 +9,10 @@
   margin-bottom: 5px;
 }
 </style>
- <div class="content">
-  <div class="panel">
-    <div class="panel-heading">
-        <h3 class="panel-title"> Edit Product</h3>
+<div class="col-md-12">
+  <div class="card">
+    <div class="card-header card-header-primary">
+      <h3 class="card-title ">Edit Product</h4>
     </div>
         <div class="container-fluid">
           <div class="row">
@@ -31,28 +31,40 @@
                       <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group bmd-form-group">
-                                    <label class="bmd-label-floating">Product Name</label>
+                                    <label class="col-sm-2 col-form-label">Product Name</label>
+                                    <div class="col-sm-10">
                                     <input type="text" name="product_name" value="{{$product->product_name}}"  class="form-control" >
+                                  </div>
                                 </div>
                                 <div class="form-group bmd-form-group">
-                                    <label class="bmd-label-floating">price</label>
+                                  <label class="col-sm-2 col-form-label">price</label>
+                                  <div class="col-sm-10">
                                     <input type="text" name="price" value="{{$product->price}}"  class="form-control" >
+                                  </div>
                                 </div>
                                 <div class="form-group bmd-form-group">
-                                    <label class="bmd-label-floating">Description</label>
+                                  <label class="col-sm-2 col-form-label">Description</label>
+                                  <div class="col-sm-10">
                                     <input type="text" name="description" value="{{$product->description}}"  class="form-control" >
+                                  </div>
                                 </div>
                                 <div class="form-group bmd-form-group">
-                                    <label class="bmd-label-floating">Product Rate</label>
+                                  <label class="col-sm-2 col-form-label">Product Rate</label>
+                                  <div class="col-sm-10">
                                     <input type="text" name="product_rate" value="{{$product->product_rate}}"  class="form-control" >
+                                  </div>
                                 </div>
                                 <div class="form-group bmd-form-group">
-                                    <label class="bmd-label-floating">Stock</label>
+                                  <label class="col-sm-2 col-form-label">Stock</label>
+                                  <div class="col-sm-10">
                                     <input type="text" name="stock" value="{{$product->stock}}"  class="form-control" >
+                                  </div>
                                 </div>
                                 <div class="form-group bmd-form-group">
-                                    <label class="bmd-label-floating">Weight</label>
+                                  <label class="col-sm-2 col-form-label">Weight</label>
+                                  <div class="col-sm-10"> 
                                     <input type="text" name="weight" value="{{$product->weight}}"  class="form-control" >
+                                  </div>
                                 </div>
                             </div>
                         </div>
@@ -257,11 +269,6 @@
                           </td>
                           <td>
                             {{$review->content}}
-                          </td>
-                          <td class="td-actions text-left" >
-                            <a href="{{route('response.add_response',$review)}}"  rel="tooltip" title="Review Product" class="btn btn-primary btn-sm">
-                              <span class="lnr lnr-pencil"> Add Response</span>
-                                </a>
                           </td>
                         </tr>
                           @endforeach
