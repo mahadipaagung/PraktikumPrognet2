@@ -161,7 +161,7 @@
                           </li>
                             <br>
                             <li>
-                            @if ($transaksi->status == "unverified" && !is_null($transaksi->proof_of_payment))
+                            @if ($transaksi->status == "waiting approval" && !is_null($transaksi->proof_of_payment))
                                 <br>
                                 <div class="d-flex flex-row bd-highlight mb-3">
                                     <form action="/admin/transaksi/detail/status" method="POST">
