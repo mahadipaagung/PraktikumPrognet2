@@ -69,41 +69,20 @@ class ResponseController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        // $request->validate([
-        //     'content' => ['required'],
-        // ]);
-
-
-        // $response = new Response();
-        // $response->review_id = $request->review_id;
-        // $response->admin_id = $request->admin_id;
-        // $response->content = $request->content;
-
-        // if ($response->save()) {
-        //     $product_review = Product_Review::find($request->review_id);
-        //     $user = User::find($product_review->user_id);
-        //     $details = [
-        //         'order' => 'Response',
-        //         'body' => 'Admin has respond your review!',
-        //         'link' => url(route('detail_product', ['id' => $product_review->product_id])),
-        //     ];
-        //     return redirect("/products");
-        // }
-       
-            $response = new response;
-            $response->review_id = $request->review_id;
-            $response->admin_id = $request->admin_id;
-            $response->content = $request->content;
-            $response->save();
-            
-            $review = DB::table('product_reviews')->select('product_reviews.*')->where('product_reviews.id', '=', $request->review_id)->first();
-            $product = Product::find($review->product_id);
-            $user = User::find($review->user_id);
-            // $user->notify(new UserNotification("<a href ='/product/".$review->product_id."'>Reviewmu di produk ".$product->product_name." telah direspon oleh admin</a>"));
-            
-            return redirect()->back()->with(['terkirim'=>'Balasan Terkirim']);
+    public function store(Request $request){
+        
+        $response = new response;
+        $response->review_id = $request->review_id;
+        $response->admin_id = $request->admin_id;
+        $response->content = $request->content;
+        $response->save();
+        
+        $review = DB::table('product_reviews')->select('product_reviews.*')->where('product_reviews.id', '=', $request->review_id)->first();
+        $product = Product::find($review->product_id);
+        $user = User::find($review->user_id);
+        // $user->notify(new UserNotification("<a href ='/product/".$review->product_id."'>Reviewmu di produk ".$product->product_name." telah direspon oleh admin</a>"));
+        
+        return redirect()->back()->with(['terkirim'=>'Balasan Terkirim']);
           
     }
 

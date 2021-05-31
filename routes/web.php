@@ -41,13 +41,13 @@ Route::prefix('admin')->group(function(){
     Route::get('/transaksi','AdminTransaksiController@index')->name('admin.transaksi');
     Route::get('/transaksi/detail/{id}','AdminDetailTransaksiController@index')->name('admin.detail_transaksi');
     Route::post('/transaksi/detail/status', 'AdminDetailTransaksiController@membatalkanPesanan');
+
+
     Route::post('/transaksi/detail/review', 'ResponseController@create');
    
-
 });
-
 Route::resource('response', 'ResponseController');
-Route::post('/response', 'ResponseController@store');
+Route::post('/store', 'ResponseController@store')->name('response.store')->middleware('auth:admin');
 
 //Courier
 Route::resource('/courier','CourierController')->middleware('auth:admin');
@@ -64,24 +64,24 @@ Route::delete('/{id}/delete_cat', 'ProductController@delete_cat')->name('product
 //Categories
 Route::resource('/categories','ProductCategoriesController')->middleware('auth:admin');
 
-Route::prefix('admin/response')->group(function () {
-    Route::get('/', 'ResponseController@index')->name('admin.response')->middleware('auth:admin');
-    Route::get('/add', 'ResponseController@create')->name('response.add')->middleware('auth:admin');
-    Route::get('/{review}/add', 'ResponseController@add_response')->name('response.add_response')->middleware('auth:admin');
-    Route::get('/{response}/edit', 'ResponseController@edit')->name('response.edit')->middleware('auth:admin');
-    Route::post('/store', 'ResponseController@store')->name('response.store')->middleware('auth:admin');
-    Route::put('/{id}/update', 'ResponseController@update')->name('response.update')->middleware('auth:admin');
-    Route::delete('/{id}', 'ResponseController@destroy')->name('response.destroy')->middleware('auth:admin');
-});
+// Route::prefix('admin/response')->group(function () {
+//     Route::get('/', 'ResponseController@index')->name('admin.response')->middleware('auth:admin');
+//     Route::get('/add', 'ResponseController@create')->name('response.add')->middleware('auth:admin');
+//     Route::get('/{review}/add', 'ResponseController@add_response')->name('response.add_response')->middleware('auth:admin');
+//     Route::get('/{response}/edit', 'ResponseController@edit')->name('response.edit')->middleware('auth:admin');
 
-Route::prefix('admin/discount')->group(function () {
-    Route::get('/', 'DiscountController@index')->name('admin.discount')->middleware('auth:admin');
-    Route::get('/add/{id}', 'DiscountController@create')->name('discount.add')->middleware('auth:admin');
-    Route::get('/{discount}/edit', 'DiscountController@edit')->name('discount.edit')->middleware('auth:admin');
-    Route::post('/store', 'DiscountController@store')->name('discount.store')->middleware('auth:admin');
-    Route::put('/{id}/update', 'DiscountController@update')->name('discount.update')->middleware('auth:admin');
-    Route::delete('/{id}', 'DiscountController@destroy')->name('discount.destroy')->middleware('auth:admin');
-});
+//     Route::put('/{id}/update', 'ResponseController@update')->name('response.update')->middleware('auth:admin');
+//     Route::delete('/{id}', 'ResponseController@destroy')->name('response.destroy')->middleware('auth:admin');
+// });
+
+// Route::prefix('admin/discount')->group(function () {
+//     Route::get('/', 'DiscountController@index')->name('admin.discount')->middleware('auth:admin');
+//     Route::get('/add/{id}', 'DiscountController@create')->name('discount.add')->middleware('auth:admin');
+//     Route::get('/{discount}/edit', 'DiscountController@edit')->name('discount.edit')->middleware('auth:admin');
+//     Route::post('/store', 'DiscountController@store')->name('discount.store')->middleware('auth:admin');
+//     Route::put('/{id}/update', 'DiscountController@update')->name('discount.update')->middleware('auth:admin');
+//     Route::delete('/{id}', 'DiscountController@destroy')->name('discount.destroy')->middleware('auth:admin');
+// });
 
 Route::get('/', 'ProductController@showbaru');
 

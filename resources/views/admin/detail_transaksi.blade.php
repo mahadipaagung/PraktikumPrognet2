@@ -214,16 +214,15 @@
                             @foreach($item->product->product_review as $review)
                               @if($item->product->id == $review->product_id && $review->transaction_id == $transaksi->id)
                               <td>
-                                {{$review->rate}}
+                              <p>{{$review->rate}}</p>
                                 <input type="hidden" name="review_id" id="review_id{{$loop->iteration-1}}" value="{{$review->id}}">
                               </td>
                               <td>
-                                {{$review->content}}
+                              <p>{{$review->content}}</p>
                               </td>
                               @endif
                             @endforeach
-                            <input type="hidden" name="id" id="product_id{{$loop->iteration-1}}" value="{{$item->product->id}}">
-                            <input type="hidden" name="name" id="product_name{{$loop->iteration-1}}" value="{{$item->product->product_name}}">
+                            
                             @php
                                 $status = 0;
                             @endphp
@@ -241,8 +240,6 @@
                             @if ($status != 0)               
                                 <button class="btn btn-sm btn-success lihat-review" data-toggle="modal" data-target="#modalLihatReview"
                                     data-produk="{{$item->product->product_name}}" >Berikan Balasan</button>
-                            @else
-                                <button class="btn btn-sm btn-success lihat-review" data-toggle="modal" data-target="#modalLihatReview" disabled>Belum Ada Review</button>
                             @endif     
                           </td>
                         </tr>
@@ -313,44 +310,4 @@
     </div>
   </main>
                            
-@endsection
-@section('script')
-  <script>
-    $(document).ready(function(e){
-        $(".lihat-review").click(function(e){
-          var index = $(".lihat-review").index(this);
-          var product_name = $("#product_name"+index).val();
-          $("#product_name").text('Tambah Balasan ' + product_name);
-
-          var product_id = $("#product_id"+index).val();
-          $("#product_id").val(product_id);
-
-          var review_id = $("#review_id"+index).val();
-          $("#review_id").val(review_id);
-          
-          console.log("IDADMIN"+ $("#admin_id").val());
-          console.log("REVIEW ID"+ $("#review_id").val());
-          console.log("CONTENMT"+$("#content").val());
-          
-        });
-
-        $("#kirim-review").click(function(e){
-          jQuery.ajax({
-                url: "{{url('/admin/transaksi/detail/review')}}",
-                method: 'post',
-                data: {
-                    _token: $('#signup-token').val(),
-                    admin_id: $("#admin_id").val(),
-                    review_id: $("#review_id").val(),
-                    content: $("#content").val(),
-                },
-                success: function(result){
-                  $('#modalLihatReview').modal('hide');
-                  alert('Berhasil Membalas Review');
-                  location.reload();
-                }
-            });
-        });
-    });
-  </script>
 @endsection
