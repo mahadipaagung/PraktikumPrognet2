@@ -272,6 +272,7 @@
                 <!-- Content -->
               </div>
             </div>
+            
             <div class="modal fade" id="modalLihatReview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
               <form action="{{route('response.store')}}" method="POST">
               @csrf
