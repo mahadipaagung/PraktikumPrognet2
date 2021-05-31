@@ -42,8 +42,12 @@ Route::prefix('admin')->group(function(){
     Route::get('/transaksi/detail/{id}','AdminDetailTransaksiController@index')->name('admin.detail_transaksi');
     Route::post('/transaksi/detail/status', 'AdminDetailTransaksiController@membatalkanPesanan');
     Route::post('/transaksi/detail/review', 'ResponseController@create');
+   
 
 });
+
+Route::resource('response', 'ResponseController');
+Route::post('/response', 'ResponseController@store');
 
 //Courier
 Route::resource('/courier','CourierController')->middleware('auth:admin');
