@@ -190,6 +190,14 @@
                                 placeholder="Berat produk yang ingin ditambahkan">
                         </div>
                     </div>
+                                        {{-- slug --}}
+                                        <div class="form-group row">
+                                            <label class="col-sm-5 col-form-label">slug</label>
+                                            <div class="col-sm-10">
+                                                <input name="slug" type="text" class="form-control"
+                                                    placeholder="slug produk yang ingin ditambahkan">
+                                            </div>
+                                        </div>
                     {{-- product images --}}
                   <div class="form-group row">
                     <label class="col-sm-5 col-form-label">Product Images</label>

@@ -86,6 +86,7 @@ class ProductController extends Controller
             $product->product_rate = $request->product_rate;
             $product->stock = $request->stock;
             $product->weight = $request->weight;
+            $product->slug = $request->slug;
             $product->save();
 
 
