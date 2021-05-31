@@ -36,7 +36,7 @@ class AdminDetailTransaksiController extends Controller
 
             $admin= User::find(1);
             $data= [
-                'nama'=> 'admin',
+                'nama'=> Auth::user('admin')->name,
                 'pesan'=> 'Transaksi Batal'
             ];
             $endcode = json_encode($data);
@@ -54,7 +54,7 @@ class AdminDetailTransaksiController extends Controller
 
             $admin= User::find(1);
             $data= [
-                'nama'=> 'admin',
+                'nama'=> Auth::user('admin')->name,
                 'pesan'=> 'Transaksi Diterima'
             ];
             $endcode = json_encode($data);
@@ -67,7 +67,7 @@ class AdminDetailTransaksiController extends Controller
 
             $admin= User::find(1);
             $data= [
-                'nama'=> 'admin',
+                'nama'=> Auth::user('admin')->name,
                 'pesan'=> 'Transaksi Berhasil'
             ];
             $endcode = json_encode($data);
@@ -80,7 +80,7 @@ class AdminDetailTransaksiController extends Controller
 
             $admin= User::find(1);
             $data= [
-                'nama'=> 'admin',
+                'nama'=> Auth::user('admin')->name,
                 'pesan'=> 'Transaksi Belum Terkirim'
             ];
             $endcode = json_encode($data);
@@ -93,7 +93,7 @@ class AdminDetailTransaksiController extends Controller
 
             $admin= User::find(1);
             $data= [
-                'nama'=> 'admin',
+                'nama'=> Auth::user('admin')->name,
                 'pesan'=> 'Transaksi Terkirim'
             ];
             $endcode = json_encode($data);

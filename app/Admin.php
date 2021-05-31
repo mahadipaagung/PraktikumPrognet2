@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+
 class Admin extends Authenticatable
 {
     use Notifiable;
@@ -57,4 +58,10 @@ class Admin extends Authenticatable
         $notifyadmin->data = $encode;
         $notifyadmin->save();
     }
+
+    public function notifications()
+    {
+        return $this->morphMany('App\AdminNotification', 'notifiable')->orderBy('created_at', 'desc');
+    }
+
 }
