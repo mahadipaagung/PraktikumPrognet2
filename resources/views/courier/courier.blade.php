@@ -149,6 +149,16 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="modal-body">
+                            {{-- kode courier --}}
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">kode kurir</label>
+                                <div class="col-sm-10">
+                                    <input name="courierkode" type="text" class="form-control"
+                                        placeholder="kode kurir yang ingin ditambahkan">
+                                </div>
+                            </div>
+                        </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                             <button type="submit" class="btn btn-primary">Simpan</button>

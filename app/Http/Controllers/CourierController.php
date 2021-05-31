@@ -41,6 +41,7 @@ class CourierController extends Controller
             return redirect('/courier')->with('failed','Data Sudah Ada');
         }else{
         $cr = new Courier;
+        $cr->code = $request->courierkode;
         $cr->courier = $request->courier;
         $cr->save();
         return redirect('/courier')->with('success','Data Tersimpan');
