@@ -54,4 +54,14 @@ class User extends Authenticatable implements MustVerifyEmail
     public function product_cart(){
         return $this->belongsToMany('App\Product', 'carts', 'user_id', 'product_id')->withPivot('id');
     }
+
+    public function createnotifyuser($encode){
+        $notifyuser = new UserNotification();
+        $notifyuser->type= 'App\Notifications\UserNotification';
+        $notifyuser->notifiable_type= 'App\Admin';
+        $notifyuser->notifiable_id= $this->id;
+        $notifyuser->data = $encode;
+        $notifyuser->save();
+    }
+
 }
