@@ -201,22 +201,10 @@
 
             <p id="edd-last-name-wrap">
               <label class="edd-label" for="edd-first">
-              Courier <span class="edd-required-indicator">*</span>
-              </label>
-              <select name="courier" id="kurir" class="form-select dropdown_item_select ongkir" required>
-                <option value="" >-Courier-</option>
-                @foreach ($kurir as $k)
-                    <option value="{{$k->id}}">{{$k->courier}}</option>
-                @endforeach
-              </select>
-            </p>
-            
-            <p id="edd-last-name-wrap">
-              <label class="edd-label" for="edd-first">
               Province <span class="edd-required-indicator">*</span>
               </label>
               <select name="province" id="provinsi" class="form-select dropdown_item_select ongkir" required>
-                <option value="" >-Province-</option>
+                <option value="0" >-Province-</option>
                 @foreach ($provinsi as $prov)
                   <option value="{{$prov->id}}">{{$prov->title}}</option>
                 @endforeach
@@ -228,7 +216,28 @@
               City <span class="edd-required-indicator">*</span>
               </label>
               <select name="regency" id="kota" class="form-select dropdown_item_select ongkir" required>
-                <option value="" >-Select Province First!-</option>
+                <option value="0" >-Select Province First!-</option>
+              </select>
+            </p>
+
+            <p id="edd-last-name-wrap">
+              <label class="edd-label" for="edd-first">
+              Courier <span class="edd-required-indicator">*</span>
+              </label>
+              <select name="courier" id="kurir" class="form-select dropdown_item_select ongkir" required>
+                <option value="0" >-Courier-</option>
+                @foreach ($kurir as $k)
+                    <option value="{{$k->id}}">{{$k->courier}}</option>
+                @endforeach
+              </select>
+            </p>
+
+            <p id="edd-last-name-wrap">
+              <label class="edd-label" for="edd-first">
+              Courier Service Plan <span class="edd-required-indicator">*</span>
+              </label>
+              <select name="courierplan" id="courierplan" class="form-select dropdown_item_select ongkir" required>
+                <option value="0" >-Select Courier First!-</option>
               </select>
             </p>
             
@@ -248,7 +257,7 @@
             <input type="hidden" name="user_id" value="{{Auth::user()->id}}">
             <input type="hidden" name="product_id" value="{{$product_id}}">
             <input type="hidden" name="qty" value="{{$qty}}">
-            <button type="submit" class="edd-submit button" id="edd-purchase-button" name="edd-purchase">Purchase</button>
+            <button type="submit" class="edd-submit button" id="edd-purchase-button" name="edd-purchase" disabled>Purchase</button>
           </fieldset>
         </form>
       </div>
@@ -281,15 +290,17 @@
           type: "GET",
           dataType: "json",
           success:function(data){
+            $("#edd-purchase-button").prop("disabled", true);
             $('#kota').empty();
+            $('#kota').append('<option value="0">-Choose Your City Destination!-</option>');
             $.each(data, function(cityid,citytitle){
               $('#kota').append('<option value="'+cityid+'">'+citytitle+'</option>');
             });
           },
         });
-      }else{
+      }else if(id_provinsi==0){        
         $('#kota').empty();
-        $('#kota').append('<option value="">-City-</option>');
+        $('#kota').append('<option value="0">-Select Province First!-</option>');
       }
     });
 
@@ -297,9 +308,28 @@
       var kurir = $('#kurir').val();
       var provinsi = $('#provinsi').val();
       var kota = $('#kota').val();
+      var delivery = $('#courierplan').val();
       var berat = parseInt($('#beratbarang').val());
 
-      if(provinsi>0 && kurir>0){
+      if(delivery == 0 || kurir == 0 || provinsi==0 || kota== 0){
+        $('#hargaongkir').text("");
+        $('#totalall').text("");
+        $("#edd-purchase-button").prop("disabled", true);
+      }
+
+      if(kurir < 1){
+        $('#courierplan').empty();
+        $('#courierplan').append('<option value="0">-Select Courier First!-</option>');
+        $("#edd-purchase-button").prop("disabled", true);
+      }else if(delivery > 0){
+        $('#hargaongkir').text('Rp.'+ rubah(delivery));
+        var subtotalbaru = $('#subtotalbaru').val();
+        var totalakhir = parseInt(delivery) + parseInt(subtotalbaru);
+        $('#totalall').text('Rp.'+ rubah(totalakhir));
+        $('#totalakhir').val(totalakhir);
+        $('#hargadelivery').val(delivery);
+        $("#edd-purchase-button").removeAttr('disabled');
+      }else if(provinsi>0 && kurir>0 && kota>0 && delivery <= 0){
         $.ajax({
           url: '/ongkir',
           method: 'POST',
@@ -310,13 +340,16 @@
             prov: provinsi, 
           },
           success: function(result){
-            $('#hargaongkir').text('Rp.'+ rubah(result.hasil["value"]));
-            var subtotalbaru = $('#subtotalbaru').val();
-            var totalakhir = result.hasil["value"] + parseInt(subtotalbaru);
-            $('#totalall').text('Rp.'+ rubah(totalakhir));
-            $('#totalakhir').val(totalakhir);
-            $('#hargadelivery').val(result.hasil["value"]);
-
+            $("#edd-purchase-button").prop("disabled", true);
+            $('#courierplan').empty();
+            $('#courierplan').append('<option value="0">-Choose Your Plan!-</option>');
+            $.each(result, function(key, value){
+              $.each(value.costs, function(key1, value1){
+                $.each(value1.cost, function(key2, value2){
+                  $('#courierplan').append('<option value="'+ value2.value +'">' + value1.service + '-' + value1.description + '- Rp.' +value2.value+ '</option>');
+                });
+              });
+            });
           }
         });
       }

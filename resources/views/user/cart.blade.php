@@ -52,6 +52,7 @@
               $status=0;
               if($products->status == "producterror"){
                 $status = 1;
+                $statusall = $statusall+1;
               }else if($products->status == "qtyerror"){
                 $status = 2;
                 $statusall = $statusall+1;

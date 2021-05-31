@@ -14,14 +14,19 @@ class CartController extends Controller
         if(is_null(Auth::user())){
             return redirect('/login');
         }else{
-            $carts = Cart::where('user_id', '=', Auth::user()->id)->where('status', '=' , 'notyet')->get();
+            $carts = Cart::where('user_id', '=', Auth::user()->id)
+            ->where(function($query){
+                $query->where('status', '=', 'notyet')
+                    ->orWhere('status', '=', 'producterror')
+                    ->orWhere('status', '=', 'qtyerror');
+            })->get();
             foreach($carts as $cart){
                 $idcart = $cart->id;
                 $product = $cart->product->id;
                 $cekproduk = Product::find($product);
 
                 $cart = Cart::find($idcart);
-
+                $cart->status = 'notyet';
                 if(!isset($cekproduk)){
                     $cart->status = 'producterror';
                     $cart->save();
@@ -29,23 +34,9 @@ class CartController extends Controller
                     $stockprod = $cekproduk->stock;
                     if($stockprod < $cart->qty){
                         $cart->status = 'qtyerror';
-                        $cart->save();
                     }
                 }
-
-                // if(!isset($cekproduk)){
-                //     $cart->status = 'cancelled';
-                //     $cart->save();
-                // }else{
-                //     $stockprod = $cekproduk->stock;
-                //     if($stockprod < $cart->qty){
-                //         $cart->qty = $stockprod;
-                //         $cart->save();
-                //     }else if($stockprod==0){
-                //         $cart->status = 'cancelled';
-                //         $cart->save();
-                //     }
-                // }
+                $cart->save();
             }
             $carts = Cart::where('user_id', '=', Auth::user()->id)
             ->where(function($query){
@@ -108,14 +99,19 @@ class CartController extends Controller
             $cart->status = 'notyet';
             $cart->save();
         }
-        $carts = Cart::where('user_id', '=', Auth::user()->id)->where('status', '=' , 'notyet')->get();
+        $carts = Cart::where('user_id', '=', Auth::user()->id)
+        ->where(function($query){
+            $query->where('status', '=', 'notyet')
+                ->orWhere('status', '=', 'producterror')
+                ->orWhere('status', '=', 'qtyerror');
+        })->get();
         foreach($carts as $cart){
             $idcart = $cart->id;
             $product = $cart->product->id;
             $cekproduk = Product::find($product);
 
             $cart = Cart::find($idcart);
-
+            $cart->status = 'notyet';
             if(!isset($cekproduk)){
                 $cart->status = 'producterror';
                 $cart->save();
@@ -123,9 +119,9 @@ class CartController extends Controller
                 $stockprod = $cekproduk->stock;
                 if($stockprod < $cart->qty){
                     $cart->status = 'qtyerror';
-                    $cart->save();
                 }
             }
+            $cart->save();
         }
         $carts = Cart::where('user_id', '=', Auth::user()->id)
         ->where(function($query){
