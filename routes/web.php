@@ -46,7 +46,7 @@ Route::prefix('admin')->group(function(){
     Route::post('/transaksi/detail/review', 'ResponseController@create');
    
 });
-Route::resource('response', 'ResponseController');
+
 Route::post('/store', 'ResponseController@store')->name('response.store')->middleware('auth:admin');
 
 //Courier

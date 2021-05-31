@@ -48,4 +48,13 @@ class Admin extends Authenticatable
     {
         return $this->hasMany('App\Response');
     }
+
+    public function createnotifyadmin($encode){
+        $notifyadmin = new AdminNotification();
+        $notifyadmin->type= 'App\Notifications\AdminNotification';
+        $notifyadmin->notifiable_type= 'App\User';
+        $notifyadmin->notifiable_id= $this->id;
+        $notifyadmin->data = $encode;
+        $notifyadmin->save();
+    }
 }
