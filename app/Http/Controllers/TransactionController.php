@@ -102,6 +102,14 @@ class TransactionController extends Controller
 
         $encryptid = Crypt::encrypt($request->user_id);
 
+        $admin= Admin::find(1);
+        $data= [
+            'nama'=> Auth::user()->name,
+            'pesan'=> 'melakukan transaksi'
+        ];
+        $endcode = json_encode($data);
+        $admin->createnotifyadmin($endcode); 
+
         return redirect('/transaksi/'.$encryptid);
     }
 

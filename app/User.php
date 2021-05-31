@@ -43,6 +43,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
+
+    public function notifications()
+    {
+        return $this->morphMany('App\UserNotification', 'notifiable')->orderBy('created_at', 'desc');
+    }
+
     public function product(){
         return $this->belongsToMany('App\Product', 'product_reviews', 'user_id', 'product_id')->withPivot('id');
     }
@@ -54,4 +60,16 @@ class User extends Authenticatable implements MustVerifyEmail
     public function product_cart(){
         return $this->belongsToMany('App\Product', 'carts', 'user_id', 'product_id')->withPivot('id');
     }
+
+    public function createnotifyuser($encode){
+        $notifyuser = new UserNotification();
+        $notifyuser->type= 'App\Notifications\UserNotification';
+        $notifyuser->notifiable_type= 'App\Admin';
+        $notifyuser->notifiable_id= $this->id;
+        $notifyuser->data = $encode;
+        $notifyuser->save();
+    }
+
+
+
 }

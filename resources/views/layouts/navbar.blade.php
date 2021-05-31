@@ -37,13 +37,38 @@
           <li class="nav-item active"><a class="nav-link" href="\cart">Cart</a></li>
           <li class="nav-item avatar dropdown">
             <a class="nav-link dropdown-toggle waves-effect waves-light" id="navbarDropdownMenuLink-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              <span class="badge badge-danger ml-2">4</span>
+            @if ($notif->count() != 0)
+                                
+                                <!-- Counter - Alerts -->
+                                @if ($notif->count() >= 5)
+                                    <span class="badge badge-danger ml-2">{{ $notif->count() }}+</span>
+                                    <!-- <span class="badge badge-danger badge-counter">
+                                        {{ $notif->count() }}+
+                                    </span> -->
+                                    
+                                @else
+                                    <span class="badge badge-danger ml-2">{{ $notif->count() }}</span>
+                                    <!-- <span class="badge badge-danger badge-counter">
+                                        {{ $notif->count() }}
+                                    </span>
+                                     -->
+                                @endif
+                            
+                            @endif
+  
               <i class="fa fa-bell"></i>
+
             </a>
             <div class="dropdown-menu dropdown-menu-lg-right dropdown-secondary" aria-labelledby="navbarDropdownMenuLink-5">
-              <a class="dropdown-item waves-effect waves-light" href="#">Notification 1</a><br>
-              <a class="dropdown-item waves-effect waves-light" href="#">Notification 2</a><br>
-              <a class="dropdown-item waves-effect waves-light" href="#">Notification 3</a><br>
+              @foreach($notif as $item)
+              @php
+
+              $data = json_decode($item->data);
+
+              @endphp
+              <a class="dropdown-item waves-effect waves-light" href="#">{{$data->nama}}{{$data->pesan}}</a><br>
+              @endforeach
+
             </div>
           </li>
           @endauth

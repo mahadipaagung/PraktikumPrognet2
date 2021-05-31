@@ -33,6 +33,15 @@ class AdminDetailTransaksiController extends Controller
         if($request->status == 1){
             $transaksi->status = 'canceled';
             $transaksi->save();
+
+            $admin= User::find(1);
+            $data= [
+                'nama'=> Auth::user('admin')->name,
+                'pesan'=> 'Transaksi Batal'
+            ];
+            $endcode = json_encode($data);
+            $admin->createnotifyuser($endcode); 
+
             return redirect('/transaksi/detail/'.$request->id);
         }elseif($request->status == 3){
             $transaksi->status = 'verified';
@@ -42,18 +51,54 @@ class AdminDetailTransaksiController extends Controller
                 $produk->stock = $produk->stock - $item->qty;
                 $produk->save();
             }
+
+            $admin= User::find(1);
+            $data= [
+                'nama'=> Auth::user('admin')->name,
+                'pesan'=> 'Transaksi Diterima'
+            ];
+            $endcode = json_encode($data);
+            $admin->createnotifyuser($endcode); 
+
             return redirect('admin/transaksi/detail/'.$request->id);
         }elseif($request->status == 2){
             $transaksi->status = 'success';
             $transaksi->save();
+
+            $admin= User::find(1);
+            $data= [
+                'nama'=> Auth::user('admin')->name,
+                'pesan'=> 'Transaksi Berhasil'
+            ];
+            $endcode = json_encode($data);
+            $admin->createnotifyuser($endcode);
+
             return redirect('/transaksi/detail/'.$request->id);
         }elseif($request->status == 4){
             $transaksi->status = 'indelivery';
             $transaksi->save();
+
+            $admin= User::find(1);
+            $data= [
+                'nama'=> Auth::user('admin')->name,
+                'pesan'=> 'Transaksi Belum Terkirim'
+            ];
+            $endcode = json_encode($data);
+            $admin->createnotifyuser($endcode); 
+
             return redirect('admin/transaksi/detail/'.$request->id);
         }else{
             $transaksi->status = 'delivered';
             $transaksi->save();
+
+            $admin= User::find(1);
+            $data= [
+                'nama'=> Auth::user('admin')->name,
+                'pesan'=> 'Transaksi Terkirim'
+            ];
+            $endcode = json_encode($data);
+            $admin->createnotifyuser($endcode);
+
             return redirect('admin/transaksi/detail/'.$request->id);
         }
     }
