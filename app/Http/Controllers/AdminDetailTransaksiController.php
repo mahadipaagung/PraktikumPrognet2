@@ -37,6 +37,7 @@ class AdminDetailTransaksiController extends Controller
 
             $admin= User::find(1);
             $data= [
+                'id' => $transaksi->id,
                 'nama'=> Auth::user('admin')->name,
                 'pesan'=> 'Transaksi Batal'
             ];
@@ -55,6 +56,7 @@ class AdminDetailTransaksiController extends Controller
 
             $admin= User::find(1);
             $data= [
+                'id' => $transaksi->id,
                 'nama'=> Auth::user('admin')->name,
                 'pesan'=> 'Transaksi Diterima'
             ];
@@ -68,6 +70,7 @@ class AdminDetailTransaksiController extends Controller
 
             $admin= User::find(1);
             $data= [
+                'id' => $transaksi->id,
                 'nama'=> Auth::user('admin')->name,
                 'pesan'=> 'Transaksi Berhasil'
             ];
@@ -81,6 +84,7 @@ class AdminDetailTransaksiController extends Controller
 
             $admin= User::find(1);
             $data= [
+                'id' => $transaksi->id,
                 'nama'=> Auth::user('admin')->name,
                 'pesan'=> 'Transaksi Belum Terkirim'
             ];
@@ -94,6 +98,7 @@ class AdminDetailTransaksiController extends Controller
 
             $admin= User::find(1);
             $data= [
+                'id' => $transaksi->id,
                 'nama'=> Auth::user('admin')->name,
                 'pesan'=> 'Transaksi Terkirim'
             ];

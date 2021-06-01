@@ -104,6 +104,7 @@ class TransactionController extends Controller
 
         $admin= Admin::find(1);
         $data= [
+            'id' => $detail_transaksi->transaction_id = $transaksi->id,
             'nama'=> Auth::user()->name,
             'pesan'=> 'melakukan transaksi'
         ];
