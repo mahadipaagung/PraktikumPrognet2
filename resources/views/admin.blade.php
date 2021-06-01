@@ -136,7 +136,7 @@
                       $data = json_decode($item->data);
 
                       @endphp
-                      <a class="dropdown-item waves-effect waves-light" href="/admin/transaksi/detail/{{ $data->id }}">{{$data->nama}}{{$data->pesan}}</a><br>
+                      <a class="dropdown-item waves-effect waves-light" href="#">{{$data->nama}}{{$data->pesan}}</a><br>
                       @endforeach
                 </div>
               </li>
