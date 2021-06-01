@@ -102,8 +102,8 @@ class AdminDetailTransaksiController extends Controller
 
             return redirect('admin/transaksi/detail/'.$request->id);
         }
-
     }
+
     public function rejectproof(Request $request){
         $id=$request->id;
         $id_detail=$request->id_detail;
