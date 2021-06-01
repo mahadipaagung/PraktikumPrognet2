@@ -41,6 +41,7 @@ Route::prefix('admin')->group(function(){
     Route::get('/transaksi','AdminTransaksiController@index')->name('admin.transaksi');
     Route::get('/transaksi/detail/{id}','AdminDetailTransaksiController@index')->name('admin.detail_transaksi');
     Route::post('/transaksi/detail/status', 'AdminDetailTransaksiController@membatalkanPesanan');
+    Route::post('/transaksi/detail/{id}', 'AdminDetailTransaksiController@rejectproof');
 
 
     Route::post('/transaksi/detail/review', 'ResponseController@create');

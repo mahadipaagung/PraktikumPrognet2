@@ -9,6 +9,7 @@ use App\Response;
 use App\Product_Review;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class AdminDetailTransaksiController extends Controller
 {
@@ -101,6 +102,21 @@ class AdminDetailTransaksiController extends Controller
 
             return redirect('admin/transaksi/detail/'.$request->id);
         }
-    }
 
+    }
+    public function rejectproof(Request $request){
+        $id=$request->id;
+        $id_detail=$request->id_detail;
+        $transaksi = Transaction::find($id);
+        
+        date_default_timezone_set("Asia/Makassar");
+        $waktuhabis = Carbon::now()->addDay();
+        $transaksi->timeout = $waktuhabis;
+        $transaksi->status= 'unverified';
+        
+
+        $transaksi->save();
+
+        return redirect('admin/transaksi/detail/'.$request->id_detail);
+    }
 }
