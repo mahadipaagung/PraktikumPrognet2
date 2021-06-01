@@ -24,7 +24,7 @@ class AdminDetailTransaksiController extends Controller
 
         $review = Product_Review::where('user_id', '=', $transaksi->user_id)->get();
        
-        return view('admin.detail_transaksi',['transaksi' => $transaksi, 'review' => $review, 'response' => $response]);
+        return view('admin.detail_transaksi',['transaksi' => $transaksi, 'review' => $review, 'response' => $response, 'id'=>$id]);
      
     }
 
@@ -112,6 +112,7 @@ class AdminDetailTransaksiController extends Controller
         date_default_timezone_set("Asia/Makassar");
         $waktuhabis = Carbon::now()->addDay();
         $transaksi->timeout = $waktuhabis;
+        $transaksi->proof_of_payment=NULL;
         $transaksi->status= 'unverified';
         
 

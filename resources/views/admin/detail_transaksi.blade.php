@@ -110,8 +110,10 @@
                                       </form>
                                       <form action="/admin/transaksi/detail/{{$transaksi->id}}" method="POST">
                                         @csrf
+                                        
                                         <input type="hidden" name="id" value="{{$transaksi->id}}">
-                                        <input type="hidden" name="id_detail" value="{{$transaksi->transaction_detail->id}}">
+                                        <input type="hidden" name="id_detail" value="{{$id}}">
+
                                         <button type="submit" class="btn btn-danger btn-sm d-flex justify-content-center" onclick="return confirm('Apa yakin ingin me reject Proof Pesanan ini?')">Reject Proof</button>
                                       </form>
                                   </div>  
