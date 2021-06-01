@@ -112,7 +112,7 @@
               <li class="nav-item dropdown">
                 <a class="nav-link" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="material-icons">notifications</i>
-                  <span class="notification">5</span>
+                  <span class="notification">3</span>
                   <p class="d-lg-none d-md-block">
                     Some Actions
                   </p>
