@@ -136,8 +136,7 @@
                             {{$loop->iteration}}
                           </td>
                           <td>
-                            <img src="{{asset('storage/app/public/img/gambarproduk/'.$i->image_name)}}" style="width:260px;" alt="{{ $i->image_name }}">
-                           
+                            <img src="{{asset('storage/app/public/img/gambarproduk/'.$i->image_name)}}" style="width:300px;" alt="{{$i->image_name}}">     
                           </td>
                           <td class="td-actions text-left" >
                             <form style="display:inline-block;" action="{{route('product.delete_image',['id'=>$i->id])}}" method="post">
@@ -226,7 +225,7 @@
             {{-- product review--}}
 
             {{-- Product Discount --}}
-              <div class="col-md-12">
+              {{-- <div class="col-md-12">
               <div class="card">
                 <div class="card-header card-header-info">
                   <h4 class="card-title ">Discount</h4>
@@ -297,7 +296,7 @@
                     @endif   
                 </div>
               </div>
-            </div>
+            </div> --}}
             
             {{-- Product Discount --}}
           </div>

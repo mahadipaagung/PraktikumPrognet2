@@ -133,7 +133,6 @@
                     <form action="/discount" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="modal-body">
-                            {{-- Nama courier --}}
                             <div class="form-group bmd-form-group">
                               <label class="col-sm-2 col-form-label">Percentage</label>
                               <input type="number" name="percentage"  step="0.01" min="0" max="99" value="{{ old('percentage') }}"  class="form-control" >

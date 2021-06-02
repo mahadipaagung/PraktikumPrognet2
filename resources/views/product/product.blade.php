@@ -73,6 +73,7 @@
           <th>Product Rate</th>
           <th>Stock</th>
           <th>Weight</th>
+          <th>Image</th>
           <th class="text-center">Action</th>
         </tr>
       </thead>
@@ -86,6 +87,7 @@
           <td>{{$item->product_rate}}</td>
           <td>{{$item->stock}}</td>
           <td>{{$item->weight}}</td>
+          <td><a href="storage/app/public/img/gambarproduk/{{$item->image_name}}" target="_blank" style="text-decoration: none; color: #111">{{$item->image_name}}</a></td>
           <td class="text-center">
         {{-- TOMBOL DELETE DAN EDIT --}}
         <form action="/products/{{$item->id}}" method="POST">
@@ -190,14 +192,16 @@
                                 placeholder="Berat produk yang ingin ditambahkan">
                         </div>
                     </div>
-                    {{-- slug --}}
-                    <div class="form-group row">
-                        <label class="col-sm-5 col-form-label">slug</label>
-                        <div class="col-sm-10">
-                            <input name="slug" type="text" class="form-control"
-                                placeholder="slug produk yang ingin ditambahkan">
-                         </div>
-                    </div>
+                    {{-- Category
+                    <<div class="form-group bmd-form-group">
+                        <label class="col-sm-2 col-form-label">Category</label>
+                        <div class="col-sm-10"> 
+                            <select  class="form-control" name="product_category" data-style=" btn btn-link">
+                                   <option selected disabled>-- Category Product --</option>
+                                  @foreach ($product_categories as $pc)
+                                    <option value="{{$pc->id}}">{{$pc->category_name}}</option>
+                                  @endforeach
+                            </select>  --}}
                     {{-- product images --}}
                   <div class="form-group row">
                     <label class="col-sm-5 col-form-label">Product Images</label>
