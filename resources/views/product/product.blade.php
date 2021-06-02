@@ -81,7 +81,7 @@
         <tr>
           <td>{{$loop->iteration }}</td>
           <td>{{$item->product_name}}</td>
-          <td>{{$item->price}}</td>
+          <td>@currency($item->price)</td>
           <td>{{$item->description}}</td>
           <td>{{$item->product_rate}}</td>
           <td>{{$item->stock}}</td>
