@@ -68,6 +68,12 @@
             </a>
           </li>
           <li class="nav-item ">
+            <a class="nav-link" href="/discount">
+              <i class="material-icons">attach_money</i>
+              <p>Discount</p>
+            </a>
+          </li>
+          <li class="nav-item ">
             <a class="nav-link" href="/admin/transaksi">
               <i class="material-icons">shopping_cart</i>
               <p>Transaction</p>

@@ -59,8 +59,8 @@ Route::get('/{id}/edit', 'ProductController@edit')->name('product.edit')->middle
 Route::post('/{id}/update', 'ProductController@update')->name('product.update')->middleware('auth:admin');
 Route::post('/{id}/add_image', 'ProductController@add_image')->name('product.add_image')->middleware('auth:admin');
 Route::delete('/{id}/delete_image', 'ProductController@delete_image')->name('product.delete_image')->middleware('auth:admin');
-Route::post('/{id}/add_cat', 'ProductController@add_cat')->name('product.add_cat')->middleware('auth:admin');
-Route::delete('/{id}/delete_cat', 'ProductController@delete_cat')->name('product.delete_cat')->middleware('auth:admin');
+//Route::post('/{id}/add_cat', 'ProductController@add_cat')->name('product.add_cat')->middleware('auth:admin');
+//Route::delete('/{id}/delete_cat', 'ProductController@delete_cat')->name('product.delete_cat')->middleware('auth:admin');
 
 //Categories
 Route::resource('/categories','ProductCategoriesController')->middleware('auth:admin');
@@ -75,14 +75,14 @@ Route::resource('/categories','ProductCategoriesController')->middleware('auth:a
 //     Route::delete('/{id}', 'ResponseController@destroy')->name('response.destroy')->middleware('auth:admin');
 // });
 
- Route::prefix('admin/discount')->group(function () {
-     Route::get('/', 'DiscountController@index')->name('admin.discount')->middleware('auth:admin');
-     Route::get('/add/{id}', 'DiscountController@create')->name('discount.add')->middleware('auth:admin');
-     Route::get('/{discount}/edit', 'DiscountController@edit')->name('discount.edit')->middleware('auth:admin');
-     Route::post('/store', 'DiscountController@store')->name('discount.store')->middleware('auth:admin');
-     Route::put('/{id}/update', 'DiscountController@update')->name('discount.update')->middleware('auth:admin');
-     Route::delete('/{id}', 'DiscountController@destroy')->name('discount.destroy')->middleware('auth:admin');
- });
+ Route::resource('/discount','DiscountController')->middleware('auth:admin');
+//      Route::get('/', 'DiscountController@index')->name('admin.discount')->middleware('auth:admin');
+//      Route::get('/add/{id}', 'DiscountController@create')->name('discount.add')->middleware('auth:admin');
+//      Route::get('/{discount}/edit', 'DiscountController@edit')->name('discount.edit')->middleware('auth:admin');
+//      Route::post('/store', 'DiscountController@store')->name('discount.store')->middleware('auth:admin');
+//      Route::put('/{id}/update', 'DiscountController@update')->name('discount.update')->middleware('auth:admin');
+//      Route::delete('/{id}', 'DiscountController@destroy')->name('discount.destroy')->middleware('auth:admin');
+//  });
 
 Route::get('/', 'ProductController@showbaru');
 

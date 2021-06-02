@@ -74,6 +74,7 @@ class ProductController extends Controller
             'product_rate' => ['required','max:100'],
             'stock' => ['required', 'max:10'],
             'weight' => ['required', 'max:3'],
+            'product_category' => ['required'],
 
         ]);
 
@@ -86,7 +87,7 @@ class ProductController extends Controller
             $product->product_rate = $request->product_rate;
             $product->stock = $request->stock;
             $product->weight = $request->weight;
-            $product->slug = $request->slug;
+            $product->category = $request->product_category;
             $product->save();
 
 
@@ -152,6 +153,7 @@ class ProductController extends Controller
             'product_rate' => ['required', 'max:100'],
             'stock' => ['required', 'max:10'],
             'weight' => ['required', 'max:3'],
+            'product_category' => ['required'],
         ]);
 
         $product->product_name= $request->product_name;
@@ -160,6 +162,7 @@ class ProductController extends Controller
         $product->product_rate= $request->product_rate;
         $product->stock= $request->stock;
         $product->weight= $request->weight;
+        $product->category_name = $request->category_name;
         $product->save();
         return redirect("/products")->with('edits','Data Berhasil dirubah');;
     }
@@ -189,20 +192,20 @@ class ProductController extends Controller
 
     }
 
-    public function add_cat(Request $request, $id)
-    {
-        $request->validate([
-            'product_category' => ['required'],
-        ]);
+   //public function add_cat(Request $request, $id)
+    // {
+    //     $request->validate([
+    //         'product_category' => ['required'],
+    //     ]);
         
-        $pro_cat = new Product_Category_Details();
-        $pro_cat->product_id = $id;
-        $pro_cat->category_id = $request->product_category;
-        if ( $pro_cat->save()) {
-            return redirect()->intended(route('product.edit', ['id' => $id]))->with("success", "Successfully Add Category");
-        }
-        return redirect()->intended(route('product.edit', ['id' => $id]))->with('error', 'Please fill in all fields with valid value');
-    }
+    //     $pro_cat = new Product_Category_Details();
+    //     $pro_cat->product_id = $id;
+    //     $pro_cat->category_id = $request->product_category;
+    //     if ( $pro_cat->save()) {
+    //         return redirect()->intended(route('product.edit', ['id' => $id]))->with("success", "Successfully Add Category");
+    //     }
+    //     return redirect()->intended(route('product.edit', ['id' => $id]))->with('error', 'Please fill in all fields with valid value');
+    // }
 
     /**
      * Remove the specified resource from storage.

@@ -66,6 +66,22 @@
                                     <input type="text" name="weight" value="{{$product->weight}}"  class="form-control" >
                                   </div>
                                 </div>
+                                <div class="form-group bmd-form-group">
+                                  <label class="col-sm-2 col-form-label">Category</label>
+                                  <div class="col-sm-10"> 
+                                      <select  class="form-control" name="product_category" data-style=" btn btn-link">
+                                        @if ($product_categories->isEmpty())
+                                            <option disabled>Category Product</option>
+                                        @else
+                                             <option selected disabled>-- Category Product --</option>
+                                            @foreach ($product_categories as $pc)
+                                              <option value="{{$pc->id}}">{{$pc->category_name}}</option>
+                                            @endforeach
+                                        @endif
+                                      </select>
+                                      <br>
+                                  </div>
+                                </div>
                             </div>
                         </div>
                         
@@ -145,79 +161,6 @@
               </div>
             {{-- productImage end --}}
 
-             {{-- product Category --}}
-            <div class="col-md-12">
-              <div class="card">
-                <div class="card-header card-header-primary">
-                  <h4 class="card-title ">Product Categories</h4>
-                  <p class="card-category"> </p>
-                </div>
-                <div class="card-body">
-                  <div class="table-responsive">
-                    <form action="{{route('product.add_cat',['id'=>$product->id])}}" method="post"  class="form">
-                      @csrf
-                      <div class="form-group">
-                        <select  class="form-control" name="product_category" data-style=" btn btn-link">
-                          @if ($product_categories->isEmpty())
-                              <option disabled>Category Product</option>
-                          @else
-                               <option selected disabled>-- Category Product --</option>
-                              @foreach ($product_categories as $pc)
-                                <option value="{{$pc->id}}">{{$pc->category_name}}</option>
-                              @endforeach
-                          @endif
-                        </select>
-                        <br>
-                        <input type="submit" name="submit" value="Add Category" class="btn btn-success pull-right">
-                      </div>
-                    </form>
-
-                    <table class="table">
-                      <thead class=" text-primary">
-                        <th>
-                          ID
-                        </th>
-                        <th>
-                          Name Category
-                        </th>
-                        <th>
-                          Action
-                        </th>
-                      </thead>
-                      <tbody>
-                       @if ($product_category_details->isEmpty())
-                           
-                       @else
-                        @foreach ($product_category_details as $det)
-                            
-                        <tr>
-                          <td>
-                          {{$loop->iteration}}
-                          </td>
-                          <td>
-                            
-                            {{$det->product_categories->category_name}}
-                          </td>
-                          <td class="td-actions text-left" >
-                            <form style="display:inline-block;" action="{{route('product.delete_cat',['id'=>$det->id])}}" method="post">
-                                    @csrf
-                                    @method('delete')
-                                  <button type="submit" value="Delete"  rel="tooltip" title="Remove" class="btn btn-danger btn-sm">
-                                    <i class="fa fa-trash-o">  Delete</i>
-                                  </button>
-                                </form>
-                          </td>
-                        </tr>
-                          @endforeach
-                       @endif
-                      </tbody>
-                    </table>
-                  </div>
-                  {{$product_category_details->links()}}
-                </div>
-              </div>
-            </div>
-            {{-- product Category  end--}}
 
 
             {{-- product review --}}
