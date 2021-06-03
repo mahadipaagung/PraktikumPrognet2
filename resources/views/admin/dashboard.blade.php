@@ -171,7 +171,7 @@
                     <i class="material-icons">store</i>
                   </div>
                   <p class="card-category">Revenue</p>
-                  <h3 class="card-title">$34,245</h3>
+                  <h3 class="card-title">{{ \App\Transaction::all()->count() }}</h3>
                 </div>
                 <div class="card-footer">
                   <div class="stats">
@@ -186,8 +186,8 @@
                   <div class="card-icon">
                     <i class="material-icons">info_outline</i>
                   </div>
-                  <p class="card-category">Fixed Issues</p>
-                  <h3 class="card-title">75</h3>
+                  <p class="card-category">Active Product</p>
+                  <h3 class="card-title">{{ \App\Product::all()->count() }}</h3>
                 </div>
                 <div class="card-footer">
                   <div class="stats">
@@ -200,10 +200,10 @@
               <div class="card card-stats">
                 <div class="card-header card-header-info card-header-icon">
                   <div class="card-icon">
-                    <i class="fa fa-twitter"></i>
+                    <i class="material-icons">person</i>
                   </div>
-                  <p class="card-category">Followers</p>
-                  <h3 class="card-title">+245</h3>
+                  <p class="card-category">Users</p>
+                  <h3 class="card-title">{{ \App\User::all()->count() }}</h3>
                 </div>
                 <div class="card-footer">
                   <div class="stats">
