@@ -120,6 +120,14 @@ class AdminDetailTransaksiController extends Controller
         $transaksi->proof_of_payment=NULL;
         $transaksi->status= 'unverified';
         
+        $admin= User::find(1);
+        $data= [
+            'id' => $transaksi->id,
+            'nama'=> Auth::user('admin')->name,
+            'pesan'=> 'Tidak Divirifikasi'
+        ];
+        $endcode = json_encode($data);
+        $admin->createnotifyuser($endcode); 
 
         $transaksi->save();
 
