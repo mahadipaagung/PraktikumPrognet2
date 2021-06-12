@@ -28,9 +28,7 @@ class AdminRegisterController extends Controller
                 'username' => ['required', 'string', 'max:255', 'unique:admins'],
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
             ]
-        
         );
-
         try {
             $admin = Admin::create([
                 'username' => $request->username,

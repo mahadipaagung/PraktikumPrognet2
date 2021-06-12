@@ -69,7 +69,4 @@ class User extends Authenticatable implements MustVerifyEmail
         $notifyuser->data = $encode;
         $notifyuser->save();
     }
-
-
-
 }

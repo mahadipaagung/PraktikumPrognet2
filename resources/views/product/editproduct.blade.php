@@ -185,9 +185,7 @@
                         <th>
                           Comment
                         </th>
-                        <th>
-                          Action
-                        </th>
+                
                       </thead>
                       <tbody>
                        @if ($product_review->isEmpty())

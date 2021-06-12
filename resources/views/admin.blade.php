@@ -79,12 +79,14 @@
               <p>Transaction</p>
             </a>
           </li>
+          @if(Auth::guard('admin')->user()->id==1)
           <li class="nav-item ">
-            <a class="nav-link" href="./notifications.html">
-              <i class="material-icons">notifications</i>
-              <p>Notifications</p>
+            <a class="nav-link" href="{{Route('admin.manage')}}">
+              <i class="material-icons">manage_accounts</i>
+              <p>Manage Admin</p>
             </a>
           </li>
+          @endif
         </ul>
       </div>
     </div>
@@ -135,16 +137,7 @@
                     Some Actions
                   </p>
                 </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                  @foreach($notif as $item)
-                      @php
-
-                      $data = json_decode($item->data);
-
-                      @endphp
-                      <a class="dropdown-item waves-effect waves-light" href="/admin/transaksi/detail/{{ $data->id }}">{{$data->nama}}{{$data->pesan}}</a><br>
-                      @endforeach
-                </div>
+                
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link" href="javascript:;" id="navbarDropdownProfile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

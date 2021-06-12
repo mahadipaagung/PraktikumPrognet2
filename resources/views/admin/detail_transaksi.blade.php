@@ -301,7 +301,7 @@
                         <label >Masukan Balasan</label>
                         <textarea type="text" name="content" id="content" class="md-textarea form-control form-control-sm text-dark" rows="3" required></textarea>
                         <input type="hidden" name="review_id" id="review_id" value="{{$review->id}}">
-                        <input type="hidden" name="admin_id" id="admin_id" value="{{Auth::user()->id}}">
+                        <input type="hidden" name="admin_id" id="admin_id" value="{{Auth::guard('admin')->user()->id}}">
                       </div>
                       <br><br>
                       <div class="text-center mt-1-half">
