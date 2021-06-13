@@ -3,11 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Response extends Model
 {
-    protected $table='response';
+    use SoftDeletes;
 
+    protected $table='response';
+    protected $dates = ['deleted_at'];
     public function product_review()
     {
         return $this->belongsTo('App\Product_Review', 'review_id', 'id');

@@ -10,7 +10,7 @@
   <title>
     Admin Page
   </title>
-  <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />\
+  <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
   	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
@@ -43,36 +43,36 @@
             </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="./user.html">
+            <a class="nav-link" href="#">
               <i class="material-icons">person</i>
               <p>User Profile</p>
             </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="/courier">
+            <a class="nav-link" href="/admin/courier">
               <i class="material-icons">
                 delivery_dining</i>
               <p>Courier</p>
             </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="/products">
+            <a class="nav-link" href="/admin/products">
               <i class="material-icons">library_books</i>
               <p>Product</p>
             </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="/categories">
+            <a class="nav-link" href="/admin/categories">
               <i class="material-icons">bubble_chart</i>
-              <p>Product Catecory</p>
+              <p>Product Category</p>
             </a>
           </li>
-          <li class="nav-item ">
-            <a class="nav-link" href="/discount">
+          <!-- <li class="nav-item ">
+            <a class="nav-link" href="/admin/discount">
               <i class="material-icons">attach_money</i>
               <p>Discount</p>
             </a>
-          </li>
+          </li> -->
           <li class="nav-item ">
             <a class="nav-link" href="/admin/transaksi">
               <i class="material-icons">shopping_cart</i>

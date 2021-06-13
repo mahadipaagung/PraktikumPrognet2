@@ -1,13 +1,26 @@
 <?php
 
 namespace App;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
-use Vinkla\Hashids\Facades\Hashids;
+use Cviebrock\EloquentSluggable\Sluggable;
 
 class Product extends Model
 {
+    use SoftDeletes;
+    use Sluggable;
+
     protected $table='products';
+    protected $dates = ['deleted_at'];
+
+    public function sluggable()
+    {
+        return [
+            'slug' => [
+                'source' => 'product_name'
+            ]
+        ];
+    }
 
     public function product_category_details()
     {
