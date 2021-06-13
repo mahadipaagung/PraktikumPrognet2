@@ -5,8 +5,8 @@
 <section class="cart_area">
   <div class="container">
     <div class="card">
-      <div class="card-header card-header-primary">
-        <h4 class="card-title">Daftar Admin</h4>
+      <div class="card-header card-header-info">
+        <h4 class="card-title">Transaction</h4>
       </div>
       <div class="card-body">
       <div class="cart_inner">

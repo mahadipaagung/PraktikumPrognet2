@@ -9,6 +9,9 @@
               <div class="container">
                 <section class="contact-section my-5">
                   <div class="card">
+                    <div class="card-header card-header-info">
+                      <h4 class="card-title">Detail Transaction</h4>
+                    </div>
                     <div class="row">
                       <div class="col-lg-8">
                         <div class="card-body form">
@@ -160,105 +163,113 @@
               </div>
             </div>
             <br><br>
-            <div style="width:1000px;" class="container">
-              <section class="section my-5 pb-5">
-                <!-- Shopping Cart table -->
-                <div class="table-responsive">
-                  <h1 align="center">Rincian Produk</h1>
-                  <br>
-                  <table class="table">
-                    <!-- Table head -->
-                    <thead>
-                        <tr>
-                          <th class="font-weight-bold">
-                            <strong>Image Product</strong>
-                          </th>
-                          <th class="font-weight-bold">
-                            <strong>Product</strong>
-                          </th>
-                          <th class="font-weight-bold">
-                            <strong>Diskon</strong>
-                          </th>
-                          <th class="font-weight-bold">
-                            <strong>Price</strong>
-                          </th>
-                          <th class="font-weight-bold">
-                            <strong>QTY</strong>
-                          </th>  
-                          <th class="font-weight-bold">
-                              <strong>Rating</strong>
-                          </th>
-                          <th class="font-weight-bold">
-                              <strong>Review</strong>
-                          </th>
-                          <th class="font-weight-bold">
-                              <strong>action</strong>
-                          </th>
-                      </tr>
-                    </thead>
-                    <!-- Table head -->
-                    <!-- Table body -->
-                    <tbody>
-                      <!-- First row -->
-                      @foreach ($transaksi->transaction_detail as $item)
-                        <tr>
-                          <th scope="row">
-                              @foreach ($item->product->relasi_product_image as $image)
-                                  <img style="width:100px;height:100px;" src="{{asset('/uploads/product_images/'.$image->image_name)}}" alt=""class="img-fluid z-depth-0">
-                                  @break
-                              @endforeach
-                          </th>
-                          <td>
-                            <h5 class="mt-3">
-                              <input type="hidden" name="id" id="product_id{{$loop->iteration-1}}" value="{{$item->product->id}}">
-                              <strong>{{$item->product->product_name}}</strong>
-                            </h5>
-                          </td>
-                          <td>{{$item->discount}}%</td>
-                          <td>Rp.{{$item->selling_price}}</td>
-                          <td class="text-center text-md-left">
-                            <span>{{$item->qty}} </span>
-                          </td>
-                            @foreach($item->product->product_review as $review)
-                              @if($item->product->id == $review->product_id && $review->transaction_id == $transaksi->id)
+            <div class="card">
+              <div class="card-header card-header-info">
+                <h4 class="card-title">Buyer Review</h4>
+              </div>
+              <div class="card-body">
+                <div class="container">
+                  <section class="section my-5 pb-5">
+                    <!-- Shopping Cart table -->
+                    <div class="table-responsive">
+                      <h1 align="center">Rincian Produk</h1>
+                      <br>
+                      <table class="table">
+                        <!-- Table head -->
+                        <thead>
+                            <tr>
+                              <th class="font-weight-bold">
+                                <strong>Image Product</strong>
+                              </th>
+                              <th class="font-weight-bold">
+                                <strong>Product</strong>
+                              </th>
+                              <th class="font-weight-bold">
+                                <strong>Diskon</strong>
+                              </th>
+                              <th class="font-weight-bold">
+                                <strong>Price</strong>
+                              </th>
+                              <th class="font-weight-bold">
+                                <strong>QTY</strong>
+                              </th>  
+                              <th class="font-weight-bold">
+                                  <strong>Rating</strong>
+                              </th>
+                              <th class="font-weight-bold">
+                                  <strong>Review</strong>
+                              </th>
+                              <th class="font-weight-bold">
+                                  <strong>action</strong>
+                              </th>
+                          </tr>
+                        </thead>
+                        <!-- Table head -->
+                        <!-- Table body -->
+                        <tbody>
+                          <!-- First row -->
+                          @foreach ($transaksi->transaction_detail as $item)
+                            <tr>
+                              <th scope="row">
+                                  @foreach ($item->product->relasi_product_image as $image)
+                                      <img style="width:100px;height:100px;" src="{{asset('/uploads/product_images/'.$image->image_name)}}" alt=""class="img-fluid z-depth-0">
+                                      @break
+                                  @endforeach
+                              </th>
                               <td>
-                              <p>{{$review->rate}}</p>
-                                <input type="hidden" name="review_id" id="review_id{{$loop->iteration-1}}" value="{{$review->id}}">
+                                <h5 class="mt-3">
+                                  <input type="hidden" name="id" id="product_id{{$loop->iteration-1}}" value="{{$item->product->id}}">
+                                  <strong>{{$item->product->product_name}}</strong>
+                                </h5>
                               </td>
-                              <td>
-                              <p>{{$review->content}}</p>
+                              <td>{{$item->discount}}%</td>
+                              <td>Rp.{{$item->selling_price}}</td>
+                              <td class="text-center text-md-left">
+                                <span>{{$item->qty}} </span>
                               </td>
-                              @endif
-                            @endforeach
-                            
-                            @php
-                                $status = 0;
-                            @endphp
-                            @foreach ($item->product->product_review as $pr)
+                                @foreach($item->product->product_review as $review)
+                                  @if($item->product->id == $review->product_id && $review->transaction_id == $transaksi->id)
+                                  <td>
+                                  <p>{{$review->rate}}</p>
+                                    <input type="hidden" name="review_id" id="review_id{{$loop->iteration-1}}" value="{{$review->id}}">
+                                  </td>
+                                  <td>
+                                  <p>{{$review->content}}</p>
+                                  </td>
+                                  @endif
+                                @endforeach
+                                
                                 @php
-                                    if($item->product->id == $pr->product_id){
-                                          $status = $status + 1;
-                                    }else{
-                                          $status = $status;
-                                    }
+                                    $status = 0;
                                 @endphp
-                            @endforeach
-                          </td>
-                          <td>
-                            @if ($status != 0)               
-                                <button class="btn btn-sm btn-success lihat-review" data-toggle="modal" data-target="#modalLihatReview"
-                                    data-produk="{{$item->product->product_name}}" >Berikan Balasan</button>
-                            @endif     
-                          </td>
-                        </tr>
-                      @endforeach
-                    </tbody>
-                    <!-- Table body -->
-                  </table>
+                                @foreach ($item->product->product_review as $pr)
+                                    @php
+                                        if($item->product->id == $pr->product_id){
+                                              $status = $status + 1;
+                                        }else{
+                                              $status = $status;
+                                        }
+                                    @endphp
+                                @endforeach
+                              </td>
+                              <td>
+                                @if ($status != 0)               
+                                    <button class="btn btn-sm btn-success lihat-review" data-toggle="modal" data-target="#modalLihatReview"
+                                        data-produk="{{$item->product->product_name}}" >Berikan Balasan</button>
+                                @endif     
+                              </td>
+                            </tr>
+                          @endforeach
+                        </tbody>
+                        <!-- Table body -->
+                      </table>
+                    </div>
+                    <!-- Shopping Cart table -->
+                  </section>
                 </div>
-                <!-- Shopping Cart table -->
-              </section>
+              </div>
             </div>
+            
                 <!-- Main Container -->
             <div class="modal" id="modalContactForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
               <div class="modal-dialog cascading-modal" role="document">
