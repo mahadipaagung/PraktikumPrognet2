@@ -76,8 +76,10 @@ Route::prefix('admin')->group(function(){
 Route::group(['prefix' => 'admin', 'middleware' => ['CekSuperRole:1']], function () {
     Route::get('/manage-admin', 'AdminController@manageAdmin')->name('admin.manage');
     Route::get('/manage-admin/delete/{id}', 'AdminController@destroyAdmin')->name('admin.destroy');
+    Route::get('/manage-admin/edit/{id}', 'AdminController@editAdmin')->name('admin.edit');
     Route::get('/manage-admin/add', 'AdminController@registerAdmin')->name('admin.add');
     Route::post('/manage-admin/register','AdminController@register')->name('admin.add.submit');
+    Route::post('/manage-admin/editSubmit','AdminController@editSubmit')->name('admin.edit.submit');
 });
 
 Route::post('/store', 'ResponseController@store')->name('response.store')->middleware('auth:admin');
