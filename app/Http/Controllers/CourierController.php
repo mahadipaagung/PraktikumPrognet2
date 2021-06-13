@@ -36,15 +36,15 @@ class CourierController extends Controller
      */
     public function store(Request $request) //method untuk input data ke database
     {
-        $test = Courier::where('courier' , $request->courier)->get();
+        $test = Courier::where('code' , $request->code)->get();
         if (count($test)>0){
-            return redirect('/courier')->with('failed','Data Sudah Ada');
+            return redirect('/admin/courier')->with('failed','Data Sudah Ada');
         }else{
-        $cr = new Courier;
-        $cr->code = $request->courierkode;
-        $cr->courier = $request->courier;
-        $cr->save();
-        return redirect('/courier')->with('success','Data Tersimpan');
+            $cr = new Courier;
+            $cr->code = $request->code;
+            $cr->courier = $request->courier;
+            $cr->save();
+            return redirect('/admin/courier')->with('success','Data Tersimpan');
         }
     }
 
@@ -65,9 +65,9 @@ class CourierController extends Controller
      * @param  \App\Courier  $courier
      * @return \Illuminate\Http\Response
      */
-    public function edit(Courier $courier) //method untuk menampilkan halaman edit
+    public function edit($id) //method untuk menampilkan halaman edit
     {
-        $courier = Courier::find($courier)->first();
+        $courier = Courier::find($id);
         return view('courier.editcourier',compact('courier')); 
     }
 
@@ -78,11 +78,19 @@ class CourierController extends Controller
      * @param  \App\Courier  $courier
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Courier $courier) //method untuk mengupdate data di database
+    public function update(Request $request) //method untuk mengupdate data di database
     {
-        $courier->courier = $request->courier;
-        $courier->save();
-        return redirect('/courier')->with('edits','Data Berhasil dirubah');
+        $test = Courier::where('code' , $request->code)->where('id','!=',$request->courier_id)->get();
+        if (count($test)>0){
+            return redirect('/admin/courier')->with('failed','Data Sudah Ada');
+        }else{
+            $courier = Courier::find($request->courier_id);
+            $courier->courier = $request->courier;
+            $courier->code = $request->code;
+            $courier->save();
+            return redirect('/admin/courier')->with('edits','Data Berhasil dirubah');
+        }
+        
     }
 
     /**
@@ -91,9 +99,9 @@ class CourierController extends Controller
      * @param  \App\Courier  $courier
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Courier $courier) //method untuk menghapus data
+    public function destroy($id) //method untuk menghapus data
     {
-        $courier->delete($courier);
-        return redirect('/courier')->with('delete','Data Barang Berhasil Dihapus');
+        $courier = Courier::find($id)->delete();
+        return redirect('/admin/courier')->with('delete','Data Barang Berhasil Dihapus');
     }
 }

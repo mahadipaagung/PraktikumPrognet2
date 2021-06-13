@@ -31,6 +31,28 @@
 </div>
 @endif
 
+@if(Session::has('failed'))
+<div class="alert alert-warning d-flex align-items-center" role="alert">
+    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#check-circle-fill"/></svg>
+        <button class="close" data-dismiss="alert">
+            <span>&times;</span>
+        </button>
+        Data Tidak Ditambah
+    </div>
+</div>
+@endif
+
+@if(Session::has('failed1'))
+<div class="alert alert-warning d-flex align-items-center" role="alert">
+    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#check-circle-fill"/></svg>
+        <button class="close" data-dismiss="alert">
+            <span>&times;</span>
+        </button>
+        Data Tidak Diedit
+    </div>
+</div>
+@endif
+
 @if(Session::has('delete'))
 <div class="alert alert-warning d-flex align-items-center" role="alert">
     <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
@@ -335,6 +357,7 @@
         <div class="modal-body">
           <div class="form-group bmd-form-group">
             <label class="col-sm-2 col-form-label">Percentage</label>
+            <input type="hidden" name="product_id" value="{{$product->id}}">
             <input type="number" name="percentage"  step="0.01" min="0" max="99" value=""  class="form-control" >
         </div>
         <div class="form-group bmd-form-group">

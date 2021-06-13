@@ -12,7 +12,7 @@
       <h3 class="panel-tittle">Edit Discount</h3>
   </div>
  <div class="panel-body">
-    <form action="/admin/discount/edit/edit/{{$discount->id}}" method="POST">
+    <form action="/admin/discount/edit/edit/" method="POST">
       @csrf
       <div class="modal-body">
         <div class="form-group row">
@@ -25,6 +25,7 @@
         </div>
         <div class="form-group row">
           <label class="col-sm-2 col-form-label">End</label>
+          <input type="hidden" name="id" value="{{ $discount->id  }}"  class="form-control" >
           <input type="date" name="end" value="{{ $discount->end  }}"  class="form-control" >
         </div>
         <div class="panel-body">

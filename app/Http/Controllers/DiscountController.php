@@ -38,20 +38,34 @@ class DiscountController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([    
+        $request->validate([  
+            'product_id' => ['required'],  
             'percentage' => ['required', 'between:0,99.99'],
-            'start' => ['required'],
-            'end' => ['required']
+            'start' => ['required', 'before_or_equal:end'],
+            'end' => ['required', 'after_or_equal:start']
         ]);
 
+
+        $discountcek = Discount::where('id_product', '=', $request->product_id)->get();
+
+        $start = date('Y-m-d', strtotime($request->start));
+        $end = date('Y-m-d', strtotime($request->end));
+
+        foreach($discountcek as $dsc){
+            $dscstart = date('Y-m-d', strtotime($dsc->start));
+            $dscend = date('Y-m-d', strtotime($dsc->end));
+            if($dscstart <= $start && $dscend >= $start || $dscstart <= $end && $dscend >= $end){
+                return redirect('/admin/products/edit/'.$request->product_id)->with('failed','Data Tidak Tersimpan');
+            }
+        }
+        
         $discount = new Discount();
+        $discount->id_product = $request->product_id;
         $discount->percentage = $request->percentage;
         $discount->start = $request->start;
         $discount->end = $request->end;
-        
-        if($discount->save()){
-            return redirect('/admin/products/edit/')->with('success','Data Tersimpan');
-        }
+        $discount->save();
+        return redirect('/admin/products/edit/'.$request->product_id)->with('success','Data Tersimpan');
 
         // return redirect()->back()->withInput($request->only('percentage', 'start', 'end'))->with("error", "Failed Add Discount");
     }
@@ -86,14 +100,29 @@ class DiscountController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $request->validate([
             'percentage' => ['required', 'between:0,99.99'],
-            'start' => ['required'],
-            'end' => ['required']
+            'start' => ['required', 'before_or_equal:end'],
+            'end' => ['required', 'after_or_equal:start']
         ]);
-        $discount = Discount::find($id);
+
+        $discount = Discount::find($request->id);
+
+        $discountcek = Discount::where('id', '!=', $request->id)->get();
+
+        $start = date('Y-m-d', strtotime($request->start));
+        $end = date('Y-m-d', strtotime($request->end));
+
+        foreach($discountcek as $dsc){
+            $dscstart = date('Y-m-d', strtotime($dsc->start));
+            $dscend = date('Y-m-d', strtotime($dsc->end));
+            if($dscstart <= $start && $dscend >= $start || $dscstart <= $end && $dscend >= $end){
+                return redirect('/admin/products/edit/'.$discount->id_product)->with('failed1','Data Tidak Tersimpan');
+            }
+        }
+
         $discount->percentage = $request->percentage;
         $discount->start = $request->start;
         $discount->end = $request->end;

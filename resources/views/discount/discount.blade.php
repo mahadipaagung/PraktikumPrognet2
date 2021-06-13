@@ -122,7 +122,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="/admin/discount/add" method="POST" enctype="multipart/form-data">
+                    <form action="/admin/discount/add" method="POST">
                         @csrf
                         <div class="modal-body">
                             <div class="form-group bmd-form-group">

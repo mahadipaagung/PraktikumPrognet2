@@ -61,12 +61,16 @@ Route::prefix('admin')->group(function(){
     Route::post('/categories/edit/edit/{id}','ProductCategoriesController@update')->middleware('auth:admin');
     Route::get('/categories/delete/{id}','ProductCategoriesController@destroy')->middleware('auth:admin');
 
-    Route::get('/discount/add','DiscountController@store')->middleware('auth:admin');
+    Route::post('/discount/add','DiscountController@store')->middleware('auth:admin');
     Route::get('/discount/edit/{id}','DiscountController@edit')->middleware('auth:admin');
-    Route::post('/discount/edit/edit/{id}','DiscountController@update')->middleware('auth:admin');
+    Route::post('/discount/edit/edit/','DiscountController@update')->middleware('auth:admin');
     Route::get('/discount/delete/{id}','DiscountController@destroy')->middleware('auth:admin');
 
     Route::get('/courier','CourierController@index')->middleware('auth:admin');
+    Route::post('/courier/add','CourierController@store')->middleware('auth:admin');
+    Route::get('/courier/edit/{id}','CourierController@edit')->middleware('auth:admin');
+    Route::post('/courier/edit/edit/','CourierController@update')->middleware('auth:admin');
+    Route::get('/courier/delete/{id}','CourierController@destroy')->middleware('auth:admin');
    
 });
 Route::group(['prefix' => 'admin', 'middleware' => ['CekSuperRole:1']], function () {
