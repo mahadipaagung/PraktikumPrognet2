@@ -48,60 +48,64 @@
         </div>
     </div>
     @endif
-
-    <div class="panel">
-        <div class="panel-heading">
-            <h3 class="panel-title">Product</h3>
+    <div class="card">
+        <div class="card-header card-header-primary">
+            <h4 class="card-title">Product</h4>
         </div>
-        <div class="panel-body">
-            <a href="/admin/products/baru"><button type="button" class="btn btn-info ">
-                <i class="fa fa-plus-square"></i>
-                Add Product
-            </button></a>
-            <br>
-            <br>
+        <div class="card-body">
+            <div class="panel">
+                <div class="panel-body">
+                    <a href="/admin/products/baru"><button type="button" class="btn btn-info ">
+                        <i class="fa fa-plus-square"></i>
+                        Add Product
+                    </button></a>
+                    <br>
+                    <br>
+                </div>
+                <table class="table table-striped">
+                <thead>
+                    <tr>
+                    <th>No</th>
+                    <th>Product Name</th>
+                    <th>Price</th>
+                    <th>Description</th>
+                    <th>Product Rate</th>
+                    <th>Stock</th>
+                    <th>Weight</th>
+                    <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @forelse ($products as $product)
+                    <tr>
+                    <td>{{$loop->iteration }}</td>
+                    <td>{{$product->product_name}}</td>
+                    <td>Rp{{number_format($product->price)}}</td>
+                    <td>{{$product->description}}</td>
+                    <td>{{$product->product_rate}}</td>
+                    <td>{{$product->stock}}</td>
+                    <td>{{$product->weight}}</td>
+                    <td class="text-center">
+                        <a href="/admin/products/edit/{{$product->id}}"><button type="button" name="button" class="btn btn-warning btn-lg btn-block">Edit</button></a>
+                        <form action="/admin/products/delete/{{$product->id}}" method="GET">
+                            @csrf
+                            <button type="submit" name="submit" class="btn btn-danger btn-lg btn-block" onclick="return confirm('Are you sure you want to delete this product?');">Delete</button>
+                        </form>
+                    </td>
+                    </tr>
+                @empty
+                    <tr>
+                    <td class="text-center" colspan="3">
+                        <p>No product yet</p>
+                    </td>
+                    </tr>
+                @endforelse
+                </tbody>
+                </table>
+            </div>
         </div>
-        <table class="table table-striped">
-        <thead>
-            <tr>
-            <th>No</th>
-            <th>Product Name</th>
-            <th>Price</th>
-            <th>Description</th>
-            <th>Product Rate</th>
-            <th>Stock</th>
-            <th>Weight</th>
-            <th class="text-center">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-        @forelse ($products as $product)
-            <tr>
-            <td>{{$loop->iteration }}</td>
-            <td>{{$product->product_name}}</td>
-            <td>Rp{{number_format($product->price)}}</td>
-            <td>{{$product->description}}</td>
-            <td>{{$product->product_rate}}</td>
-            <td>{{$product->stock}}</td>
-            <td>{{$product->weight}}</td>
-            <td class="text-center">
-                <a href="/admin/products/edit/{{$product->id}}"><button type="button" name="button" class="btn btn-warning btn-lg btn-block">Edit</button></a>
-                <form action="/admin/products/delete/{{$product->id}}" method="GET">
-                    @csrf
-                    <button type="submit" name="submit" class="btn btn-danger btn-lg btn-block" onclick="return confirm('Are you sure you want to delete this product?');">Delete</button>
-                </form>
-            </td>
-            </tr>
-        @empty
-            <tr>
-            <td class="text-center" colspan="3">
-                <p>No product yet</p>
-            </td>
-            </tr>
-        @endforelse
-        </tbody>
-        </table>
     </div>
+   
 @endsection
 
 @section('javascript')

@@ -4,7 +4,12 @@
 
 <section class="cart_area">
   <div class="container">
-    <div class="cart_inner">
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title">Daftar Admin</h4>
+      </div>
+      <div class="card-body">
+      <div class="cart_inner">
       <div class="table-responsive">
         <table class="table">
           <thead>
@@ -82,6 +87,10 @@
         </table>
       </div>
     </div>
+      </div>
+    </div>
+    
+    
   </div>
 </section>
 @endsection
