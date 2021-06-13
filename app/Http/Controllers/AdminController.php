@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Admin;
 use Illuminate\Http\Request;
 use App\AdminNotification;
 
@@ -28,6 +28,8 @@ class AdminController extends Controller
     }
 
     public function manageAdmin(){
-        
+    
+        $listAdmin = Admin::all();
+        return view('admin.manage_admin', ['listAdmin' => $listAdmin]);
     }
 }

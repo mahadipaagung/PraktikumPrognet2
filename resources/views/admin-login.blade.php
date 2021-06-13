@@ -45,9 +45,6 @@
                                 <button type="submit" class="btn btn-info">
                                     {{ __('Login') }}
                                 </button>
-                                <a class="btn btn-link" href="/admin/register">
-                                        Register
-                                </a>
                             </div>
                         </div>
                     </form>

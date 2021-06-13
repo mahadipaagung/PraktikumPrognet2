@@ -27,7 +27,7 @@
 	@include('sweetalert::alert')
 
     @include('layouts.navbar')
-
+	
     @yield('content')
 
 	<!-- SCRIPTS =============================-->

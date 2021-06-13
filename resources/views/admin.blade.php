@@ -32,7 +32,7 @@
         Tip 2: you can also add an image using data-image tag
     -->
       <div class="logo"><a href="" class="simple-text logo-normal">
-          THEGATGET2
+          THEGADGET2
         </a></div>
       <div class="sidebar-wrapper">
         <ul class="nav">
@@ -159,10 +159,9 @@
       </nav>
       <!-- End Navbar -->
       <div class="content">
-	  <div class="container-fluid">
-	 	 @yield('page-contents')
-	  </div>
-	  
+        <div class="container-fluid">
+        @yield('page-contents')
+        </div>
       </div>
       <footer class="footer">
         <div class="container-fluid">
