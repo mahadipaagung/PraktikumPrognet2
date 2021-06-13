@@ -1,11 +1,17 @@
 <?php
 
 namespace App;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
+
+    use SoftDeletes;
+ 
+    protected $table = "transactions";
+    protected $dates = ['deleted_at'];
+
     public function transaction_detail(){
         return $this->hasMany('App\Transaction_Detail', 'transaction_id', 'id');
     }

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Category;
 use App\Product;
 use App\Product_Categories;
 use App\Product_Category_Details;
@@ -14,6 +14,8 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
+use Cviebrock\EloquentSluggable\Sluggable;
+use Validator;
 use File;
 
 
@@ -26,8 +28,15 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $data = Product::all();
-        return view('product.product',compact('data'));
+        $product = Product::with('product_image')->get();
+        $categories = Category::all();
+        return view('product.product',['products' => $product, 'categories' => $categories]);
+    }
+
+    public function showadd()
+    {
+        $categories = Category::all();
+        return view('product.addproduct',['categories' => $categories]);
     }
 
     public function showbaru()
@@ -65,45 +74,71 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {  
+        
         $request->validate([
-            'product_images' => ['required'],
-            'product_images.*' => [ 'mimes:jpg,jpeg,png', 'max:2000'],
-            'product_name' => ['required','max:100'],
-            'price' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'product_name' => ['required'],
+            'price' => ['required', 'min:1'],
             'description' => ['required'],
-            'product_rate' => ['required','max:100'],
-            'stock' => ['required', 'max:10'],
-            'weight' => ['required', 'max:3'],
-            'product_category' => ['required'],
-
+            'stock' => ['required', 'min:1'],
+            'weight' => ['required', 'min:1'],
+            'cat' => ['required'],
+            'product_images' => ['max:20000'],
         ]);
 
         if($request->hasFile('product_images')){
-
             $product = new Product;
             $product->product_name = $request->product_name;
             $product->price = $request->price;
             $product->description = $request->description;
-            $product->product_rate = $request->product_rate;
+            $product->product_rate = 0;
             $product->stock = $request->stock;
             $product->weight = $request->weight;
-            $product->category = $request->product_category;
             $product->save();
+    
+            $product = Product::where('product_name','=', $request->product_name)->first();
 
+            $pathhome = base_path();
+            $path = $pathhome.'/public/uploads/product_images/';
 
-            $product = DB::table('products')->where('product_name','=', $request->product_name)->first();
-            foreach($request->file('product_images') as $file){
-                $name = rand(1000,9999) . '_.' . $file->extension();
-                $file->storeAs('/img/gambarproduk', $name);
+            foreach($request->file('product_images') as $fil){
+                $nama_awal = $fil->getClientOriginalName();
+                $name = time()."_".$nama_awal;
+                $fil->move($path,$name);
                 $image = new Product_Image();
                 $image->product_id= $product->id;
                 $image->image_name=$name;
                 $image->save();
             }
-            return redirect("/products")->with('success','Data Tersimpan');
-        }
 
-       return redirect()->back()->withInput($request->only('product_name', 'price', 'description', 'product_rate', 'stock', 'weight'))->with('error', 'Please fill in all fields with valid value');
+            foreach($request->cat as $ct){
+                $pcd = new Product_Category_Details();
+                $pcd->product_id= $product->id;
+                $pcd->category_id=$ct;
+                $pcd->save();
+            }
+
+        }else{
+            $product = new Product;
+            $product->product_name = $request->product_name;
+            $product->price = $request->price;
+            $product->description = $request->description;
+            $product->product_rate = 0;
+            $product->stock = $request->stock;
+            $product->weight = $request->weight;
+            $product->save();
+    
+            $product = Product::where('product_name','=', $request->product_name)->first();
+            foreach($request->cat as $ct){
+                $pcd = new Product_Category_Details();
+                $pcd->product_id= $product->id;
+                $pcd->category_id=$ct;
+                $pcd->save();
+            }
+        }
+        
+        return redirect("/admin/products")->with('success','Data berhasil ditambah');;
+        Alert::success('Product Added', 'New product is added to the shop!');
+    //    return redirect()->back()->withInput($request->only('product_name', 'price', 'description', 'product_rate', 'stock', 'weight'))->with('error', 'Please fill in all fields with valid value');
     }
 
     /**
@@ -126,11 +161,12 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::find($id);
-        $image = DB::table('product_images')->where('product_id','=',$id)->paginate(5);
-        $product_categories= DB::table('product_categories')->get();
-        $product_category_details = Product_Category_Details::where('product_id', '=', $id)->with('product_categories')->paginate(10);
-        $product_review = Product_Review::where('product_id', '=', $id)->paginate(10);
-        $discount = Discount::where('id_product', '=', $id)->paginate(10);
+        $image = Product_Image::where('product_id','=',$id)->get();
+        $product_categories= Product_Categories::all();
+        $product_category_details = Product_Category_Details::where('product_id', '=', $id)->get();
+ 
+        $product_review = Product_Review::where('product_id', '=', $id)->get();
+        $discount = Discount::where('id_product', '=', $id)->get();
         return view('product.editproduct', compact('product','image', 'product_categories', 'product_category_details', 'product_review', 'discount'));
     }
 
@@ -141,55 +177,51 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $product = new Product();
-        $product = Product::find($id);
-
         $request->validate([
-            'product_name' => ['required', 'max:100'],
-            'price' => ['required', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'product_name' => ['required'],
+            'price' => ['required', 'min:1'],
             'description' => ['required'],
-            'product_rate' => ['required', 'max:100'],
-            'stock' => ['required', 'max:10'],
-            'weight' => ['required', 'max:3'],
-            'product_category' => ['required'],
+            'stock' => ['required', 'min:1'],
+            'weight' => ['required', 'min:1'],
+            'cat' => ['required'],
         ]);
 
+        $product = Product::find($request->product_id);
         $product->product_name= $request->product_name;
         $product->price= $request->price;
         $product->description= $request->description;
-        $product->product_rate= $request->product_rate;
         $product->stock= $request->stock;
         $product->weight= $request->weight;
-        $product->category_name = $request->category_name;
         $product->save();
-        return redirect("/products")->with('edits','Data Berhasil dirubah');;
+
+        Product::find($request->product_id)->category()->sync($request->cat);
+
+        return redirect("/admin/products/")->with('edits','Data berhasil dirubah');
+        Alert::error('Product Edited', 'A product is changed to the shop!');
     }
 
-    public function add_image(Request $request, $id)
+    public function add_image(Request $request)
     {
         $request->validate([
-            'product_images' => ['required'],
-            'product_images.*' => ['mimes:jpg,jpeg,png', 'max:2000'],
+            'product_images' => ['required','max:20000'],
         ]);
-
-
-        foreach($request->file('product_images') as $file){
-                $name = time() . '_.' . $file->extension();
-                $file->storeAs('/img/gambarproduk', $name);
-                $image = new Product_Image();
-                $image->product_id= $id;
-                $image->image_name=$name;
-                $image->save();
-            }
-        if (file_exists('product_images/'.$name)) {
-            return redirect()->intended(route('product.edit', ['id' => $id]))->with("success", "Successfully Add Image");
-        } 
-
-       return redirect()->intended(route('product.edit', ['id' => $id]))->with('error', 'Please fill in all fields with valid value');
-    
-
+        
+        $pathhome = base_path();
+        $path = $pathhome.'/public/uploads/product_images/';
+        
+        foreach($request->file('product_images') as $fil){
+            $nama_awal = $fil->getClientOriginalName();
+            $name = time()."_".$nama_awal;
+            $fil->move($path,$name);
+            $image = new Product_Image();
+            $image->product_id= $request->product_id;
+            $image->image_name=$name;
+            $image->save();
+        }
+        
+        return redirect("/admin/products/edit/".$request->product_id);
     }
 
    //public function add_cat(Request $request, $id)
@@ -221,12 +253,18 @@ class ProductController extends Controller
         $product->discount()->delete();
         $product->product_category_details()->delete();
         $product->delete();
-        return redirect("/products")->with('delete','Data Barang Berhasil Dihapus');;
+        return redirect("/admin/products")->with('delete','Data berhasil dihapus');
     }
 
     public function delete_image($id)
     {
         Product_Image::destroy($id);
+        return back();
+    }
+
+    public function delete_comment($id)
+    {
+        Product_Review::destroy($id);
         return back();
     }
 

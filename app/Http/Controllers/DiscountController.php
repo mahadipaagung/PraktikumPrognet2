@@ -15,7 +15,7 @@ class DiscountController extends Controller
      */
     public function index()
     {
-        $data=Discount::all();
+        $data=Discount::with('product')->get();
         return view ('discount.discount',compact(['data']));
     }
 
@@ -50,10 +50,10 @@ class DiscountController extends Controller
         $discount->end = $request->end;
         
         if($discount->save()){
-            return redirect('/discount')->with('success','Data Tersimpan');
+            return redirect('/admin/products/edit/')->with('success','Data Tersimpan');
         }
-        return redirect()->back()->withInput($request->only('percentage', 'start', 'end'))->with("error", "Failed Add Discount");
 
+        // return redirect()->back()->withInput($request->only('percentage', 'start', 'end'))->with("error", "Failed Add Discount");
     }
 
     /**
@@ -73,10 +73,10 @@ class DiscountController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(discount $discount)
+    public function edit($id)
     {
-        $product = Product::all();
-        return view('discount.editdiscount',compact('discount','product'));
+        $discount = Discount::find($id);
+        return view('discount.editdiscount',compact('discount'));
     }
 
     /**
@@ -98,7 +98,7 @@ class DiscountController extends Controller
         $discount->start = $request->start;
         $discount->end = $request->end;
         $discount->save();
-        return redirect('/discount')->with('edits','Data Berhasil dirubah');
+        return redirect('/admin/products/edit/'.$discount->id_product)->with('edits','Data Berhasil dirubah');
         
     }
 

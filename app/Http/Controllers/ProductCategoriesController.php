@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Product_Category_Details;
 use App\Product_Categories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -39,12 +39,12 @@ class ProductCategoriesController extends Controller
     {
         $test = Product_Categories::where('category_name' , $request->category_name)->get();
         if (count($test)>0){
-            return redirect('/categories')->with('failed','Data Sudah Ada');
+            return redirect('/admin/categories')->with('failed','Data Sudah Ada');
         }else{
             $ct = new Product_Categories;
             $ct->category_name = $request->category_name;
             $ct->save();
-            return redirect('/categories')->with('success','Data Tersimpan');
+            return redirect('/admin/categories')->with('success','Data Tersimpan');
         }
     }
 
@@ -67,8 +67,8 @@ class ProductCategoriesController extends Controller
      */
     public function edit($id)
     {
-        $dataCategory = Product_Categories::find($id);
-        return view('categories.editcategories',compact('dataCategory'));
+        $pcat = Product_Categories::find($id);
+        return view('categories.editcategories',compact('pcat'));
     }
 
     /**
@@ -87,7 +87,7 @@ class ProductCategoriesController extends Controller
         $category = Product_Categories::find($id);
         $category->category_name= $request->category_name;
         $category->save();
-        return redirect('/categories')->with('edits','Data Berhasil dirubah');;
+        return redirect('/admin/categories')->with('edits','Data Berhasil dirubah');;
        
     }
 
@@ -99,13 +99,9 @@ class ProductCategoriesController extends Controller
      */
     public function destroy($id)
     {
-        $cat = Product_Categories::find($id);
-        $product_cat_det = DB::table('product_category_details')->where('product_id','=',$cat->id)->get();
-        if($product_cat_det->isEmpty()){
-            DB::delete('delete from product_category_details where product_id = ?', [$cat->id]);
-        }
-        $cat->delete();
-
-        return redirect('/categories')->with('delete','Data Barang Berhasil Dihapus');
+        $pcat = Product_Categories::find($id);
+        Product_Category_Details::where('category_id','=',$pcat->id)->delete();
+        $pcat->delete();
+        return redirect('/admin/categories')->with('delete','Data Barang Berhasil Dihapus');
     }
 }

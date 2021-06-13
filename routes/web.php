@@ -43,6 +43,30 @@ Route::prefix('admin')->group(function(){
     Route::post('/transaksi/detail/{id}', 'AdminDetailTransaksiController@rejectproof');
 
     Route::post('/transaksi/detail/review', 'ResponseController@create');
+
+    Route::get('/products','ProductController@index')->middleware('auth:admin');
+    Route::get('/products/baru','ProductController@showadd')->middleware('auth:admin');
+    Route::post('/products/add','ProductController@store')->middleware('auth:admin');
+    Route::get('/products/edit/{id}','ProductController@edit')->middleware('auth:admin');
+    Route::post('/products/edit/edit/','ProductController@update')->middleware('auth:admin');
+    Route::get('/products/delete/{id}','ProductController@destroy')->middleware('auth:admin');
+
+    Route::post('/products/add/gambar/','ProductController@add_image')->middleware('auth:admin');
+    Route::get('/products/delete/gambar/{id}','ProductController@delete_image')->middleware('auth:admin');
+    Route::get('/products/delete/comment/{id}','ProductController@delete_comment')->middleware('auth:admin');
+
+    Route::get('/categories','ProductCategoriesController@index')->middleware('auth:admin');
+    Route::post('/categories/add/','ProductCategoriesController@store')->middleware('auth:admin');
+    Route::get('/categories/edit/{id}','ProductCategoriesController@edit')->middleware('auth:admin');
+    Route::post('/categories/edit/edit/{id}','ProductCategoriesController@update')->middleware('auth:admin');
+    Route::get('/categories/delete/{id}','ProductCategoriesController@destroy')->middleware('auth:admin');
+
+    Route::get('/discount/add','DiscountController@store')->middleware('auth:admin');
+    Route::get('/discount/edit/{id}','DiscountController@edit')->middleware('auth:admin');
+    Route::post('/discount/edit/edit/{id}','DiscountController@update')->middleware('auth:admin');
+    Route::get('/discount/delete/{id}','DiscountController@destroy')->middleware('auth:admin');
+
+    Route::get('/courier','CourierController@index')->middleware('auth:admin');
    
 });
 Route::group(['prefix' => 'admin', 'middleware' => ['CekSuperRole:1']], function () {
@@ -51,21 +75,21 @@ Route::group(['prefix' => 'admin', 'middleware' => ['CekSuperRole:1']], function
 
 Route::post('/store', 'ResponseController@store')->name('response.store')->middleware('auth:admin');
 
-//Courier
-Route::resource('/courier','CourierController')->middleware('auth:admin');
+// //Courier
+// Route::resource('/courier','CourierController')->middleware('auth:admin');
 
-//Product
-Route::resource('/products','ProductController')->middleware('auth:admin');
-Route::get('/{id}/edit', 'ProductController@edit')->name('product.edit')->middleware('auth:admin');
-Route::post('/{id}/update', 'ProductController@update')->name('product.update')->middleware('auth:admin');
-Route::post('/{id}/add_image', 'ProductController@add_image')->name('product.add_image')->middleware('auth:admin');
-Route::delete('/{id}/delete_image', 'ProductController@delete_image')->name('product.delete_image')->middleware('auth:admin');
+// //Product
+// Route::resource('/products','ProductController')->middleware('auth:admin');
+// Route::get('/{id}/edit', 'ProductController@edit')->name('product.edit')->middleware('auth:admin');
+// Route::post('/{id}/update', 'ProductController@update')->name('product.update')->middleware('auth:admin');
+// Route::post('/{id}/add_image', 'ProductController@add_image')->name('product.add_image')->middleware('auth:admin');
+// Route::delete('/{id}/delete_image', 'ProductController@delete_image')->name('product.delete_image')->middleware('auth:admin');
 
-//Categories
-Route::resource('/categories','ProductCategoriesController')->middleware('auth:admin');
+// //Categories
+// Route::resource('/categories','ProductCategoriesController')->middleware('auth:admin');
 
 
-Route::resource('/discount','DiscountController')->middleware('auth:admin');
+// Route::resource('/discount','DiscountController')->middleware('auth:admin');
 
 Route::get('/', 'ProductController@showbaru');
 

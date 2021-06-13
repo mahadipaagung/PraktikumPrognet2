@@ -1,234 +1,154 @@
 @extends('admin')
 @section('css')
-<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-    <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
-      <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-    </symbol>
-    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
-      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-    </symbol>
-  </svg>
-<style>
-    .dataTables_filter {
-        float: right !important;
-    }
-
-</style>
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+        </symbol>
+        <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+        </symbol>
+    </svg>
+    <style>
+        .dataTables_filter {
+            float: right !important;
+        }
+    </style>
 @endsection
+
 @section('page-contents')
-@if(Session::has('success'))
-<div class="alert alert-success d-flex align-items-center" role="alert">
-    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>  
-        <button class="close" data-dismiss="alert">
-            <span>&times;</span>
-        </button>
-        Data Berhasil Dimasukan
+    @if(Session::has('success'))
+    <div class="alert alert-success d-flex align-items-center" role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+            <button class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+            Data Berhasil Dimasukan
+        </div>
     </div>
-</div>
-@endif
+    @endif
 
-@if(Session::has('edits'))
-<div class="alert alert-success d-flex align-items-center" role="alert">
-    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>  
-        <button class="close" data-dismiss="alert">
-            <span>&times;</span>
-        </button>
-        Data Berhasil Dirubah
+    @if(Session::has('edits'))
+    <div class="alert alert-success d-flex align-items-center" role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+            <button class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+            Data Berhasil Dirubah
+        </div>
     </div>
-</div>
-@endif
+    @endif
 
-@if(Session::has('delete'))
-<div class="alert alert-warning d-flex align-items-center" role="alert">
-    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
-        <button class="close" data-dismiss="alert">
-            <span>&times;</span>
-        </button>
-        Data Berhasil Dihapus
+    @if(Session::has('delete'))
+    <div class="alert alert-warning d-flex align-items-center" role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+            <button class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+            Data Berhasil Dihapus
+        </div>
     </div>
-</div>
-@endif
+    @endif
 
     <div class="panel">
-      <div class="panel-heading">
-          <h3 class="panel-title">Product</h3>
-      </div>
-      <div class="panel-body">
-          {{-- ------------------------------------------TOMBOL TAMBAH DATA---------------------------------------- --}}
-          <button type="button" class="btn btn-info " data-toggle="modal" data-target="#tambahdata">
-            <i class="fa fa-plus-square"></i>
-            Tambah Data
-        </button>
-          {{-- ------------------------------------------Section & Tambah data---------------------------------------- --}}
-          <br>
-          <br>
-  
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>No</th>
-          <th>Product Name</th>
-          <th>Price</th>
-          <th>Description</th>
-          <th>Product Rate</th>
-          <th>Stock</th>
-          <th>Weight</th>
-          <th>Image</th>
-          <th class="text-center">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-      @forelse ($data as $item)
-        <tr>
-          <td>{{$loop->iteration }}</td>
-          <td>{{$item->product_name}}</td>
-          <td>@currency($item->price)</td>
-          <td>{{$item->description}}</td>
-          <td>{{$item->product_rate}}</td>
-          <td>{{$item->stock}}</td>
-          <td>{{$item->weight}}</td>
-          <td><a href="storage/app/public/img/gambarproduk/{{$item->image_name}}" target="_blank" style="text-decoration: none; color: #111">{{$item->image_name}}</a></td>
-          <td class="text-center">
-        {{-- TOMBOL DELETE DAN EDIT --}}
-        <form action="/products/{{$item->id}}" method="POST">
-          @csrf
-          {{method_field('DELETE')}}
-  
-          {{-- TOMBOL EDIT --}}
-          <a href="/products/{{$item->id}}/edit" class="btn btn-primary">Edit
-              <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pencil"
-                  fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd"
-                      d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5L13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175l-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
-              </svg>
-          </a>
-  
-          {{-- TOMBOL DELETE --}}
-          <button type="submit" name="submit" class="btn btn-danger">Delete
-              <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash"
-                  fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                  <path fill-rule="evenodd"
-                      d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-              </svg>
-          </button>
-      </form>
-  </td>
-  </tr>
-  
-  @empty
-  <tr>
-  <td class="text-center" colspan="3">
-      <p>Tidak ada data</p>
-  </td>
-  </tr>
-  @endforelse
-      </tbody>
-    </table>
-  </div>
-  
-  </body>
-  </html>
-  
-  <!--------------------------------------- Modal Tambah data--------------------------------------------- -->
-  <div class="modal fade" id="tambahdata" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Menambahkan Data Baru</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                  </button>
-              </div>
-              <form action="/products" method="POST" enctype="multipart/form-data">
-                  @csrf
-                  <div class="modal-body">
-                      {{-- Nama Product --}}
-                      <div class="form-group row">
-                          <label class="col-sm-5 col-form-label">Product Name</label>
-                          <div class="col-sm-10">
-                              <input name="product_name" type="text" class="form-control"
-                                  placeholder="Nama produk yang ingin ditambahkan">
-                          </div>
-                      </div>
-                      {{-- Price --}}
-                      <div class="form-group row">
-                        <label class="col-sm-5 col-form-label">Price</label>
-                        <div class="col-sm-10">
-                            <input name="price" type="number" class="form-control"
-                                placeholder="Harga produk yang ingin ditambahkan">
-                        </div>
-                    </div>
-                    {{-- Description --}}
-                    <div class="form-group row">
-                        <label class="col-sm-5 col-form-label">Description</label>
-                        <div class="col-sm-10">
-                            <input name="description" type="text" class="form-control"
-                                placeholder="Deskripsi produk yang ingin ditambahkan">
-                        </div>
-                    </div>
-                    {{-- Product Rate --}}
-                    <div class="form-group row">
-                        <label class="col-sm-5 col-form-label">Product rate</label>
-                        <div class="col-sm-10">
-                            <input name="product_rate" type="number" class="form-control"
-                                placeholder="Rating produk yang ingin ditambahkan">
-                        </div>
-                    </div>
-                    {{-- Stock --}}
-                    <div class="form-group row">
-                        <label class="col-sm-5 col-form-label">Stock</label>
-                        <div class="col-sm-10">
-                            <input name="stock" type="number" class="form-control"
-                                placeholder="Stok produk yang ingin ditambahkan">
-                        </div>
-                    </div>
-                    {{-- Weight --}}
-                    <div class="form-group row">
-                        <label class="col-sm-5 col-form-label">Weight</label>
-                        <div class="col-sm-10">
-                            <input name="weight" type="number" class="form-control"
-                                placeholder="Berat produk yang ingin ditambahkan">
-                        </div>
-                    </div>
-                    {{-- Category
-                    <<div class="form-group bmd-form-group">
-                        <label class="col-sm-2 col-form-label">Category</label>
-                        <div class="col-sm-10"> 
-                            <select  class="form-control" name="product_category" data-style=" btn btn-link">
-                                   <option selected disabled>-- Category Product --</option>
-                                  @foreach ($product_categories as $pc)
-                                    <option value="{{$pc->id}}">{{$pc->category_name}}</option>
-                                  @endforeach
-                            </select>  --}}
-                    {{-- product images --}}
-                  <div class="form-group row">
-                    <label class="col-sm-5 col-form-label">Product Images</label>
+        <div class="panel-heading">
+            <h3 class="panel-title">Product</h3>
+        </div>
+        <div class="panel-body">
+            <a href="/admin/products/baru"><button type="button" class="btn btn-info ">
+                <i class="fa fa-plus-square"></i>
+                Add Product
+            </button></a>
+            <br>
+            <br>
+        </div>
+        <table class="table table-striped">
+        <thead>
+            <tr>
+            <th>No</th>
+            <th>Product Name</th>
+            <th>Price</th>
+            <th>Description</th>
+            <th>Product Rate</th>
+            <th>Stock</th>
+            <th>Weight</th>
+            <th class="text-center">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        @forelse ($products as $product)
+            <tr>
+            <td>{{$loop->iteration }}</td>
+            <td>{{$product->product_name}}</td>
+            <td>Rp{{number_format($product->price)}}</td>
+            <td>{{$product->description}}</td>
+            <td>{{$product->product_rate}}</td>
+            <td>{{$product->stock}}</td>
+            <td>{{$product->weight}}</td>
+            <td class="text-center">
+                <a href="/admin/products/edit/{{$product->id}}"><button type="button" name="button" class="btn btn-warning btn-lg btn-block">Edit</button></a>
+                <form action="/admin/products/delete/{{$product->id}}" method="GET">
+                    @csrf
+                    <button type="submit" name="submit" class="btn btn-danger btn-lg btn-block" onclick="return confirm('Are you sure you want to delete this product?');">Delete</button>
+                </form>
+            </td>
+            </tr>
+        @empty
+            <tr>
+            <td class="text-center" colspan="3">
+                <p>No product yet</p>
+            </td>
+            </tr>
+        @endforelse
+        </tbody>
+        </table>
+    </div>
+@endsection
 
-                    <div class="form-group bmd-form-group form-file-upload form-file-multiple">
-                        <input type="file" multiple="" name="product_images[]" class="inputFileHidden">
-                </div>
-                  <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                      <button type="submit" class="btn btn-primary">Simpan</button>
-                  </div>
-              </form>
-          </div>
-      </div>
-  </div>
-  
-  @endsection
-  {{-- javascript tambahan --}}
-  @section('javascript')
-  <!--Java Script untuk Data Table-->
-  <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
-  <script>
-      $(document).ready(function () {
-          $('#example').DataTable();
-      });
-  
-  </script>
-  
-  @endsection
+@section('javascript')
+<!--Java Script untuk Data Table-->
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+@endsection
+
+<!-- @section('script')
+<script>
+    $(document).ready(function(e){
+        $('#bacot').click(function(e){
+            var index = $(".deletebtn").index(this);
+            var indexbaru = index + 1;
+            var product_id = $('.delete'+indexbaru).val();
+            console.log(product_id);
+            swal({
+                title: "Delete this product?",
+                text: "You will not be able to undo this action!",
+                icon: "warning",
+                buttons: [
+                'No!',
+                'Yes!'
+                ],
+                dangerMode: true,
+            }).then(function(isConfirm) {
+                if (isConfirm) {
+                $.ajaxSetup({
+                    headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    url: '/updatecart/'+user_id: $('.userid'+indexbaru).val(),
+                    method: 'get',
+                    data: {
+                        
+                    },
+                    success: function(result){
+                        swal("Product Deleted", "The product is removed from your store!", "success");
+                    }
+                });
+                } else {
+                swal("Product Status", "Your product is still in shop!", "warning");
+                }
+            });
+        });
+    });
+</script>
+@endsection -->
