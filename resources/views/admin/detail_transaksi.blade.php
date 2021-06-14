@@ -9,7 +9,7 @@
               <div class="container">
                 <section class="contact-section my-5">
                   <div class="card">
-                    <div class="card-header card-header-info">
+                    <div class="card-header card-header-primary">
                       <h4 class="card-title">Detail Transaction</h4>
                     </div>
                     <div class="row">

@@ -60,51 +60,61 @@
 </div>
 @endif
 
-<div class="panel">
-    <div class="panel-heading">
-        <h3 class="panel-tittle">Courier</h3>
+<div class="card">
+    <div class="card-header card-header-primary">
+        <h4 class="card-title">Courier</h4>
     </div>
-    <div class="panel-body">
-        <button type="button" class="btn btn-info " data-toggle="modal" data-target="#tambahdata">
-            <i class="fa fa-plus-square"></i>
-            Tambah Data
-        </button>
-        <br>
-        <br>
+    <div class="card-body">
+        <div class="panel">
+            <div class="panel-heading">
+                <h3 class="panel-tittle">Courier</h3>
+            </div>
+            <div class="panel-body">
+                <button type="button" class="btn btn-info " data-toggle="modal" data-target="#tambahdata">
+                    <i class="fa fa-plus-square"></i>
+                    Tambah Data
+                </button>
+                <br>
+                <br>
 
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Courier</th>
-                    <th class="text-center">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($data as $item)
-                <tr>
-                    <td>{{$loop->iteration }}</td>
-                    <td>{{$item->courier}}</td>
-                    <td class="text-center">
-                        <a href="/admin/courier/edit/{{$item->id}}"><button type="button" name="button" class="btn btn-warning btn-sm btn-block">Edit</button></a>
-                        <form action="/admin/courier/delete/{{$item->id}}" method="GET">
-                            @csrf
-                            <button type="submit" name="submit" class="btn btn-danger btn-sm btn-block" onclick="return confirm('Are you sure you want to delete this courier?');">Delete</button>
-                        </form>
-                    </td>
-                </tr>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Courier</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($data as $item)
+                        <tr>
+                            <td>{{$loop->iteration }}</td>
+                            <td>{{$item->courier}}</td>
+                            <td class="text-center">
+                                <a href="/admin/courier/edit/{{$item->id}}"><button type="button" name="button" class="btn btn-warning btn-sm btn-block">Edit</button></a>
+                                <form action="/admin/courier/delete/{{$item->id}}" method="GET">
+                                    @csrf
+                                    <button type="submit" name="submit" class="btn btn-danger btn-sm btn-block" onclick="return confirm('Are you sure you want to delete this courier?');">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
 
-                @empty
-                <tr>
-                    <td class="text-center" colspan="3">
-                        <p>Tidak ada data</p>
-                    </td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+                        @empty
+                        <tr>
+                            <td class="text-center" colspan="3">
+                                <p>Tidak ada data</p>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
+
+
+
 <div class="modal fade" id="tambahdata" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
