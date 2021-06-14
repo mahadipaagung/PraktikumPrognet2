@@ -1,9 +1,11 @@
 @extends('admin')
 @section('page-contents')
-<div class="card p-2">
-    <h3 class="text-center"><strong>Add New Product<strong></h3>
-</div>
+
 <div class="card">
+<div class="card-header card-header-primary">
+      <h3 class="card-title ">Edit Product</h4>
+</div>
+<div class="card-body">
     <form action="/admin/products/add" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="m-3">
@@ -52,4 +54,6 @@
             <button type="submit" class="btn btn-info">Save</button>
     </form>
 </div>
+</div>
+
 @endsection
