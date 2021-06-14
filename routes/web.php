@@ -58,7 +58,7 @@ Route::prefix('admin')->group(function(){
     Route::get('/categories','ProductCategoriesController@index')->middleware('auth:admin');
     Route::post('/categories/add/','ProductCategoriesController@store')->middleware('auth:admin');
     Route::get('/categories/edit/{id}','ProductCategoriesController@edit')->middleware('auth:admin');
-    Route::post('/categories/edit/edit/{id}','ProductCategoriesController@update')->middleware('auth:admin');
+    Route::post('/categories/edit/edit/','ProductCategoriesController@update')->middleware('auth:admin');
     Route::get('/categories/delete/{id}','ProductCategoriesController@destroy')->middleware('auth:admin');
 
     Route::post('/discount/add','DiscountController@store')->middleware('auth:admin');
