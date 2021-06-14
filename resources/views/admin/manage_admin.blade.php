@@ -62,7 +62,7 @@
                         <td>{{$item->username}}</td>
                         <td>{{$item->phone}}</td>
                         <td>
-                            <form action="/admin/manage-admin/{{$item->id}}" method="POST">
+                            <form action="/admin/manage-admin/edit/{{$item->id}}" method="GET">
                                 @csrf
                                 <button type="submit" name="submit" class="btn btn-primary">edit</button>
                             </form>

@@ -35,17 +35,22 @@ class AdminController extends Controller
         return view('admin.admin-register');
     }
 
-
     public function manageAdmin(){
     
         $listAdmin = Admin::all();
         return view('admin.manage_admin', ['listAdmin' => $listAdmin]);
     }
 
+    public function editAdmin($id){
+    
+        $adminedit = Admin::find($id);
+        return view('admin.admin-edit', ['adminedit' => $adminedit]);
+    }
+
     public function destroyAdmin($id){
         $adminnya = Admin::find($id);
         $adminnya->delete();
-        return redirect("admin.manage_admin")->with('delete','Data berhasil dihapus');
+        return redirect('/admin/manage-admin')->with('delete','Data berhasil dihapus');
     }
 
     public function register(Request $request ){
@@ -56,18 +61,36 @@ class AdminController extends Controller
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
             ]
         );
-        try {
-            $admin = Admin::create([
-                'username' => $request->username,
-                'name' => $request->name,
-                'profile_image'=> $request->profile_image,
-                'phone' =>$request->phone,
-                'password' => Hash::make($request->password),
-            ]);
-            
-            return redirect('/admin/manage-admin');
-        } catch (\Exception $e) {
-            return redirect()->back()->withInput($request->only('name','username'));
+
+        $admin = Admin::create([
+            'username' => $request->username,
+            'name' => $request->name,
+            'profile_image'=> $request->profile_image,
+            'phone' =>$request->phone,
+            'password' => Hash::make($request->password),
+        ]);
+
+        return redirect('/admin/manage-admin');
+    }
+    public function editSubmit(Request $request)
+    {
+        $admin = Admin::find($request->id);
+        if(!is_null($request->profile)){
+            $admin->username= $request->username;
+            $admin->password= Hash::make($request->password);
+            $admin->name= $request->name;
+            $admin->phone= $request->phone;
+            $admin->profile_image= $request->profile;
+            $admin->save();
+        }else{
+            $admin->username= $request->username;
+            $admin->password= Hash::make($request->password);
+            $admin->name= $request->name;
+            $admin->phone= $request->phone;;
+            $admin->save();
         }
+        
+
+        return redirect("/admin/manage-admin")->with('edits','Data berhasil dirubah');
     }
 }
