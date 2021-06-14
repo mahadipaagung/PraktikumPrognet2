@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -60,6 +59,18 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
+                            </div>
+                        </div>
+                        <!-- google recaptcha -->
+                        <div class="form-group row {{ $errors->has('g-recaptcha-response') ? ' has-error' : '' }}">
+                            <label for="capcha" class="col-md-4 col-form-label text-md-right">Chapcha</label>
+                            <div class="col-md-12">
+                                {!! app('captcha')->display() !!}
+                                @if ($errors->has('g-recaptcha-response'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('g-recaptcha-response') }}</strong>
+                                    </span>
+                                @endif
                             </div>
                         </div>
                         <div class="form-group row mb-0">
