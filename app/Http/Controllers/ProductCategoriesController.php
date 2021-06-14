@@ -78,17 +78,21 @@ class ProductCategoriesController extends Controller
      * @param  \App\Product_Categories  $product_Categories
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $request->validate([
             'category_name' => ['required', 'max:30']
         ]);
-        $category = new Product_Categories();
-        $category = Product_Categories::find($id);
-        $category->category_name= $request->category_name;
-        $category->save();
-        return redirect('/admin/categories')->with('edits','Data Berhasil dirubah');;
-       
+        
+        $test = Product_Categories::where('category_name' , $request->category_name)->get();
+        if (count($test)>0){
+            return redirect('/admin/categories')->with('failed','Data Sudah Ada');
+        }else{
+            $category = Product_Categories::find($request->id);
+            $category->category_name= $request->category_name;
+            $category->save();
+            return redirect('/admin/categories')->with('edits','Data Berhasil dirubah');
+        }
     }
 
     /**
@@ -102,6 +106,6 @@ class ProductCategoriesController extends Controller
         $pcat = Product_Categories::find($id);
         Product_Category_Details::where('category_id','=',$pcat->id)->delete();
         $pcat->delete();
-        return redirect('/admin/categories')->with('delete','Data Barang Berhasil Dihapus');
+        return redirect('/admin/categories')->with('delete','Data Category Berhasil Dihapus');
     }
 }

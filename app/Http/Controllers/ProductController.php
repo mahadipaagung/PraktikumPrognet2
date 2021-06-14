@@ -28,9 +28,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $product = Product::with('product_image')->get();
-        $categories = Category::all();
-        return view('product.product',['products' => $product, 'categories' => $categories]);
+        $product = Product::all();
+        return view('product.product',['products' => $product]);
     }
 
     public function showadd()

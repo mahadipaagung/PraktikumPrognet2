@@ -1,10 +1,10 @@
 @extends('admin')
-    @section('css')
-    <style>
-        .dataTables_filter {
-            float: right !important;
-        }
-    </style>
+@section('css')
+<style>
+    .dataTables_filter {
+        float: right !important;
+    }
+</style>
 @endsection
 
 @section('page-contents')
@@ -13,11 +13,12 @@
             <h3 class="panel-tittle">Edit Product Categories</h3>
         </div>
         <div class="panel-body">
-            <form action="/admin/categories/edit/edit/{{$pcat->id}}" method="POST">
+            <form action="/admin/categories/edit/edit" method="POST">
                 @csrf
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Category Name</label>
                     <div class="col-sm-10">
+                        <input name="id" type="hidden" class="form-control" value="{{$pcat->id}}">
                         <input name="category_name" type="text" class="form-control" value="{{$pcat->category_name}}">
                     </div>
                 </div>
